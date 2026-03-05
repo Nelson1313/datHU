@@ -523,7 +523,7 @@ let baseTax;
 
 /* ezeknél interpolál a NAV */
 
-if(env === "euro14plus" || env === "euro14" || env === "euro12_14"){
+const brackets = [80,100,120,140,180,250];
 
 let lowerKW;
 let upperKW;
@@ -538,25 +538,20 @@ baseTax = lowerTax;
 }
 else{
 
-const brackets = [80,100,120,140,180,250];
-
 lowerKW = brackets[index-1];
 upperKW = brackets[index];
-
-if(upperTax !== lowerTax){
 
 lowerTax = Math.floor(lowerTax / 10000) * 10000;
 upperTax = Math.floor(upperTax / 10000) * 10000;
 
-baseTax = interpolate(power, lowerKW, upperKW, lowerTax, upperTax);
+baseTax = interpolate(
+power,
+lowerKW,
+upperKW,
+lowerTax,
+upperTax
+);
 
-}
-
-else  {
-  baseTax = lowerTax;
-}
-
-}
 }
 
 /* új autó */
