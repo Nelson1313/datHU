@@ -384,6 +384,8 @@ Enter vehicle data to calculate tax.
 
 document.addEventListener("DOMContentLoaded", function() {
 
+let chart;
+
 /* ---------------- NAV SWITCH ---------------- */
 
 window.switchView = function(e,view){
@@ -400,7 +402,7 @@ document.getElementById("view-"+view)
 .classList.add("active");
 
 setTimeout(() => {
- if (typeof chart !== "undefined" && chart) {
+ if(chart){
   chart.resize();
  }
 },200);
@@ -461,7 +463,6 @@ calcMonth.value=currentMonth;
 
 /* ---------------- CHART INIT ---------------- */
 
-let chart;
 
 const chartCanvas=document.getElementById("chart");
 
