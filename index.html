@@ -589,53 +589,98 @@ return 0.62;
 
 window.calculateTax = function(){
 
+window.calculateTax = function(){
+
 let power = parseInt(document.getElementById("power").value);
 let env   = document.getElementById("envClass").value;
 
 if(!power){
- alert("Enter vehicle power (kW)");
+ alert("Enter vehicle power");
  return;
 }
 
+let baseTax;
+
+/* Ft/kW kategóriák */
+
+const rates = {
+ euro14plus: 1017,
+ hybrid: 0,
+ euro14: 1170
+};
+
+/* táblázatos kategóriák */
+
+const baseTable = {
+
+euro12_14:[282000,423000,564000,846000,1128000,1692000,2538000],
+euro11_9:[564000,846000,1128000,1692000,2256000,3384000,5076000],
+euro8_or_worse:[1128000,1692000,2256000,3384000,4512000,6768000,10152000]
+
+};
+
+/* POWER BRACKET */
+
+function getPowerIndex(power){
+
+if(power<=80) return 0;
+if(power<=100) return 1;
+if(power<=120) return 2;
+if(power<=140) return 3;
+if(power<=180) return 4;
+if(power<=250) return 5;
+
+return 6;
+
+}
+
+/* BASE TAX */
+
+if(env === "euro14plus" || env === "euro14" || env === "hybrid"){
+
+baseTax = Math.round(power * rates[env]);
+
+}else{
+
 let index = getPowerIndex(power);
+baseTax = baseTable[env][index];
 
-/* base tax from table */
+}
 
-let baseTax = baseTable[env][index];
+/* NEW CAR */
 
 let newCar =
 document.querySelector('input[name="newCar"]:checked').value === "yes";
 
 let payable = baseTax;
 
-/* USED CAR AGE CALC */
-
 if(!newCar){
 
-let regY  = parseInt(regYear.value);
-let regM  = parseInt(regMonth.value);
+let regY = parseInt(regYear.value);
+let regM = parseInt(regMonth.value);
 
 let calcY = parseInt(calcYear.value);
 let calcM = parseInt(calcMonth.value);
 
 let ageMonths =
-(calcY - regY) * 12 +
-(calcM - regM);
+(calcY-regY)*12+(calcM-regM);
 
-let ageYears = Math.floor(ageMonths / 12);
+let percent = 0;
 
-let multiplier = getAgeMultiplier(ageYears);
+if(ageMonths<=36) percent=0;
+else if(ageMonths<=72) percent=0.10;
+else if(ageMonths<=108) percent=0.20;
+else if(ageMonths<=144) percent=0.40;
+else if(ageMonths<=180) percent=0.60;
+else percent=0.80;
 
-payable = Math.round(baseTax * multiplier);
+payable=Math.round(baseTax*(1-percent));
 
 }
 
 let reduction = baseTax - payable;
 
-
-/* OUTPUT */
-
-document.getElementById("taxResult").innerHTML =
+document.getElementById("taxResult").innerHTML=
 `
 Base Tax: ${baseTax.toLocaleString()} Ft<br>
 Reduction: ${reduction.toLocaleString()} Ft<br>
