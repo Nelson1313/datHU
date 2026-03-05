@@ -299,7 +299,7 @@ Select dates to calculate depreciation.
 <option value="470">Euro 14</option>
 <option value="705">Euro 12-14</option>
 <option value="940">Euro 11-9</option>
-<option value="1175">Euro 8 or worse</option>
+<option value="24400">Euro 8 or worse</option>
 </select>
 
 </div>
@@ -489,40 +489,55 @@ chart.update();
 
 window.calculateTax=function(){
 
-let power=parseFloat(document.getElementById("power").value);
-let rate=parseFloat(document.getElementById("envClass").value);
+let power = parseFloat(document.getElementById("power").value);
+let rate = parseFloat(document.getElementById("envClass").value);
 
-let regY=parseInt(regYear.value);
-let regM=parseInt(regMonth.value);
+let regY = parseInt(regYear.value);
+let regM = parseInt(regMonth.value);
 
-let calcY=parseInt(calcYear.value);
-let calcM=parseInt(calcMonth.value);
+let calcY = parseInt(calcYear.value);
+let calcM = parseInt(calcMonth.value);
 
-if(!power){alert("Enter power");return;}
+if(!power){
+ alert("Enter power");
+ return;
+}
 
-let base=power*rate;
+/* ALAP ADÓ */
 
-let ageMonths=(calcY-regY)*12+(calcM-regM);
-let age=ageMonths/12;
+let base = power * rate;
 
-let reduction=0;
+/* KOR */
 
-if(age<=3) reduction=0;
-else if(age<=6) reduction=0.1;
-else if(age<=9) reduction=0.2;
-else if(age<=12) reduction=0.4;
-else if(age<=15) reduction=0.6;
-else reduction=0.8;
+let ageMonths = (calcY-regY)*12 + (calcM-regM);
+let age = ageMonths / 12;
 
-let reduce=base*reduction;
-let tax=base-reduce;
+/* CSÖKKENTÉS */
 
-document.getElementById("taxResult").innerHTML=
-`Base Tax: ${Math.round(base)} Ft<br>
-Reduction: ${Math.round(reduce)} Ft<br>
-Payable Tax: ${Math.round(tax)} Ft`;
+let reductionPercent = 0;
 
-};
+if(age < 3) reductionPercent = 0;
+else if(age < 4) reductionPercent = 0.1;
+else if(age < 5) reductionPercent = 0.2;
+else if(age < 6) reductionPercent = 0.3;
+else if(age < 7) reductionPercent = 0.4;
+else if(age < 8) reductionPercent = 0.5;
+else if(age < 9) reductionPercent = 0.6;
+else if(age < 10) reductionPercent = 0.7;
+else if(age < 11) reductionPercent = 0.8;
+else reductionPercent = 0.9;
+
+let reduce = base * reductionPercent;
+let tax = base - reduce;
+
+document.getElementById("taxResult").innerHTML =
+`
+Base Tax: ${base.toLocaleString()} Ft<br>
+Reduction: ${reduce.toLocaleString()} Ft<br>
+Payable Tax: ${tax.toLocaleString()} Ft
+`;
+
+}
 
 });
 
