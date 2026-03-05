@@ -524,6 +524,9 @@ if(lowerKW === power){
 baseTax = lowerTax;
 }else{
 
+lowerTax = Math.floor(lowerTax / 10000) * 10000;
+upperTax = Math.floor(upperTax / 10000) * 10000;
+
 baseTax = interpolate(
 power,
 lowerKW,
@@ -533,8 +536,6 @@ upperTax
 );
 
 }
-
-baseTax = Math.floor(baseTax / 10000) * 10000;
 
 let newCar=document.querySelector('input[name="newCar"]:checked').value==="yes";
 
