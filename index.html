@@ -526,7 +526,7 @@ const brackets = [80,100,120,140,180,250];
 lowerKW = brackets[index-1];
 upperKW = brackets[index];
 
-baseTax = interpolate(power,lowerKW,upperKW,lowerTax,upperTax);
+baseTax = interpolate(power, lowerKW, upperKW, lowerTax, upperTax);
 
 }
 
@@ -566,6 +566,16 @@ let ageMonths =
 let multiplier=getAgeMultiplier(ageMonths);
 
 payable=Math.round(baseTax*multiplier);
+
+}
+
+function interpolate(power, lowerKW, upperKW, lowerTax, upperTax){
+
+let ratio = (power - lowerKW) / (upperKW - lowerKW);
+
+return Math.round(
+lowerTax + ratio * (upperTax - lowerTax)
+);
 
 }
 
