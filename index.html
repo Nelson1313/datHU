@@ -297,12 +297,31 @@ Select dates to calculate depreciation.
 <label>Environmental Class</label>
 
 <select id="envClass">
-<option value="470">Euro 14+</option>
-<option value="235">Hybrid</option>
-<option value="470">Euro 14</option>
-<option value="705">Euro 12-14</option>
-<option value="940">Euro 11-9</option>
-<option value="24400">Euro 8 or worse</option>
+
+<option value="euro14plus">
+Euro 14+ (after 2020)
+</option>
+
+<option value="hybrid">
+Hybrid
+</option>
+
+<option value="euro14">
+Euro 14
+</option>
+
+<option value="euro12_14">
+Euro 12-14
+</option>
+
+<option value="euro11_9">
+Euro 11-9
+</option>
+
+<option value="euro8_or_worse">
+Euro 8 or worse
+</option>
+
 </select>
 
 </div>
@@ -521,45 +540,65 @@ f.disabled=isNew;
 
 window.calculateTax=function(){
 
-let power=parseFloat(document.getElementById("power").value);
-let rate=parseFloat(document.getElementById("envClass").value);
+let power = parseFloat(document.getElementById("power").value);
 
-if(!power){
-alert("Enter power");
-return;
-}
+let env = document.getElementById("envClass").value;
 
-let base=power*rate;
+let regY = parseInt(regYear.value);
+let regM = parseInt(regMonth.value);
 
-let newCar=document.querySelector('input[name="newCar"]:checked').value==="yes";
+let calcY = parseInt(calcYear.value);
+let calcM = parseInt(calcMonth.value);
 
-let reductionPercent=0;
+let newCar =
+document.querySelector('input[name="newCar"]:checked').value === "yes";
+
+const baseRate = {
+ euro14plus: 1017,
+ hybrid: 0,
+ euro14: 1170,
+ euro12_14: 1620,
+ euro11_9: 2160,
+ euro8_or_worse: 24400
+};
+
+const monthlyRate = {
+ euro14plus: 0.003,
+ hybrid: 0,
+ euro14: 0.004,
+ euro12_14: 0.005,
+ euro11_9: 0.006,
+ euro8_or_worse: 0.012
+};
+
+let base = power * baseRate[env];
+
+let reductionPercent = 0;
 
 if(!newCar){
 
-let regY=parseInt(regYear.value);
-let regM=parseInt(regMonth.value);
+let ageMonths =
+(calcY - regY) * 12 +
+(calcM - regM);
 
-let calcY=parseInt(calcYear.value);
-let calcM=parseInt(calcMonth.value);
+reductionPercent =
+ageMonths * monthlyRate[env];
 
-let ageMonths=(calcY-regY)*12+(calcM-regM);
-
-let monthlyRate=0.012;
-
-reductionPercent=ageMonths*monthlyRate;
-
-if(reductionPercent>0.9) reductionPercent=0.9;
+if(reductionPercent > 0.9)
+ reductionPercent = 0.9;
 
 }
 
-let reduce=base*reductionPercent;
-let tax=base-reduce;
+let reduction = base * reductionPercent;
 
-document.getElementById("taxResult").innerHTML=
-`Base Tax: ${base.toLocaleString()} Ft<br>
-Reduction: ${Math.round(reduce).toLocaleString()} Ft<br>
-Payable Tax: ${Math.round(tax).toLocaleString()} Ft`;
+let tax = base - reduction;
+
+document.getElementById("taxResult").innerHTML =
+`
+Base Tax: ${Math.round(base).toLocaleString()} Ft<br>
+Reduction: ${Math.round(reduction).toLocaleString()} Ft<br>
+Payable Tax: ${Math.round(tax).toLocaleString()} Ft
+`;
 
 };
 
