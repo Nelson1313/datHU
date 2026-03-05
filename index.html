@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vehicle Tools</title>
+<title>DAT Hungary</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
@@ -432,11 +432,31 @@ calcMonth.disabled=isNew;
 
 const baseTaxTable={
 
-euro14plus:[47000,70500,94000,141000,188000,282000,423000],
-euro14:[70500,105750,141000,211500,282000,423000,634500],
-euro12_14:[282000,423000,564000,846000,1128000,1692000,2538000],
-euro9_11:[564000,846000,1128000,1692000,2256000,3384000,5076000],
-euro8_or_worse:[1128000,1692000,2256000,3384000,4512000,6768000,10152000]
+env14plus:[47000,70500,94000,141000,188000,282000,423000],
+
+env14:[70500,105750,141000,211500,282000,423000,634500],
+
+env12_14:[282000,423000,564000,846000,1128000,1692000,2538000],
+
+env9_11:[
+564000,
+846000,
+1128000,
+1692000,
+2160000,
+3384000,
+5076000
+],
+
+env8_or_worse:[
+1128000,
+1692000,
+2256000,
+3384000,
+4512000,
+6768000,
+10152000
+]
 
 };
 
@@ -480,6 +500,7 @@ let env=document.getElementById("envClass").value;
 
 let index=getPowerIndex(power);
 let baseTax=baseTaxTable[env][index];
+baseTax = Math.floor(baseTax / 10000) * 10000
 
 let newCar=document.querySelector('input[name="newCar"]:checked').value==="yes";
 
@@ -498,7 +519,6 @@ let ageMonths=(calcY*12+calcM)-(regY*12+regM);
 let multiplier=getAgeMultiplier(ageMonths);
 
 payable=Math.round(baseTax*multiplier);
-baseTax = Math.floor(baseTax / 10000) * 10000;
 
 }
 
