@@ -566,26 +566,103 @@ return 6;
 
 }
 
+/* INTERPOLATION */
 
-/* AGE MULTIPLIER (Excel Munka1) */
+function interpolate(power, lowerKW, upperKW, lowerTax, upperTax){
 
-function getAgeMultiplier(age){
+let ratio = (power - lowerKW) / (upperKW - lowerKW);
 
-if(age == 0) return 1;
-if(age <= 2) return 0.97;
-if(age <= 4) return 0.92;
-if(age <= 6) return 0.87;
-if(age <= 12) return 0.82;
-if(age <= 17) return 0.77;
-if(age <= 22) return 0.72;
-if(age <= 27) return 0.67;
-
-return 0.62;
+return Math.round(
+lowerTax + ratio * (upperTax - lowerTax)
+);
 
 }
 
 
-/* REGISTRATION TAX */
+/* POWER BASE TAX */
+
+function getBaseTax(power, env){
+
+/* Ft/kW kategória */
+
+const kwRates = {
+ euro14plus: 1017,
+ euro14: 1170,
+ hybrid: 0
+};
+
+/* Ft/kW */
+
+if(env === "euro14plus" || env === "euro14" || env === "hybrid"){
+
+ return Math.round(power * kwRates[env]);
+
+}
+
+/* TÁBLÁZATOS KATEGÓRIÁK */
+
+if(env === "euro12_14"){
+
+ if(power <= 80) return interpolate(power,0,80,282000,423000);
+ if(power <= 100) return interpolate(power,81,100,423000,564000);
+ if(power <= 120) return interpolate(power,101,120,564000,846000);
+ if(power <= 140) return interpolate(power,121,140,846000,1128000);
+ if(power <= 180) return interpolate(power,141,180,1128000,1692000);
+ if(power <= 250) return interpolate(power,181,250,1692000,2538000);
+
+ return 2538000;
+
+}
+
+
+if(env === "euro11_9"){
+
+ if(power <= 80) return interpolate(power,0,80,564000,846000);
+ if(power <= 100) return interpolate(power,81,100,846000,1128000);
+ if(power <= 120) return interpolate(power,101,120,1128000,1692000);
+ if(power <= 140) return interpolate(power,121,140,1692000,2256000);
+ if(power <= 180) return interpolate(power,141,180,2256000,3384000);
+ if(power <= 250) return interpolate(power,181,250,3384000,5076000);
+
+ return 5076000;
+
+}
+
+
+if(env === "euro8_or_worse"){
+
+ if(power <= 80) return interpolate(power,0,80,1128000,1692000);
+ if(power <= 100) return interpolate(power,81,100,1692000,2256000);
+ if(power <= 120) return interpolate(power,101,120,2256000,3384000);
+ if(power <= 140) return interpolate(power,121,140,3384000,4512000);
+ if(power <= 180) return interpolate(power,141,180,4512000,6768000);
+ if(power <= 250) return interpolate(power,181,250,6768000,10152000);
+
+ return 10152000;
+
+}
+
+}
+
+
+/* AGE MULTIPLIER (NAV Excel) */
+
+function getAgeMultiplier(months){
+
+if(months <= 36) return 1.00;
+if(months <= 48) return 0.94;
+if(months <= 60) return 0.88;
+if(months <= 72) return 0.82;
+if(months <= 84) return 0.70;
+if(months <= 96) return 0.55;
+if(months <= 108) return 0.26;
+
+return 0.20;
+
+}
+
+
+/* REGISTRATION TAX CALCULATION */
 
 window.calculateTax = function(){
 
@@ -593,64 +670,25 @@ let power = parseInt(document.getElementById("power").value);
 let env   = document.getElementById("envClass").value;
 
 if(!power){
+
  alert("Enter vehicle power");
  return;
-}
-
-let baseTax;
-
-/* Ft/kW kategóriák */
-
-const rates = {
- euro14plus: 1017,
- hybrid: 0,
- euro14: 1170
-};
-
-/* táblázatos kategóriák */
-
-const baseTable = {
-
-euro12_14:[282000,423000,564000,846000,1128000,1692000,2538000],
-euro11_9:[564000,846000,1128000,1692000,2256000,3384000,5076000],
-euro8_or_worse:[1128000,1692000,2256000,3384000,4512000,6768000,10152000]
-
-};
-
-/* POWER BRACKET */
-
-function getPowerIndex(power){
-
-if(power<=80) return 0;
-if(power<=100) return 1;
-if(power<=120) return 2;
-if(power<=140) return 3;
-if(power<=180) return 4;
-if(power<=250) return 5;
-
-return 6;
 
 }
 
 /* BASE TAX */
 
-if(env === "euro14plus" || env === "euro14" || env === "hybrid"){
+let baseTax = getBaseTax(power, env);
 
-baseTax = Math.round(power * rates[env]);
-
-}else{
-
-let index = getPowerIndex(power);
-baseTax = baseTable[env][index];
-
-}
 
 /* NEW CAR */
 
 let newCar =
 document.querySelector('input[name="newCar"]:checked').value === "yes";
 
+
 let payable = baseTax;
+
 
 if(!newCar){
 
@@ -660,25 +698,31 @@ let regM = parseInt(regMonth.value);
 let calcY = parseInt(calcYear.value);
 let calcM = parseInt(calcMonth.value);
 
+
+/* AGE IN MONTHS */
+
 let ageMonths =
-(calcY-regY)*12+(calcM-regM);
+(calcY - regY) * 12 +
+(calcM - regM);
 
-let percent = 0;
 
-if(ageMonths<=36) percent=0;
-else if(ageMonths<=72) percent=0.10;
-else if(ageMonths<=108) percent=0.20;
-else if(ageMonths<=144) percent=0.40;
-else if(ageMonths<=180) percent=0.60;
-else percent=0.80;
+/* NAV MULTIPLIER */
 
-payable=Math.round(baseTax*(1-percent));
+let multiplier = getAgeMultiplier(ageMonths);
+
+
+payable = Math.round(baseTax * multiplier);
 
 }
 
+
 let reduction = baseTax - payable;
 
-document.getElementById("taxResult").innerHTML=
+
+/* OUTPUT */
+
+document.getElementById("taxResult").innerHTML =
+
 `
 Base Tax: ${baseTax.toLocaleString()} Ft<br>
 Reduction: ${reduction.toLocaleString()} Ft<br>
