@@ -541,8 +541,18 @@ f.disabled=isNew;
 window.calculateTax=function(){
 
 let power = parseFloat(document.getElementById("power").value);
-
 let env = document.getElementById("envClass").value;
+
+let newCar =
+document.querySelector('input[name="newCar"]:checked').value === "yes";
+
+let rate = rates[env];
+
+let baseTax = power * rate;
+
+let reduction = 0;
+
+if(!newCar){
 
 let regY = parseInt(regYear.value);
 let regM = parseInt(regMonth.value);
@@ -550,52 +560,28 @@ let regM = parseInt(regMonth.value);
 let calcY = parseInt(calcYear.value);
 let calcM = parseInt(calcMonth.value);
 
-let newCar =
-document.querySelector('input[name="newCar"]:checked').value === "yes";
-
-const baseRate = {
- euro14plus: 1017,
- hybrid: 0,
- euro14: 1170,
- euro12_14: 1620,
- euro11_9: 2160,
- euro8_or_worse: 24400
-};
-
-const monthlyRate = {
- euro14plus: 0.003,
- hybrid: 0,
- euro14: 0.004,
- euro12_14: 0.005,
- euro11_9: 0.006,
- euro8_or_worse: 0.012
-};
-
-let base = power * baseRate[env];
-
-let reductionPercent = 0;
-
-if(!newCar){
-
 let ageMonths =
 (calcY - regY) * 12 +
 (calcM - regM);
 
-reductionPercent =
-ageMonths * monthlyRate[env];
+let percent = 0;
 
-if(reductionPercent > 0.9)
- reductionPercent = 0.9;
+if(ageMonths <= 36) percent = 0;
+else if(ageMonths <= 72) percent = 0.10;
+else if(ageMonths <= 108) percent = 0.20;
+else if(ageMonths <= 144) percent = 0.40;
+else if(ageMonths <= 180) percent = 0.60;
+else percent = 0.80;
+
+reduction = baseTax * percent;
 
 }
 
-let reduction = base * reductionPercent;
-
-let tax = base - reduction;
+let tax = baseTax - reduction;
 
 document.getElementById("taxResult").innerHTML =
 `
-Base Tax: ${Math.round(base).toLocaleString()} Ft<br>
+Base Tax: ${Math.round(baseTax).toLocaleString()} Ft<br>
 Reduction: ${Math.round(reduction).toLocaleString()} Ft<br>
 Payable Tax: ${Math.round(tax).toLocaleString()} Ft
 `;
