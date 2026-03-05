@@ -199,7 +199,7 @@ Other Tool
 <div class="card card-calculator">
 
 <div class="header">
-<h1>Vehicle Depreciation Calculator</h1>
+<h1>Depreciation Calculator</h1>
 </div>
 
 <div class="content">
@@ -297,11 +297,11 @@ Select dates to calculate depreciation.
 <label>Environmental Class</label>
 
 <select id="envClass">
-<option value="euro14plus">Euro 14+ (after 2020)</option>
-<option value="euro14">Euro 14</option>
-<option value="euro12_14">Euro 12-14</option>
-<option value="euro9_11">Euro 9-11</option>
-<option value="euro8_or_worse">Euro 8 or worse</option>
+<option value="euro14plus">14+ (after 2020)</option>
+<option value="euro14">14</option>
+<option value="euro12_14">12-14</option>
+<option value="euro9_11">9-11</option>
+<option value="euro8_or_worse">8 or worse</option>
 </select>
 
 </div>
@@ -432,13 +432,13 @@ calcMonth.disabled=isNew;
 
 const baseTaxTable={
 
-env14plus:[47000,70500,94000,141000,188000,282000,423000],
+euro14plus:[47000,70500,94000,141000,188000,282000,423000],
 
-env14:[70500,105750,141000,211500,282000,423000,634500],
+euro14:[70500,105750,141000,211500,282000,423000,634500],
 
-env12_14:[282000,423000,564000,846000,1128000,1692000,2538000],
+euro12_14:[282000,423000,564000,846000,1128000,1692000,2538000],
 
-env9_11:[
+euro9_11:[
 564000,
 846000,
 1128000,
@@ -448,7 +448,7 @@ env9_11:[
 5076000
 ],
 
-env8_or_worse:[
+euro8_or_worse:[
 1128000,
 1692000,
 2256000,
