@@ -502,7 +502,6 @@ lowerTax + ratio * (upperTax - lowerTax)
 );
 
 }
-
 function calculateTax(){
 
 let power = parseInt(document.getElementById("power").value);
@@ -514,47 +513,48 @@ if (isNaN(power)) {
 
 let env = document.getElementById("envClass").value;
 
+const brackets = [0,80,100,120,140,180,250];
+
 let index = getPowerIndex(power);
+
+let lowerKW = brackets[index];
+let upperKW = brackets[index+1] ?? power;
 
 let lowerTax = baseTaxTable[env][index];
 let upperTax = baseTaxTable[env][index+1] ?? lowerTax;
 
-lowerTax = Math.floor(lowerTax / 10000) * 10000;
-upperTax = Math.floor(upperTax / 10000) * 10000;
-
 let baseTax;
 
-/* ezeknél interpolál a NAV */
-
-const brackets = [80,100,120,140,180,250];
-
-let lowerKW;
-let upperKW;
-
-if(index === 0){
-lowerKW = 0;
-upperKW = 80;
-baseTax = lowerTax;
-}
-else if(index === 6){
-baseTax = lowerTax;
-}
-else{
-
-lowerKW = brackets[index-1];
-upperKW = brackets[index];
-
-lowerTax = Math.floor(lowerTax / 10000) * 10000;
-upperTax = Math.floor(upperTax / 10000) * 10000;
+/* 14+ 2020 után NINCS interpoláció */
 
 if(env === "euro14plus"){
+
+baseTax = lowerTax;
+
+}
+
+/* minden más kategóriánál interpoláció */
+
+else{
+
+if(lowerKW === upperKW){
 baseTax = lowerTax;
 }
+
 else{
-baseTax = interpolate(power, lowerKW, upperKW, lowerTax, upperTax);
+
+let ratio = (power - lowerKW) / (upperKW - lowerKW);
+
+baseTax = lowerTax + ratio * (upperTax - lowerTax);
+
 }
 
 }
+
+/* NAV kerekítés */
+
+baseTax = Math.floor(baseTax / 10000) * 10000;
+
 
 /* új autó */
 
