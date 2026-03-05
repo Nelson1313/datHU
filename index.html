@@ -526,23 +526,12 @@ const brackets = [80,100,120,140,180,250];
 lowerKW = brackets[index-1];
 upperKW = brackets[index];
 
+lowerTax = Math.floor(lowerTax / 10000) * 10000;
+upperTax = Math.floor(upperTax / 10000) * 10000;
+
 baseTax = interpolate(power, lowerKW, upperKW, lowerTax, upperTax);
 
 }
-
-}
-
-/* ezeknél NINCS interpoláció */
-
-else{
-
-baseTax = lowerTax;
-
-}
-
-/* NAV kerekítés */
-
-baseTax = Math.floor(baseTax / 10000) * 10000;
 
 
 /* új autó */
