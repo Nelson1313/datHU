@@ -442,12 +442,12 @@ euro8_or_worse:[1128000,1692000,2256000,3384000,4512000,6768000,10152000]
 
 function getPowerIndex(power){
 
-if(power<=80) return 0;
-if(power<=100) return 1;
-if(power<=120) return 2;
-if(power<=140) return 3;
-if(power<=180) return 4;
-if(power<=250) return 5;
+if(power >=0 && power <=80) return 0;
+if(power >=81 && power <=100) return 1;
+if(power >=101 && power <=120) return 2;
+if(power >=121 && power <=140) return 3;
+if(power >=141 && power <=180) return 4;
+if(power >=181 && power <=250) return 5;
 
 return 6;
 
@@ -498,6 +498,7 @@ let ageMonths=(calcY*12+calcM)-(regY*12+regM);
 let multiplier=getAgeMultiplier(ageMonths);
 
 payable=Math.round(baseTax*multiplier);
+baseTax = Math.floor(baseTax / 10000) * 10000;
 
 }
 
