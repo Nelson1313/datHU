@@ -460,7 +460,7 @@ euro8_or_worse:[
 
 };
 
-const powerBrackets = [0,81,101,121,141,181,251];
+const powerBrackets = [80,100,120,140,180,250];
 
 function interpolate(power, lowerKW, upperKW, lowerTax, upperTax){
 
@@ -510,7 +510,8 @@ function calculateTax(){
 let power=parseInt(document.getElementById("power").value);
 let env=document.getElementById("envClass").value;
 
-let index=getPowerIndex(power);
+let index = getPowerIndex(power);
+
 let lowerKW = powerBrackets[index];
 let upperKW = powerBrackets[index+1] || power;
 
