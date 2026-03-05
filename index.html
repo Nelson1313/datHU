@@ -3,82 +3,170 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registration Tax Calculator</title>
+<title>Vehicle Tools</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 <style>
 
-body{
-font-family:Segoe UI;
-background:#f3f6fb;
-margin:0;
-display:flex;
-justify-content:center;
-padding-top:40px;
+:root{
+ --blue:#0A3D91;
+ --yellow:#FFD200;
+ --bg:#f3f6fb;
 }
+
+body{
+ margin:0;
+ font-family:"Segoe UI",sans-serif;
+ background:var(--bg);
+}
+
+/* NAVBAR */
+
+.navbar{
+ background:var(--blue);
+ padding:0 50px;
+ display:flex;
+ align-items:center;
+ height:60px;
+}
+
+.nav-item{
+ color:white;
+ margin-right:40px;
+ cursor:pointer;
+ font-weight:500;
+ position:relative;
+}
+
+.nav-item.active::after{
+ content:"";
+ position:absolute;
+ bottom:-8px;
+ left:0;
+ width:100%;
+ height:3px;
+ background:var(--yellow);
+ border-radius:2px;
+}
+
+/* VIEW */
+
+.view{
+ display:none;
+ width:100%;
+ justify-content:center;
+ padding:40px 0;
+}
+
+.view.active{
+ display:flex;
+}
+
+/* CONTAINER */
+
+.container{
+ display:flex;
+ justify-content:center;
+ gap:60px;
+}
+
+/* CARD */
 
 .card{
-background:white;
-width:520px;
-border-radius:20px;
-box-shadow:0 20px 60px rgba(0,0,0,0.1);
-overflow:hidden;
+ background:white;
+ border-radius:24px;
+ box-shadow:0 30px 70px rgba(0,0,0,0.08);
+ overflow:hidden;
 }
+
+.card-calculator{ width:560px;}
+.card-chart{ width:760px;}
+
+/* HEADER */
 
 .header{
-background:#1e4a94;
-color:white;
-padding:20px;
-text-align:center;
-font-weight:600;
+ background:var(--blue);
+ padding:22px 35px;
+ display:flex;
+ align-items:center;
 }
+
+.header h1{
+ color:white;
+ font-size:18px;
+ font-weight:600;
+ margin:0 auto;
+}
+
+/* CONTENT */
 
 .content{
-padding:30px;
+ padding:40px;
 }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
+.section-title{
+ font-weight:600;
+ color:var(--blue);
+ margin-bottom:15px;
+ margin-top:20px;
 }
 
-label{
-font-size:12px;
-margin-bottom:5px;
-display:block;
+.grid-2{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:20px;
+}
+
+.input-group{
+ display:flex;
+ flex-direction:column;
+}
+
+.input-group label{
+ font-size:12px;
+ margin-bottom:6px;
+ color:#555;
 }
 
 input,select{
-width:100%;
-padding:12px;
-border-radius:10px;
-border:1px solid #d0d6e0;
+ padding:14px;
+ border-radius:12px;
+ border:1px solid #dce3f0;
+ font-size:14px;
+}
+
+select:disabled{
+ opacity:0.5;
+ cursor:not-allowed;
 }
 
 button{
-width:100%;
-margin-top:25px;
-padding:14px;
-border:none;
-border-radius:14px;
-background:#ffd200;
-font-weight:700;
-cursor:pointer;
+ width:100%;
+ padding:16px;
+ border-radius:14px;
+ border:none;
+ background:var(--yellow);
+ color:var(--blue);
+ font-weight:700;
+ font-size:15px;
+ cursor:pointer;
+ margin-top:25px;
 }
 
 .result{
-margin-top:20px;
-background:#eef2f8;
-padding:18px;
-border-radius:16px;
-text-align:center;
-font-weight:600;
+ margin-top:25px;
+ padding:20px;
+ border-radius:18px;
+ background:#eef2f8;
+ text-align:center;
+ font-weight:600;
+ color:var(--blue);
 }
 
-.section{
-margin-top:20px;
-font-weight:600;
-color:#1e4a94;
+.chart-wrapper{
+ padding:30px;
+ height:500px;
 }
 
 </style>
@@ -86,20 +174,128 @@ color:#1e4a94;
 
 <body>
 
-<div class="card">
+<div class="navbar">
+
+<div class="nav-item active" onclick="switchView(event,'calculator')">
+Depreciation Calculator
+</div>
+
+<div class="nav-item" onclick="switchView(event,'registration')">
+Registration Tax Calculator
+</div>
+
+<div class="nav-item" onclick="switchView(event,'other')">
+Other Tool
+</div>
+
+</div>
+
+<!-- DEPRECIATION -->
+
+<div id="view-calculator" class="view active">
+
+<div class="container">
+
+<div class="card card-calculator">
 
 <div class="header">
-Registration Tax Calculator
+<h1>Vehicle Depreciation Calculator</h1>
 </div>
 
 <div class="content">
 
-<div class="section">Vehicle Data</div>
+<div class="section-title">Rate Settings</div>
 
-<div class="grid">
+<div class="grid-2">
 
-<div>
+<div class="input-group">
+<label>Monthly Rate 1 (%)</label>
+<input type="number" id="rate1" value="0.5" step="0.01">
+</div>
+
+<div class="input-group">
+<label>Years with Rate 1</label>
+<input type="number" id="years1" value="3">
+</div>
+
+</div>
+
+<div class="input-group" style="margin-top:20px;">
+<label>Monthly Rate 2 (%)</label>
+<input type="number" id="rate2" value="0.3" step="0.01">
+</div>
+
+<div class="section-title">Date Range</div>
+
+<div class="grid-2">
+
+<div class="input-group">
+<label>Start Year</label>
+<select id="startYear"></select>
+</div>
+
+<div class="input-group">
+<label>Start Month</label>
+<select id="startMonth"></select>
+</div>
+
+<div class="input-group">
+<label>End Year</label>
+<select id="endYear"></select>
+</div>
+
+<div class="input-group">
+<label>End Month</label>
+<select id="endMonth"></select>
+</div>
+
+</div>
+
+<button onclick="calculate()">Calculate</button>
+
+<div class="result" id="output">
+Select dates to calculate depreciation.
+</div>
+
+</div>
+</div>
+
+<div class="card card-chart">
+
+<div class="header">
+<h1>Depreciation Chart</h1>
+</div>
+
+<div class="chart-wrapper">
+<canvas id="chart"></canvas>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<!-- REGISTRATION TAX -->
+
+<div id="view-registration" class="view">
+
+<div class="container">
+
+<div class="card card-calculator">
+
+<div class="header">
+<h1>Registration Tax Calculator</h1>
+</div>
+
+<div class="content">
+
+<div class="section-title">Vehicle Data</div>
+
+<div class="grid-2">
+
+<div class="input-group">
 <label>Environmental Class</label>
+
 <select id="envClass">
 <option value="euro14plus">Euro 14+ (after 2020)</option>
 <option value="euro14">Euro 14</option>
@@ -107,68 +303,82 @@ Registration Tax Calculator
 <option value="euro9_11">Euro 9-11</option>
 <option value="euro8_or_worse">Euro 8 or worse</option>
 </select>
+
 </div>
 
-<div>
+<div class="input-group">
 <label>Power (kW)</label>
 <input type="number" id="power">
 </div>
 
 </div>
 
-
-<div class="section">New Vehicle</div>
+<div class="section-title">New Vehicle</div>
 
 <label><input type="radio" name="newCar" value="yes" onclick="toggleNewCar(true)"> Yes</label>
 <label><input type="radio" name="newCar" value="no" checked onclick="toggleNewCar(false)"> No</label>
 
+<div class="section-title">First Registration</div>
 
-<div class="section">First Registration</div>
+<div class="grid-2">
 
-<div class="grid">
-
-<div>
+<div class="input-group">
 <label>Year</label>
 <select id="regYear"></select>
 </div>
 
-<div>
+<div class="input-group">
 <label>Month</label>
 <select id="regMonth"></select>
 </div>
 
 </div>
 
+<div class="section-title">Registration Procedure</div>
 
-<div class="section">Registration Procedure</div>
+<div class="grid-2">
 
-<div class="grid">
-
-<div>
+<div class="input-group">
 <label>Year</label>
 <select id="calcYear"></select>
 </div>
 
-<div>
+<div class="input-group">
 <label>Month</label>
 <select id="calcMonth"></select>
 </div>
 
 </div>
 
-
 <button onclick="calculateTax()">Calculate Registration Tax</button>
 
 <div class="result" id="taxResult">
-Enter data to calculate.
+Enter vehicle data to calculate tax.
 </div>
 
 </div>
-
 </div>
 
+</div>
+</div>
+
+<div id="view-other" class="view">
+<h2>Other Tool</h2>
+</div>
 
 <script>
+
+/* NAV SWITCH */
+
+function switchView(e,view){
+
+document.querySelectorAll(".nav-item").forEach(el=>el.classList.remove("active"));
+e.target.classList.add("active");
+
+document.querySelectorAll(".view").forEach(el=>el.classList.remove("active"));
+document.getElementById("view-"+view).classList.add("active");
+
+}
 
 /* MONTHS */
 
@@ -177,6 +387,13 @@ const months=[
 "July","August","September","October","November","December"
 ];
 
+/* DATE SELECTORS */
+
+const startYear=document.getElementById("startYear");
+const endYear=document.getElementById("endYear");
+const startMonth=document.getElementById("startMonth");
+const endMonth=document.getElementById("endMonth");
+
 const regYear=document.getElementById("regYear");
 const calcYear=document.getElementById("calcYear");
 const regMonth=document.getElementById("regMonth");
@@ -184,6 +401,8 @@ const calcMonth=document.getElementById("calcMonth");
 
 for(let y=2040;y>=2000;y--){
 
+startYear.innerHTML+=`<option value="${y}">${y}</option>`;
+endYear.innerHTML+=`<option value="${y}">${y}</option>`;
 regYear.innerHTML+=`<option value="${y}">${y}</option>`;
 calcYear.innerHTML+=`<option value="${y}">${y}</option>`;
 
@@ -191,13 +410,14 @@ calcYear.innerHTML+=`<option value="${y}">${y}</option>`;
 
 months.forEach((m,i)=>{
 
+startMonth.innerHTML+=`<option value="${i+1}">${m}</option>`;
+endMonth.innerHTML+=`<option value="${i+1}">${m}</option>`;
 regMonth.innerHTML+=`<option value="${i+1}">${m}</option>`;
 calcMonth.innerHTML+=`<option value="${i+1}">${m}</option>`;
 
 });
 
-
-/* DISABLE DATE FOR NEW CAR */
+/* NEW CAR */
 
 function toggleNewCar(isNew){
 
@@ -207,7 +427,6 @@ calcYear.disabled=isNew;
 calcMonth.disabled=isNew;
 
 }
-
 
 /* BASE TAX TABLE */
 
@@ -221,9 +440,6 @@ euro8_or_worse:[1128000,1692000,2256000,3384000,4512000,6768000,10152000]
 
 };
 
-
-/* POWER RANGE */
-
 function getPowerIndex(power){
 
 if(power<=80) return 0;
@@ -236,9 +452,6 @@ if(power<=250) return 5;
 return 6;
 
 }
-
-
-/* AGE MULTIPLIER (Munka1) */
 
 function getAgeMultiplier(months){
 
@@ -258,28 +471,15 @@ return 0.20;
 
 }
 
-
-/* MAIN CALCULATION */
+/* REG TAX */
 
 function calculateTax(){
 
 let power=parseInt(document.getElementById("power").value);
 let env=document.getElementById("envClass").value;
 
-if(!power){
-
-alert("Enter vehicle power");
-return;
-
-}
-
-/* BASE TAX */
-
 let index=getPowerIndex(power);
 let baseTax=baseTaxTable[env][index];
-
-
-/* NEW CAR */
 
 let newCar=document.querySelector('input[name="newCar"]:checked').value==="yes";
 
@@ -293,8 +493,6 @@ let regM=parseInt(regMonth.value);
 let calcY=parseInt(calcYear.value);
 let calcM=parseInt(calcMonth.value);
 
-/* MONTH DIFFERENCE */
-
 let ageMonths=(calcY*12+calcM)-(regY*12+regM);
 
 let multiplier=getAgeMultiplier(ageMonths);
@@ -306,7 +504,6 @@ payable=Math.round(baseTax*multiplier);
 let reduction=baseTax-payable;
 
 document.getElementById("taxResult").innerHTML=
-
 `
 Base Tax: ${baseTax.toLocaleString()} Ft<br>
 Reduction: ${reduction.toLocaleString()} Ft<br>
