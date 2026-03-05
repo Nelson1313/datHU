@@ -91,11 +91,6 @@ body{
  align-items:center;
 }
 
-.header img{
- height:48px;
- margin-right:20px;
-}
-
 .header h1{
  color:white;
  font-size:18px;
@@ -177,25 +172,22 @@ button{
 
 <div class="navbar">
 
-<div class="nav-item active"
-onclick="switchView(event,'calculator')">
+<div class="nav-item active" onclick="switchView(event,'calculator')">
 Depreciation Calculator
 </div>
 
-<div class="nav-item"
-onclick="switchView(event,'registration')">
+<div class="nav-item" onclick="switchView(event,'registration')">
 Registration Tax Calculator
 </div>
 
-<div class="nav-item"
-onclick="switchView(event,'other')">
+<div class="nav-item" onclick="switchView(event,'other')">
 Other Tool
 </div>
 
 </div>
 
 
-<!-- DEP CALCULATOR -->
+<!-- DEPRECIATION -->
 
 <div id="view-calculator" class="view active">
 
@@ -294,9 +286,7 @@ Select dates to calculate depreciation.
 
 <div class="content">
 
-<div class="section-title">
-Vehicle Data
-</div>
+<div class="section-title">Vehicle Data</div>
 
 <div class="grid-2">
 
@@ -304,14 +294,12 @@ Vehicle Data
 <label>Environmental Class</label>
 
 <select id="envClass">
-
 <option value="470">Euro 14+</option>
 <option value="235">Hybrid</option>
 <option value="470">Euro 14</option>
 <option value="705">Euro 12-14</option>
 <option value="940">Euro 11-9</option>
 <option value="1175">Euro 8 or worse</option>
-
 </select>
 
 </div>
@@ -323,9 +311,7 @@ Vehicle Data
 
 </div>
 
-<div class="section-title">
-First Registration
-</div>
+<div class="section-title">First Registration</div>
 
 <div class="grid-2">
 
@@ -341,9 +327,7 @@ First Registration
 
 </div>
 
-<div class="section-title">
-Registration Procedure
-</div>
+<div class="section-title">Registration Procedure</div>
 
 <div class="grid-2">
 
@@ -359,9 +343,7 @@ Registration Procedure
 
 </div>
 
-<button onclick="calculateTax()">
-Calculate Registration Tax
-</button>
+<button onclick="calculateTax()">Calculate Registration Tax</button>
 
 <div class="result" id="taxResult">
 Enter vehicle data to calculate tax.
@@ -375,43 +357,28 @@ Enter vehicle data to calculate tax.
 
 
 <div id="view-other" class="view">
-<h2>Other Tool</h2>
-<p>Placeholder.</p>
+<h2 style="padding-left:60px">Other Tool</h2>
 </div>
 
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function() {
-console.log("SCRIPT START");
+document.addEventListener("DOMContentLoaded",function(){
 
-let chart;
+/* NAVIGATION */
 
-/* ---------------- NAV SWITCH ---------------- */
+window.switchView=function(e,view){
 
-window.switchView = function(e,view){
-
-document.querySelectorAll(".nav-item")
-.forEach(el=>el.classList.remove("active"));
-
+document.querySelectorAll(".nav-item").forEach(el=>el.classList.remove("active"));
 e.target.classList.add("active");
 
-document.querySelectorAll(".view")
-.forEach(el=>el.classList.remove("active"));
-
-document.getElementById("view-"+view)
-.classList.add("active");
-
-setTimeout(() => {
- if(chart){
-  chart.resize();
- }
-},200);
+document.querySelectorAll(".view").forEach(el=>el.classList.remove("active"));
+document.getElementById("view-"+view).classList.add("active");
 
 };
 
 
-/* ---------------- DATE POPULATION (DEP CALC) ---------------- */
+/* DATE SELECTORS */
 
 const startYear=document.getElementById("startYear");
 const endYear=document.getElementById("endYear");
@@ -419,8 +386,8 @@ const startMonth=document.getElementById("startMonth");
 const endMonth=document.getElementById("endMonth");
 
 for(let y=2040;y>=2000;y--){
- startYear.innerHTML+=`<option value="${y}">${y}</option>`;
- endYear.innerHTML+=`<option value="${y}">${y}</option>`;
+startYear.innerHTML+=`<option value="${y}">${y}</option>`;
+endYear.innerHTML+=`<option value="${y}">${y}</option>`;
 }
 
 const months=[
@@ -429,72 +396,47 @@ const months=[
 ];
 
 months.forEach((m,i)=>{
- startMonth.innerHTML+=`<option value="${i}">${m}</option>`;
- endMonth.innerHTML+=`<option value="${i}">${m}</option>`;
+startMonth.innerHTML+=`<option value="${i}">${m}</option>`;
+endMonth.innerHTML+=`<option value="${i}">${m}</option>`;
 });
 
 const today=new Date();
-const currentYear=today.getFullYear();
-const currentMonth=today.getMonth();
 
-endYear.value=currentYear;
-endMonth.value=currentMonth;
+endYear.value=today.getFullYear();
+endMonth.value=today.getMonth();
 
 
-/* ---------------- REG TAX DATE ---------------- */
+/* REG TAX DATES */
 
 const regYear=document.getElementById("regYear");
 const calcYear=document.getElementById("calcYear");
 const regMonth=document.getElementById("regMonth");
 const calcMonth=document.getElementById("calcMonth");
 
-for(let y=2040;y>=2000;y++){
- regYear.innerHTML+=`<option value="${y}">${y}</option>`;
- calcYear.innerHTML+=`<option value="${y}">${y}</option>`;
+for(let y=2040;y>=2000;y--){
+regYear.innerHTML+=`<option value="${y}">${y}</option>`;
+calcYear.innerHTML+=`<option value="${y}">${y}</option>`;
 }
 
 months.forEach((m,i)=>{
- regMonth.innerHTML+=`<option value="${i}">${m}</option>`;
- calcMonth.innerHTML+=`<option value="${i}">${m}</option>`;
+regMonth.innerHTML+=`<option value="${i}">${m}</option>`;
+calcMonth.innerHTML+=`<option value="${i}">${m}</option>`;
 });
 
-calcYear.value=currentYear;
-calcMonth.value=currentMonth;
+calcYear.value=today.getFullYear();
+calcMonth.value=today.getMonth();
 
 
-/* ---------------- CHART INIT ---------------- */
+/* CHART */
 
-
-const chartCanvas=document.getElementById("chart");
-
-if(chartCanvas){
-
-chart=new Chart(chartCanvas,{
- type:"line",
- data:{
-  labels:[],
-  datasets:[{
-   data:[],
-   borderColor:"#0A3D91",
-   backgroundColor:"rgba(10,61,145,0.15)",
-   fill:true,
-   tension:0.3
-  }]
- },
- options:{
-  responsive:true,
-  maintainAspectRatio:false,
-  plugins:{legend:{display:false}},
-  scales:{
-   y:{min:0,max:100}
-  }
- }
+let chart=new Chart(document.getElementById("chart"),{
+type:"line",
+data:{labels:[],datasets:[{data:[],borderColor:"#0A3D91",fill:false}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
 });
 
-}
 
-
-/* ---------------- DEPRECIATION CALC ---------------- */
+/* DEPRECIATION */
 
 window.calculate=function(){
 
@@ -507,8 +449,8 @@ const startTotal=sy*12+sm;
 const endTotal=ey*12+em;
 
 if(endTotal<startTotal){
- alert("End date cannot be earlier than start date.");
- return;
+alert("End date cannot be earlier.");
+return;
 }
 
 const totalMonths=endTotal-startTotal;
@@ -519,38 +461,31 @@ const rate2=parseFloat(document.getElementById("rate2").value)/100;
 
 const monthsRate1=years1*12;
 
-let values=[];
-let labels=[];
 let current=1;
-
-values.push(100);
-labels.push(0);
+let values=[100];
+let labels=[0];
 
 for(let i=1;i<=totalMonths;i++){
 
- if(i<=monthsRate1)
-  current*=(1-rate1);
- else
-  current*=(1-rate2);
+if(i<=monthsRate1) current*=(1-rate1);
+else current*=(1-rate2);
 
- values.push((current*100).toFixed(2));
- labels.push(i);
+values.push((current*100).toFixed(2));
+labels.push(i);
 
 }
 
 document.getElementById("output").innerHTML=
 `Remaining Value: ${values[values.length-1]}%`;
 
-if(chart){
- chart.data.labels=labels;
- chart.data.datasets[0].data=values;
- chart.update();
-}
+chart.data.labels=labels;
+chart.data.datasets[0].data=values;
+chart.update();
 
 };
 
 
-/* ---------------- REGISTRATION TAX CALC ---------------- */
+/* REGISTRATION TAX */
 
 window.calculateTax=function(){
 
@@ -563,10 +498,7 @@ let regM=parseInt(regMonth.value);
 let calcY=parseInt(calcYear.value);
 let calcM=parseInt(calcMonth.value);
 
-if(!power){
- alert("Enter power");
- return;
-}
+if(!power){alert("Enter power");return;}
 
 let base=power*rate;
 
@@ -586,17 +518,14 @@ let reduce=base*reduction;
 let tax=base-reduce;
 
 document.getElementById("taxResult").innerHTML=
-`
-Base Tax: ${Math.round(base)} Ft<br>
+`Base Tax: ${Math.round(base)} Ft<br>
 Reduction: ${Math.round(reduce)} Ft<br>
-Payable Tax: ${Math.round(tax)} Ft
-`;
+Payable Tax: ${Math.round(tax)} Ft`;
 
 };
 
 });
 
-document.body.innerHTML="JS működik";
 </script>
 
 </body>
