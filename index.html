@@ -460,18 +460,6 @@ euro8_or_worse:[
 
 };
 
-const powerBrackets = [81,101,121,141,181,251];
-
-function interpolate(power, lowerKW, upperKW, lowerTax, upperTax){
-
-let ratio = (power - lowerKW) / (upperKW - lowerKW);
-
-return Math.round(
-lowerTax + ratio * (upperTax - lowerTax)
-);
-
-}
-
 function getPowerIndex(power){
 
 if(power >=0 && power <=80) return 0;
@@ -507,10 +495,19 @@ return 0.20;
 
 function calculateTax(){
 
-let power=parseInt(document.getElementById("power").value);
-let env=document.getElementById("envClass").value;
+let power = parseInt(document.getElementById("power").value);
+let env = document.getElementById("envClass").value;
 
 let index = getPowerIndex(power);
+
+let lowerTax = baseTaxTable[env][index];
+let upperTax = baseTaxTable[env][index+1] || lowerTax;
+
+let baseTax;
+
+/* ezeknél interpolál a NAV */
+
+if(env === "euro14plus" || env === "euro14" || env === "euro12_14"){
 
 let lowerKW;
 let upperKW;
@@ -520,39 +517,40 @@ lowerKW = 0;
 upperKW = 80;
 }
 else if(index === 6){
-lowerKW = 250;
-upperKW = power;
+baseTax = lowerTax;
 }
 else{
-lowerKW = powerBrackets[index-1];
-upperKW = powerBrackets[index]-1;
+
+const brackets = [80,100,120,140,180,250];
+
+lowerKW = brackets[index-1];
+upperKW = brackets[index];
+
+baseTax = interpolate(power,lowerKW,upperKW,lowerTax,upperTax);
+
 }
 
-let lowerTax = baseTaxTable[env][index];
-let upperTax = baseTaxTable[env][index+1] || lowerTax;
+}
 
-let baseTax;
+/* ezeknél NINCS interpoláció */
 
-if(lowerKW === power){
+else{
+
 baseTax = lowerTax;
-}else{
-
-lowerTax = Math.floor(lowerTax / 10000) * 10000;
-upperTax = Math.floor(upperTax / 10000) * 10000;
-
-baseTax = interpolate(
-power,
-lowerKW,
-upperKW,
-lowerTax,
-upperTax
-);
 
 }
 
-let newCar=document.querySelector('input[name="newCar"]:checked').value==="yes";
+/* NAV kerekítés */
 
-let payable=baseTax;
+baseTax = Math.floor(baseTax / 10000) * 10000;
+
+
+/* új autó */
+
+let newCar =
+document.querySelector('input[name="newCar"]:checked').value === "yes";
+
+let payable = baseTax;
 
 if(!newCar){
 
@@ -562,7 +560,8 @@ let regM=parseInt(regMonth.value);
 let calcY=parseInt(calcYear.value);
 let calcM=parseInt(calcMonth.value);
 
-let ageMonths=(calcY*12+calcM)-(regY*12+regM);
+let ageMonths =
+(calcY*12+calcM)-(regY*12+regM);
 
 let multiplier=getAgeMultiplier(ageMonths);
 
@@ -570,9 +569,9 @@ payable=Math.round(baseTax*multiplier);
 
 }
 
-let reduction=baseTax-payable;
+let reduction = baseTax - payable;
 
-document.getElementById("taxResult").innerHTML=
+document.getElementById("taxResult").innerHTML =
 `
 Base Tax: ${baseTax.toLocaleString()} Ft<br>
 Reduction: ${reduction.toLocaleString()} Ft<br>
