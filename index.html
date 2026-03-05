@@ -548,7 +548,7 @@ lowerTax = Math.floor(lowerTax / 10000) * 10000;
 upperTax = Math.floor(upperTax / 10000) * 10000;
 
 if(env === "euro14plus"){
-baseTax = upperTax;
+baseTax = lowerTax;
 }
 else{
 baseTax = interpolate(power, lowerKW, upperKW, lowerTax, upperTax);
