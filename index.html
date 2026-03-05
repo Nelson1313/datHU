@@ -460,6 +460,18 @@ euro8_or_worse:[
 
 };
 
+const powerBrackets = [0,81,101,121,141,181,251];
+
+function interpolate(power, lowerKW, upperKW, lowerTax, upperTax){
+
+let ratio = (power - lowerKW) / (upperKW - lowerKW);
+
+return Math.round(
+lowerTax + ratio * (upperTax - lowerTax)
+);
+
+}
+
 function getPowerIndex(power){
 
 if(power >=0 && power <=80) return 0;
@@ -499,8 +511,29 @@ let power=parseInt(document.getElementById("power").value);
 let env=document.getElementById("envClass").value;
 
 let index=getPowerIndex(power);
-let baseTax=baseTaxTable[env][index];
-baseTax = Math.floor(baseTax / 10000) * 10000
+let lowerKW = powerBrackets[index];
+let upperKW = powerBrackets[index+1] || power;
+
+let lowerTax = baseTaxTable[env][index];
+let upperTax = baseTaxTable[env][index+1] || lowerTax;
+
+let baseTax;
+
+if(lowerKW === power){
+baseTax = lowerTax;
+}else{
+
+baseTax = interpolate(
+power,
+lowerKW,
+upperKW,
+lowerTax,
+upperTax
+);
+
+}
+
+baseTax = Math.floor(baseTax / 10000) * 10000;
 
 let newCar=document.querySelector('input[name="newCar"]:checked').value==="yes";
 
