@@ -230,7 +230,6 @@ width:100%;
 border-collapse:collapse;
 font-size:13px;
 min-width:1600px;
-table-layout: fixed;
 }
 
 #statsTable th,
@@ -238,6 +237,7 @@ table-layout: fixed;
 border:1px solid #444;
 padding:6px 10px;
 text-align:center;
+white-space: nowrap;
 }
 
 #statsTable thead th{
@@ -247,16 +247,15 @@ font-weight:600;
 
 #statsTable thead th:first-child{
 background:#FFD200;
-z-index: 21;
+z-index: 10;
 }
 
 #statsTable td:first-child,
 #statsTable th:first-child{
 position: sticky;
 left: 0;
-width: 200px;
 background:#ffffff;
-z-index: 30;
+z-index: 5;
 min-width: 200px;
 max-width: 200px;
 border-right: 2px solid #444;
