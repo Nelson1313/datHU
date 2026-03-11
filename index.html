@@ -812,16 +812,18 @@ const tbody = document.querySelector("#changeTable tbody");
 
 tbody.innerHTML = "";
 
-/* AJ = 35, BX = 75 */
+/* AJ = 35, BX = 74 */
 
 for(let i=0;i<13;i++){
 
 const month = rows[i][35];
-const change = rows[i][75];
+const change = rows[i][74];
 
-if(month && change){
+if(month === null || change === null) continue;
 
 let label = month;
+
+/* Excel dátum konvertálás */
 
 if(typeof month === "number"){
 
@@ -846,7 +848,6 @@ tbody.appendChild(tr);
 
 }
 
-}
 
 window.addEventListener("load", () => {
 initOfficeChart();
