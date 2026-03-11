@@ -182,6 +182,16 @@ color:var(--blue);
 font-weight:600;
 }
 
+.positive{
+  color:greenyellow;
+  font-weight: 600;
+}
+
+.negative{
+  color:red;
+  font-weight: 600;
+}
+
 </style>
 </head>
 
@@ -424,7 +434,12 @@ Enter vehicle data to calculate tax.
 <thead>
 <tr>
 <th>Month</th>
-<th>Change</th>
+<th>4Control Kft.</th>
+<th>DEKRA-Expert Kft.</th>
+<th>Expert-Unió Kft.</th>
+<th>Pilkington Kft.</th>
+<th>Porsche InterAutó Kft.</th>
+<th>Toyota Kovács</th>
 </tr>
 </thead>
 
@@ -803,50 +818,64 @@ const response = await fetch("./data/adattabla.xlsx");
 const buffer = await response.arrayBuffer();
 
 const workbook = XLSX.read(buffer,{type:"array"});
-
 const sheet = workbook.Sheets["Munka1"];
 
 const rows = XLSX.utils.sheet_to_json(sheet,{header:1,defval:null});
 
 const tbody = document.querySelector("#changeTable tbody");
-
 tbody.innerHTML = "";
 
-/* AJ = 35, BX = 74 */
+/* partner sorok */
+
+const partners = {
+"4Control":2,
+"DEKRA":4,
+"Expert":6,
+"Pilkington":8,
+"Porsche":10,
+"Toyota":12
+};
+
+/* AJ → BX */
 
 for(let col = 35; col <= 74; col++){
 
 const year = rows[0][col];
 const month = rows[1][col];
 
-/* csak páratlan sorok */
-const values = [
-rows[2][col],
-rows[4][col],
-rows[6][col],
-rows[8][col],
-rows[10][col],
-rows[12][col]
-];
+if(!year || !month) continue;
 
 const label = year + ". " + month;
 
-values.forEach(v => {
-
-if(v === null || v === "") return;
-
-const percent = (Number(v) * 100).toFixed(1);
-
 const tr = document.createElement("tr");
 
-tr.innerHTML = `
-<td>${label}</td>
-<td>${percent} %</td>
-`;
+let html = `<td>${label}</td>`;
 
+for(const key in partners){
+
+const rowIndex = partners[key];
+const value = rows[rowIndex][col];
+
+if(value === null || value === ""){
+html += `<td></td>`;
+continue;
+}
+
+const percent = (Number(value)*100).toFixed(1);
+
+/* színezés */
+
+let cls = "";
+
+if(value > 1) cls = "positive";
+if(value < 1) cls = "negative";
+
+html += `<td class="${cls}">${percent}%</td>`;
+
+}
+
+tr.innerHTML = html;
 tbody.appendChild(tr);
-
-});
 
 }
 
