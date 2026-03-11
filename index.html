@@ -233,7 +233,6 @@ font-size:13px;
 min-width:1600px;
 border-collapse:separate;
 border-spacing:0;
-margin-left: -230px;
 }
 
 #statsTable th,
@@ -258,10 +257,13 @@ z-index: 10;
 #statsTable td:first-child{
 position: sticky;
 left: 0;
-width: 230px;
-background: #ffffff;
-z-index: 10;
+width: 220px;
+min-width: 220px;
+max-width: 220px;
+background: #fff;
+z-index: 100;
 border-right: 3px solid #444;
+overflow: hidden;
 }
 
 </style>
