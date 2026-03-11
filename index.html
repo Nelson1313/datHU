@@ -967,58 +967,73 @@ const rows = XLSX.utils.sheet_to_json(sheet,{header:1,defval:null});
 const table = document.getElementById("statsTable");
 table.innerHTML = "";
 
-for(let r = 0; r <= 13; r++){
+/* ---------- HEADER ---------- */
 
-const thread = document.createElement("thead");
+const thead = document.createElement("thead");
+const trHead = document.createElement("tr");
 
-const tr1 = document.createElement("tr");
+/* első cella */
 
-const th1 = document.createElement("th");
-th1.textContent = "Partner";
-tr1.appendChild(th1);
+const thPartner = document.createElement("th");
+thPartner.textContent = "Partner";
+trHead.appendChild(thPartner);
+
+/* időszak oszlopok */
 
 for(let c = 1; c <= 33; c++){
 
-const val = rows[0][c];
-if(!val) break;
+const value = rows[0][c];
+
+if(!value) break;
 
 const th = document.createElement("th");
-th.textContent = val;
+th.textContent = value;
 
-tr1.appendChild(th);
-
-thead.appendChild(tr1);
-table.appendChild(thead);
+trHead.appendChild(th);
 
 }
 
+thead.appendChild(trHead);
+table.appendChild(thead);
+
+
+/* ---------- BODY ---------- */
+
 const tbody = document.createElement("tbody");
-for(let r = 2; r <= 12; r+=2){
+
+for(let r = 2; r <= 12; r += 2){
+
 const tr = document.createElement("tr");
+
+/* partner név */
+
 const tdPartner = document.createElement("td");
 tdPartner.textContent = rows[r][0];
 tr.appendChild(tdPartner);
 
+/* értékek */
+
 for(let c = 1; c <= 33; c++){
-const val = rows[r][c];
-if(val === null) break;
+
+const value = rows[r][c];
+
+if(value === null) break;
 
 const td = document.createElement("td");
-td.textContent = val;
+td.textContent = value;
 
 tr.appendChild(td);
 
 }
 
 tbody.appendChild(tr);
-}
-
-table.appendChild(tr);
 
 }
 
+table.appendChild(tbody);
 
 }
+
 
 
 window.addEventListener("load", () => {
