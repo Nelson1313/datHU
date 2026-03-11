@@ -987,7 +987,7 @@ const year = rows[0][c];
 let month = rows[1][c];
 
 if(month){
-  month = month.toString().replace(".","");
+  month = month ? month.toString().replace(/\./g,"") : "";
 }
 
 const th = document.createElement("th");
