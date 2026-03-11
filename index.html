@@ -169,6 +169,19 @@ button{
  height:500px;
 }
 
+#changeTable th,
+#changeTable td{
+padding:8px;
+border-bottom:1px solid #ddd;
+text-align:left;
+font-size:13px;
+}
+
+#changeTable th{
+color:var(--blue);
+font-weight:600;
+}
+
 </style>
 </head>
 
@@ -366,6 +379,8 @@ Enter vehicle data to calculate tax.
 
 <div class="container">
 
+<!-- BAL OLDAL: GRAFIKON -->
+
 <div class="card card-chart">
 
 <div class="header">
@@ -389,6 +404,34 @@ Enter vehicle data to calculate tax.
 
 <div class="chart-wrapper">
 <canvas id="officeChart"></canvas>
+</div>
+
+</div>
+
+
+<!-- JOBB OLDAL: TÁBLÁZAT -->
+
+<div class="card card-chart">
+
+<div class="header">
+<h1>Monthly Change</h1>
+</div>
+
+<div class="content">
+
+<table id="changeTable" style="width:100%;border-collapse:collapse">
+
+<thead>
+<tr>
+<th>Month</th>
+<th>Change</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
 </div>
 
 </div>
@@ -754,9 +797,61 @@ officeChart.update();
 
 }
 
+async function loadChangeTable(){
+
+const response = await fetch("./data/adattabla.xlsx");
+const buffer = await response.arrayBuffer();
+
+const workbook = XLSX.read(buffer,{type:"array"});
+
+const sheet = workbook.Sheets["Munka1"];
+
+const rows = XLSX.utils.sheet_to_json(sheet,{header:1,defval:null});
+
+const tbody = document.querySelector("#changeTable tbody");
+
+tbody.innerHTML = "";
+
+/* AJ = 35, BX = 75 */
+
+for(let i=0;i<13;i++){
+
+const month = rows[i][35];
+const change = rows[i][75];
+
+if(month && change){
+
+let label = month;
+
+if(typeof month === "number"){
+
+const d = excelDateToJSDate(month);
+
+label =
+d.getFullYear() + ". " +
+d.toLocaleString("hu-HU",{month:"long"});
+
+}
+
+const tr = document.createElement("tr");
+
+tr.innerHTML = `
+<td>${label}</td>
+<td>${Number(change).toFixed(2)}</td>
+`;
+
+tbody.appendChild(tr);
+
+}
+
+}
+
+}
+
 window.addEventListener("load", () => {
 initOfficeChart();
 loadOfficeChart();
+loadChangeTable();
 });
 
 </script>
