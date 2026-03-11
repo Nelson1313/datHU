@@ -662,7 +662,8 @@ const buffer = await response.arrayBuffer();
 
 const workbook = XLSX.read(buffer);
 
-const sheet = workbook.Sheets["Diagrammok"];
+const sheetName = workbook.SheetNames.find(n => n.includes("Diagram"));
+const sheet = workbook.Sheets[sheetName];
 
 const range = XLSX.utils.decode_range(sheet["!ref"]);
 
