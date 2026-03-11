@@ -664,8 +664,6 @@ const workbook = XLSX.read(buffer);
 
 const sheet = workbook.Sheets["Diagrammok"];
 
-/* teljes tartomány */
-
 const range = XLSX.utils.decode_range(sheet["!ref"]);
 
 let rows = [];
@@ -685,52 +683,6 @@ row.push(cell ? cell.v : null);
 rows.push(row);
 
 }
-
-console.log(rows);
-
-/* iroda sor */
-
-let rowIndex;
-
-if(office === "4control") rowIndex = 2;
-if(office === "dekra") rowIndex = 4;
-if(office === "expert") rowIndex = 6;
-
-const header = rows[1];
-const data = rows[rowIndex];
-
-if(!data){
-console.error("Nincs adat a kiválasztott irodához");
-return;
-}
-
-const labels = header.slice(2);
-const values = data.slice(2).map(v => Number(v));
-
-officeChart.data.labels = labels;
-officeChart.data.datasets[0].data = values;
-
-officeChart.update();
-
-}
-
-const office = document.getElementById("officeSelect").value;
-
-const response = await fetch("./data/adattabla.xlsx");
-const buffer = await response.arrayBuffer();
-
-const workbook = XLSX.read(buffer);
-
-const sheet = workbook.Sheets["Diagrammok"];
-
-/* teljes sheet kiolvasása */
-
-const rows = XLSX.utils.sheet_to_json(sheet,{header:1,defval:null});
-
-/* debug */
-console.log(rows);
-
-/* iroda sor */
 
 let rowIndex;
 
@@ -760,6 +712,7 @@ window.addEventListener("load", () => {
 initOfficeChart();
 loadOfficeChart();
 });
+
 </script>
 
 </body>
