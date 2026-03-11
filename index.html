@@ -216,7 +216,8 @@ padding:10px 30px 25px 30px;
 }
 
 .table-scroll-big{
-overflow:auto;
+overflow-x:auto;
+overflow-y: hidden;
 padding:20px 30px 30px 30px;
 }
 
@@ -224,6 +225,7 @@ padding:20px 30px 30px 30px;
 width:100%;
 border-collapse:collapse;
 font-size:13px;
+min-width:1600px;
 }
 
 #statsTable th,
@@ -970,31 +972,52 @@ const rows = XLSX.utils.sheet_to_json(sheet,{header:1,defval:null});
 const table = document.getElementById("statsTable");
 table.innerHTML = "";
 
-const cols = [30,31,32,33];
-
 /* ---------- HEADER ---------- */
 
 const thead = document.createElement("thead");
-const trHead = document.createElement("tr");
 
-const thPartner = document.createElement("th");
-thPartner.textContent = "Partner";
-trHead.appendChild(thPartner);
+/* év sor */
 
-for(const c of cols){
+const trYear = document.createElement("tr");
 
-const header = rows[0][c];
+const thEmpty = document.createElement("th");
+thEmpty.rowSpan = 2;
+thEmpty.textContent = "Partner";
+trYear.appendChild(thEmpty);
+
+for(let c=1;c<=33;c++){
+
+const year = rows[0][c];
+if(year===null) break;
 
 const th = document.createElement("th");
-th.textContent = header;
+th.textContent = year;
 
-trHead.appendChild(th);
+trYear.appendChild(th);
 
 }
 
-thead.appendChild(trHead);
-table.appendChild(thead);
+thead.appendChild(trYear);
 
+/* hónap sor */
+
+const trMonth = document.createElement("tr");
+
+for(let c=1;c<=33;c++){
+
+const month = rows[1][c];
+if(month===null) break;
+
+const th = document.createElement("th");
+th.textContent = month;
+
+trMonth.appendChild(th);
+
+}
+
+thead.appendChild(trMonth);
+
+table.appendChild(thead);
 
 /* ---------- BODY ---------- */
 
@@ -1006,14 +1029,21 @@ for(const r of partners){
 
 const tr = document.createElement("tr");
 
+/* partner név */
+
 const tdPartner = document.createElement("td");
 tdPartner.textContent = rows[r][0];
 tr.appendChild(tdPartner);
 
-for(const c of cols){
+/* értékek */
+
+for(let c=1;c<=33;c++){
+
+const val = rows[r][c];
+if(val===null) break;
 
 const td = document.createElement("td");
-td.textContent = rows[r][c];
+td.textContent = val;
 
 tr.appendChild(td);
 
