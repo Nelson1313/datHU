@@ -185,7 +185,7 @@ Registration Tax Calculator
 </div>
 
 <div class="nav-item" onclick="switchView(event,'other')">
-Other Tool
+Expert offices
 </div>
 
 </div>
@@ -369,13 +369,13 @@ Enter vehicle data to calculate tax.
 <div class="card card-chart">
 
 <div class="header">
-<h1>Szakértői irodák</h1>
+<h1>Expert Offices</h1>
 </div>
 
 <div class="content">
 
 <div class="input-group">
-<label>Iroda kiválasztása</label>
+<label>Select office</label>
 
 <select id="officeSelect" onchange="loadOfficeChart()">
 <option value="4control">4Control</option>
@@ -635,7 +635,7 @@ type:"bar",
 data:{
 labels:[],
 datasets:[{
-label:"Szakértői iroda",
+label:"Expert office",
 data:[],
 backgroundColor:"#0A3D91"
 }]
@@ -666,7 +666,7 @@ const buffer = await response.arrayBuffer();
 
 const workbook = XLSX.read(buffer);
 
-const sheet = workbook.Sheets["Munka1"];
+const sheet = workbook.Sheets["Diagrammok"];
 
 const rows = XLSX.utils.sheet_to_json(sheet,{header:1});
 
