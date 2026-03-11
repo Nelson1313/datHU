@@ -729,13 +729,13 @@ for(let i=0;i<rawLabels.length;i++){
 const value = rawValues[i];
 let label = rawLabels[i];
 
-if(value === null || value === "" || isNaN(value)) continue;
-
-
+if(value === null) break;
+if(isNaN(value)) continue;
 if(typeof label === "number"){
 
 const d = excelDateToJSDate(label);
-
+label =
+d.getFullYear() + ". " +
 d.toLocaleString("hu-HU",{month:"long"});
 
 }
