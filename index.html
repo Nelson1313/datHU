@@ -713,6 +713,15 @@ calcMonth.innerHTML+=`<option value="${i+1}">${m}</option>`;
 
 });
 
+/* TODAY AS DEFAULT END DATE */
+
+const today = new Date();
+const currentYear = today.getFullYear();
+const currentMonth = today.getMonth()+1;
+
+endYear.value = currentYear;
+endMonth.value = currentMonth;
+
 /* NEW CAR */
 
 function toggleNewCar(isNew){
