@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DAT Hungary</title>
-
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 <style>
@@ -363,7 +363,38 @@ Enter vehicle data to calculate tax.
 </div>
 
 <div id="view-other" class="view">
-<h2>Other Tool</h2>
+
+<div class="container">
+
+<div class="card card-chart">
+
+<div class="header">
+<h1>Szakértői irodák</h1>
+</div>
+
+<div class="content">
+
+<div class="input-group">
+<label>Iroda kiválasztása</label>
+
+<select id="officeSelect" onchange="loadOfficeChart()">
+<option value="4control">4Control</option>
+<option value="dekra">DEKRA-Expert</option>
+<option value="expert">Expert-Unió</option>
+</select>
+
+</div>
+
+</div>
+
+<div class="chart-wrapper">
+<canvas id="officeChart"></canvas>
+</div>
+
+</div>
+
+</div>
+
 </div>
 
 <script>
@@ -591,6 +622,63 @@ Payable Tax: ${payable.toLocaleString()} Ft
 
 }
 
+async function loadOfficeChart(){
+
+const office = document.getElementById("officeSelect").value;
+
+const response = await fetch("data/adattabla.xlsx");
+const buffer = await response.arrayBuffer();
+
+const workbook = XLSX.read(buffer);
+
+const sheet = workbook.Sheets["Munka1"];
+
+const rows = XLSX.utils.sheet_to_json(sheet,{header:1});
+
+let startRow;
+
+if(office === "4control") startRow = 1;
+if(office === "dekra") startRow = 3;
+if(office === "expert") startRow = 5;
+
+const dataRow = rows[startRow+1];
+
+const labels = rows[0].slice(2);
+const values = dataRow.slice(2);
+
+officeChart.data.labels = labels;
+officeChart.data.datasets[0].data = values;
+
+officeChart.update();
+
+}
+
+let officeChart;
+
+function initOfficeChart(){
+
+const ctx = document.getElementById("officeChart");
+
+officeChart = new Chart(ctx,{
+type:"bar",
+data:{
+labels:[],
+datasets:[{
+label:"Szakértői iroda",
+data:[],
+backgroundColor:"#0A3D91"
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+});
+
+}
+
+initOfficeChart();
+loadOfficeChart();
 </script>
 
 </body>
