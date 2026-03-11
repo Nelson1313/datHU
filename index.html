@@ -818,20 +818,35 @@ for(let col = 35; col <= 74; col++){
 
 const year = rows[0][col];
 const month = rows[1][col];
-const value = rows[2][col];
 
-if(value === null || value === "") continue;
+/* csak páratlan sorok */
+const values = [
+rows[2][col],
+rows[4][col],
+rows[6][col],
+rows[8][col],
+rows[10][col],
+rows[12][col]
+];
 
 const label = year + ". " + month;
+
+values.forEach(v => {
+
+if(v === null || v === "") return;
+
+const percent = (Number(v) * 100).toFixed(1);
 
 const tr = document.createElement("tr");
 
 tr.innerHTML = `
 <td>${label}</td>
-<td>${Number(value).toFixed(2)}</td>
+<td>${percent} %</td>
 `;
 
 tbody.appendChild(tr);
+
+});
 
 }
 
