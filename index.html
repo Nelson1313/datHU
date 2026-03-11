@@ -676,6 +676,13 @@ beginAtZero:true
 
 }
 
+function excelDateToJSDate(serial) {
+  const excelEpoch = new Date(1899, 11, 30);
+  const days = Math.floor(serial);
+  
+  return new Date(excelEpoch.getTime() + days*86400000);
+}
+
 async function loadOfficeChart(){
 
 const office = document.getElementById("officeSelect").value;
@@ -719,35 +726,22 @@ const values = [];
 
 for(let i=0;i<rawLabels.length;i++){
 
-if(rawValues[i] !== null && rawValues[i] !== "" && !isNaN(rawValues[i])){
-
+const value = rawValues[i];
 let label = rawLabels[i];
+
+if(value === null || value === "" || isNaN(value)) continue;
+
 
 if(typeof label === "number"){
 
 const d = excelDateToJSDate(label);
 
-label = d.getFullYear() + "-" +
 d.toLocaleString("hu-HU",{month:"long"});
 
 }
 
 labels.push(label);
-values.push(Number(rawValues[i]));
-
-}
-
-else if(rawValues[i] !== null && rawValues[i] !== "" && typeof rawValues[i] === "string"){
-
-function excelDateToJSDate(serial) {
-  const excelEpoch = new Date(1899, 11, 30);
-  const days = Math.floor(serial);
-  
-  return new Date(excelEpoch.getTime() + days*86400000);
-}
-values.push(Number(rawValues[i]));
-
-}
+values.push(Number(value));
 
 }
 
