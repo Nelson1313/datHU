@@ -253,16 +253,26 @@ background:#FFD200;
 z-index: 10;
 }
 
-#statsTable td:first-child,
-#statsTable th:first-child{
+#statsTable th:nth-child(1),
+#statsTable td:nth-child(1){
 position: sticky;
 left: 0;
+width: 70px;
+background: #fff;
+z-index: 30;
+border-right: 1px solid #444;
+}
+
+#statsTable th:nth-child(2),
+#statsTable td:nth-child(2){
+position: sticky;
+left: 70px;
 min-width: 200px;
 max-width: 200px;
-background:#ffffff;
-z-index: 20;
-border-right: 3px solid #444;
-box-shadow: 4px 0 6px rgba(0,0,0,0.1);
+background: #fff;
+z-index: 35;
+border-right: 3px solid #333;
+box-shadow: 6px 0 8px rgba(0,0,0,0.15);
 }
 
 </style>
