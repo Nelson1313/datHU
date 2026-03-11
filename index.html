@@ -631,24 +631,44 @@ const ctx = document.getElementById("officeChart");
 if(!ctx) return;
 
 officeChart = new Chart(ctx,{
-type:"bar",
+type:"line",
+
 data:{
 labels:[],
 datasets:[{
-label:"Szakértői iroda",
+label:"",
 data:[],
-backgroundColor:"#0A3D91"
+borderColor:"#5BA43C",
+backgroundColor:"#5BA43C",
+tension:0.3,
+fill:false
 }]
 },
+
 options:{
 responsive:true,
 maintainAspectRatio:false,
+
 plugins:{
 legend:{
-onClick:null
+display:false
+}
+},
+
+scales:{
+x:{
+ticks:{
+maxRotation:45,
+minRotation:45
+}
+},
+y:{
+beginAtZero:true
 }
 }
+
 }
+
 });
 
 }
