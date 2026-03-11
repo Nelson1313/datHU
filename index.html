@@ -640,7 +640,9 @@ label:"",
 data:[],
 borderColor:"#5BA43C",
 backgroundColor:"#5BA43C",
-tension:0.3,
+pointRadius:4,
+pointHoverRadius:6,
+tension:0.25,
 fill:false
 }]
 },
@@ -658,6 +660,7 @@ display:false
 scales:{
 x:{
 ticks:{
+autoSkip:true,
 maxRotation:45,
 minRotation:45
 }
@@ -706,8 +709,24 @@ console.error("Nincs adat az irodához");
 return;
 }
 
-const labels = header.slice(2);
-const values = data.slice(2).map(v=>Number(v));
+const rawLabels = header.slice(2);
+const rawValues = data.slice(2);
+
+/* üres cellák kiszűrése */
+
+const labels = [];
+const values = [];
+
+for(let i=0;i<rawLabels.length;i++){
+
+if(rawValues[i] !== null && rawValues[i] !== "" && !isNaN(rawValues[i])){
+
+labels.push(rawLabels[i]);
+values.push(Number(rawValues[i]));
+
+}
+
+}
 
 officeChart.data.labels = labels;
 officeChart.data.datasets[0].data = values;
