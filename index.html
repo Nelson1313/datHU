@@ -655,20 +655,20 @@ onClick:null
 
 async function loadOfficeChart(){
 
-if(!officeChart) return;
-
 const office = document.getElementById("officeSelect").value;
-
-/* GitHub Pages kompatibilis útvonal */
 
 const response = await fetch("./data/adattabla.xlsx");
 const buffer = await response.arrayBuffer();
 
 const workbook = XLSX.read(buffer);
 
+console.log(workbook.SheetNames); // debug
+
 const sheet = workbook.Sheets["Diagrammok"];
 
 const rows = XLSX.utils.sheet_to_json(sheet,{header:1});
+
+console.log(rows); // debug
 
 let startRow;
 
@@ -676,10 +676,11 @@ if(office === "4control") startRow = 1;
 if(office === "dekra") startRow = 3;
 if(office === "expert") startRow = 5;
 
-const dataRow = rows[startRow+1];
+const dataRow = rows[startRow];
 
 const labels = rows[0].slice(2);
-const values = dataRow.slice(2);
+
+const values = dataRow.slice(2).map(v => parseFloat(v));
 
 officeChart.data.labels = labels;
 officeChart.data.datasets[0].data = values;
