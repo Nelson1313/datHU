@@ -845,11 +845,9 @@ const month = rows[1][col];
 
 if(!year || !month) continue;
 
-const label = year + ". " + month;
-
 const tr = document.createElement("tr");
 
-let html = `<td>${label}</td>`;
+let html = `<td>${year}. ${month}</td>`;
 
 for(const key in partners){
 
