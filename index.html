@@ -249,10 +249,18 @@ z-index: 11;
 #statsTable th:first-child{
 position: sticky;
 left: 0;
+min-width: 180px;
 background:#FFD200;
-z-index: 10;
-min-width: 100px;
-max-width: 100px;
+z-index: 20;
+}
+
+#statsTable td:nth-child(2),
+#statsTable th:nth-child(2){
+position: sticky;
+left: 180px;
+min-width: 120px;
+background:#FFD200;
+z-index: 19;
 box-shadow: 3px 0 6px rgba(0,0,0,0.08);
 }
 
