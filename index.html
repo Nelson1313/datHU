@@ -662,8 +662,15 @@ const buffer = await response.arrayBuffer();
 
 const workbook = XLSX.read(buffer);
 
-const sheetName = workbook.SheetNames.find(n => n.includes("Diagram"));
+/* sheet keresése */
+
+const sheetName = workbook.SheetNames.find(n => n.toLowerCase().includes("diagram"));
 const sheet = workbook.Sheets[sheetName];
+
+if(!sheet || !sheet["!ref"]){
+console.error("Diagram sheet not found", workbook.SheetNames);
+return;
+}
 
 const range = XLSX.utils.decode_range(sheet["!ref"]);
 
