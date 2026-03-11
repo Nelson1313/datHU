@@ -82,13 +82,15 @@ body{
 
 .card-calculator{ width:560px;}
 .card-chart{
-flex:1;
-min-width:500px;
-height:520px;
+width:760px;
+height:700px;
 display:flex;
 flex-direction:column;
 }
 
+.card-chart .content{
+flex:0;
+}
 /* HEADER */
 
 .header{
@@ -191,12 +193,13 @@ font-size:13px;
 position:sticky;
 top:0;
 background:white;
-z-index:1;
+z-index:2;
 }
 
 .table-scroll{
-overflow-y:auto;
 flex:1;
+overflow-y:auto;
+padding:30px;
 }
 
 .positive{
@@ -447,7 +450,8 @@ Enter vehicle data to calculate tax.
 <div class="content">
 
 <div class="table-scroll">
-<table id="changeTable" style="width:100%;border-collapse:collapse">
+
+<table id="changeTable">
 
 <thead>
 <tr>
@@ -464,6 +468,7 @@ Enter vehicle data to calculate tax.
 <tbody></tbody>
 
 </table>
+
 </div>
 </div>
 
