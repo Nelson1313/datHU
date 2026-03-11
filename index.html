@@ -662,11 +662,9 @@ const buffer = await response.arrayBuffer();
 
 const workbook = XLSX.read(buffer,{type:"array"});
 
-/* sheet */
+/* ADATOK A MUNKA1 SHEETEN VANNAK */
 
-const sheet = workbook.Sheets["Diagrammok"];
-
-/* teljes sheet -> tömb */
+const sheet = workbook.Sheets["Munka1"];
 
 const rows = XLSX.utils.sheet_to_json(sheet,{header:1,defval:null});
 
@@ -680,7 +678,7 @@ if(office === "4control") rowIndex = 2;
 if(office === "dekra") rowIndex = 4;
 if(office === "expert") rowIndex = 6;
 
-const header = rows[1];
+const header = rows[0];
 const data = rows[rowIndex];
 
 if(!data){
