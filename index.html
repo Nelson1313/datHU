@@ -814,32 +814,21 @@ tbody.innerHTML = "";
 
 /* AJ = 35, BX = 74 */
 
-for(let i=0;i<13;i++){
+for(let col = 35; col <= 74; col++){
 
-const month = rows[i][35];
-const change = rows[i][74];
+const year = rows[0][col];
+const month = rows[1][col];
+const value = rows[2][col];
 
-if(month === null || change === null) continue;
+if(value === null || value === "") continue;
 
-let label = month;
-
-/* Excel dátum konvertálás */
-
-if(typeof month === "number"){
-
-const d = excelDateToJSDate(month);
-
-label =
-d.getFullYear() + ". " +
-d.toLocaleString("hu-HU",{month:"long"});
-
-}
+const label = year + ". " + month;
 
 const tr = document.createElement("tr");
 
 tr.innerHTML = `
 <td>${label}</td>
-<td>${Number(change).toFixed(2)}</td>
+<td>${Number(value).toFixed(2)}</td>
 `;
 
 tbody.appendChild(tr);
