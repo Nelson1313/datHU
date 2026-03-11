@@ -223,6 +223,7 @@ overflow-x:auto;
 overflow-y: hidden;
 padding:20px 30px 30px 30px;
 position: relative;
+background: white;
 }
 
 #statsTable{
@@ -230,6 +231,8 @@ width:100%;
 border-collapse:collapse;
 font-size:13px;
 min-width:1600px;
+border-collapse:separate;
+border-spacing:0;
 }
 
 #statsTable th,
@@ -254,11 +257,11 @@ z-index: 10;
 #statsTable th:first-child{
 position: sticky;
 left: 0;
-background:#ffffff;
-z-index: 5;
 min-width: 200px;
 max-width: 200px;
-border-right: 2px solid #444;
+background:#ffffff;
+z-index: 20;
+border-right: 3px solid #444;
 box-shadow: 4px 0 6px rgba(0,0,0,0.1);
 }
 
