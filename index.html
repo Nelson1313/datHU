@@ -213,6 +213,29 @@ padding:10px 30px 25px 30px;
   font-weight: 600;
 }
 
+.table-scroll-big{
+overflow:auto;
+padding:20px 30px 30px 30px;
+}
+
+#statsTable{
+width:100%;
+border-collapse:collapse;
+font-size:13px;
+}
+
+#statsTable th,
+#statsTable td{
+border-bottom:1px solid #ddd;
+padding:8px;
+text-align:center;
+}
+
+#statsTable th{
+background:#f5f7fb;
+font-weight:600;
+}
+
 </style>
 </head>
 
@@ -467,6 +490,24 @@ Enter vehicle data to calculate tax.
 <tbody></tbody>
 
 </table>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="container" style="margin-top:40px;">
+
+<div class="card" style="width:1200px;">
+
+<div class="header">
+<h1>Statistics</h1>
+</div>
+
+<div class="table-scroll-big">
+
+<table id="statsTable"></table>
 
 </div>
 
@@ -904,11 +945,47 @@ tbody.appendChild(tr);
 
 }
 
+async function loadStatsTable(){
+
+const response = await fetch("./data/adattabla.xlsx");
+const buffer = await response.arrayBuffer();
+
+const workbook = XLSX.read(buffer,{type:"array"});
+const sheet = workbook.Sheets["Munka1"];
+
+const rows = XLSX.utils.sheet_to_json(sheet,{header:1,defval:null});
+
+const table = document.getElementById("statsTable");
+table.innerHTML = "";
+
+for(let r = 0; r <= 13; r++){
+
+const tr = document.createElement("tr");
+
+for(let c = 0; c <= 33; c++){
+
+const cellValue = rows[r][c];
+
+const cell = document.createElement(r === 0 ? "th" : "td");
+
+cell.textContent = cellValue ?? "";
+
+tr.appendChild(cell);
+
+}
+
+table.appendChild(tr);
+
+}
+
+}
+
 
 window.addEventListener("load", () => {
 initOfficeChart();
 loadOfficeChart();
 loadChangeTable();
+loadStatsTable();
 });
 
 </script>
