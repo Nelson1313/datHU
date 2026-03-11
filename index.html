@@ -975,48 +975,38 @@ table.innerHTML = "";
 /* ---------- HEADER ---------- */
 
 const thead = document.createElement("thead");
+const tr = document.createElement("tr");
 
-/* év sor */
+const thPartner = document.createElement("th");
+thPartner.textContent = "Partner";
+tr.appendChild(thPartner);
 
-const trYear = document.createElement("tr");
+for(let c=2;c<=33;c++){
 
-const thEmpty = document.createElement("th");
-thEmpty.rowSpan = 2;
-thEmpty.textContent = "Partner";
-trYear.appendChild(thEmpty);
+let header = rows[0][c];
 
-for(let c=1;c<=33;c++){
+if(header === null) continue;
 
-const year = rows[0][c];
-if(year===null) break;
+/* Excel dátum konverzió */
 
-const th = document.createElement("th");
-th.textContent = year;
+if(typeof header === "number"){
 
-trYear.appendChild(th);
+const d = excelDateToJSDate(header);
 
-}
-
-thead.appendChild(trYear);
-
-/* hónap sor */
-
-const trMonth = document.createElement("tr");
-
-for(let c=1;c<=33;c++){
-
-const month = rows[1][c];
-if(month===null) break;
-
-const th = document.createElement("th");
-th.textContent = month;
-
-trMonth.appendChild(th);
+header =
+d.getFullYear() + ". " +
+d.toLocaleString("hu-HU",{month:"long"});
 
 }
 
-thead.appendChild(trMonth);
+const th = document.createElement("th");
+th.textContent = header;
 
+tr.appendChild(th);
+
+}
+
+thead.appendChild(tr);
 table.appendChild(thead);
 
 /* ---------- BODY ---------- */
@@ -1029,18 +1019,15 @@ for(const r of partners){
 
 const tr = document.createElement("tr");
 
-/* partner név */
-
 const tdPartner = document.createElement("td");
 tdPartner.textContent = rows[r][0];
 tr.appendChild(tdPartner);
 
-/* értékek */
-
-for(let c=1;c<=33;c++){
+for(let c=2;c<=33;c++){
 
 const val = rows[r][c];
-if(val===null) break;
+
+if(val === null) continue;
 
 const td = document.createElement("td");
 td.textContent = val;
