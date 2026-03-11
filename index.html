@@ -984,10 +984,14 @@ trHead.appendChild(thPartner);
 for(const c of cols){
 
 const year = rows[0][c];
-const month = rows[1][c];
+let month = rows[1][c];
+
+if(month){
+  month = month.toString().replace(".","");
+}
 
 const th = document.createElement("th");
-th.textContent = `${year}. ${month ?? ""}`.trim();
+th.textContent = `${year}. ${month}`;
 
 trHead.appendChild(th);
 
