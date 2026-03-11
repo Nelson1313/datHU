@@ -970,27 +970,24 @@ const rows = XLSX.utils.sheet_to_json(sheet,{header:1,defval:null});
 const table = document.getElementById("statsTable");
 table.innerHTML = "";
 
+const cols = [30,31,32,33];
+
 /* ---------- HEADER ---------- */
 
 const thead = document.createElement("thead");
 const trHead = document.createElement("tr");
 
-/* első cella */
-
 const thPartner = document.createElement("th");
 thPartner.textContent = "Partner";
 trHead.appendChild(thPartner);
 
-/* időszak oszlopok */
+for(const c of cols){
 
-for(let c = 1; c <= 33; c++){
-
-const value = rows[0][c];
-
-if(!value) break;
+const year = rows[0][c];
+const month = rows[1][c];
 
 const th = document.createElement("th");
-th.textContent = value;
+th.textContent = year + ". " + month;
 
 trHead.appendChild(th);
 
@@ -1002,28 +999,22 @@ table.appendChild(thead);
 
 /* ---------- BODY ---------- */
 
+const partners = [2,4,6,8,10,12];
+
 const tbody = document.createElement("tbody");
 
-for(let r = 2; r <= 12; r += 2){
+for(const r of partners){
 
 const tr = document.createElement("tr");
-
-/* partner név */
 
 const tdPartner = document.createElement("td");
 tdPartner.textContent = rows[r][0];
 tr.appendChild(tdPartner);
 
-/* értékek */
-
-for(let c = 1; c <= 33; c++){
-
-const value = rows[r][c];
-
-if(value === null) break;
+for(const c of cols){
 
 const td = document.createElement("td");
-td.textContent = value;
+td.textContent = rows[r][c];
 
 tr.appendChild(td);
 
