@@ -987,7 +987,7 @@ const year = rows[0][c];
 const month = rows[1][c];
 
 const th = document.createElement("th");
-th.textContent = year + ". " + month;
+th.textContent = `${year}. ${month ?? ""}`.trim();
 
 trHead.appendChild(th);
 
