@@ -836,6 +836,8 @@ const partners = {
 "Toyota":12
 };
 
+let currentYear = null;
+
 /* AJ → BX */
 
 for(let col = 35; col <= 74; col++){
@@ -843,11 +845,13 @@ for(let col = 35; col <= 74; col++){
 const year = rows[0][col];
 const month = rows[1][col];
 
-if(!year || !month) continue;
+if(year) currentYear = year;
+
+if(!month) continue;
 
 const tr = document.createElement("tr");
 
-let html = `<td>${year}. ${month}</td>`;
+let html = `<td>${currentYear}. ${month}</td>`;
 
 for(const key in partners){
 
@@ -860,8 +864,6 @@ continue;
 }
 
 const percent = (Number(value)*100).toFixed(1);
-
-/* színezés */
 
 let cls = "";
 
