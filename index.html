@@ -622,11 +622,46 @@ Payable Tax: ${payable.toLocaleString()} Ft
 
 }
 
+let officeChart;
+
+function initOfficeChart(){
+
+const ctx = document.getElementById("officeChart");
+
+if(!ctx) return;
+
+officeChart = new Chart(ctx,{
+type:"bar",
+data:{
+labels:[],
+datasets:[{
+label:"Szakértői iroda",
+data:[],
+backgroundColor:"#0A3D91"
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+plugins:{
+legend:{
+onClick:null
+}
+}
+}
+});
+
+}
+
 async function loadOfficeChart(){
+
+if(!officeChart) return;
 
 const office = document.getElementById("officeSelect").value;
 
-const response = await fetch("data/adattabla.xlsx");
+/* GitHub Pages kompatibilis útvonal */
+
+const response = await fetch("./data/adattabla.xlsx");
 const buffer = await response.arrayBuffer();
 
 const workbook = XLSX.read(buffer);
@@ -653,32 +688,10 @@ officeChart.update();
 
 }
 
-let officeChart;
-
-function initOfficeChart(){
-
-const ctx = document.getElementById("officeChart");
-
-officeChart = new Chart(ctx,{
-type:"bar",
-data:{
-labels:[],
-datasets:[{
-label:"Szakértői iroda",
-data:[],
-backgroundColor:"#0A3D91"
-}]
-},
-options:{
-responsive:true,
-maintainAspectRatio:false
-}
-});
-
-}
-
+window.addEventListener("load", () => {
 initOfficeChart();
 loadOfficeChart();
+});
 </script>
 
 </body>
