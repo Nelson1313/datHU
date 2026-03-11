@@ -183,47 +183,63 @@ button{
 
 
 
+.table-scroll{
+flex:1;
+overflow-y:auto;
+padding:0 30px 25px 30px;
+background:white;
+}
+
+
+/* TABLE */
+
 #changeTable{
 width:100%;
-border-collapse:collapse;
+border-collapse:separate;
+border-spacing:0;
+font-size:13px;
 }
+
+
+/* CELLÁK */
 
 #changeTable th,
 #changeTable td{
 padding:8px;
 border-bottom:1px solid #ddd;
-font-size:13px;
+text-align:center;
 }
 
-#changeTable thead th{
-position: sticky;
-top: 0;
-background: #ffffff;
-z-index: 20;
-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
 
-#changeTable th{
+/* STICKY HEADER */
+
+#changeTable thead{
 position:sticky;
 top:0;
-background:white;
-z-index:10;
+z-index:50;
 }
 
-.table-scroll{
-flex:1;
-overflow-y:auto;
-padding:10px 30px 25px 30px;
+
+/* HEADER STYLE */
+
+#changeTable thead th{
+background:#f5f5f5;
+font-weight:600;
+border-top:2px solid #444;
+border-bottom:2px solid #444;
 }
+
+
+/* POSITIVE / NEGATIVE SZÍNEK */
 
 .positive{
-  color:#2e7d32;
-  font-weight: 600;
+color:#2e7d32;
+font-weight:600;
 }
 
 .negative{
-  color:#c62828;
-  font-weight: 600;
+color:#c62828;
+font-weight:600;
 }
 
 .table-scroll-big{
