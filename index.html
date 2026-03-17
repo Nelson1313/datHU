@@ -840,23 +840,24 @@
 
         return;
       }
+
       let powerIndex = parseInt(document.getElementById("power").value);
       let envIndex = parseInt(document.getElementById("envClass").value);
 
       let baseTax = baseTaxTable[powerIndex]?.[envIndex] ?? 0;
 
-      let newCar =
-        document.querySelector('input[name="newCar"]:checked').value === "yes";
+      const newCarRadio = document.querySelector('input[name="newCar"]:checked');
+      const newCar = newCarRadio ? newCarRadio.value === "yes" : false;
 
       let payable = baseTax;
 
       if (!newCar) {
 
-        let regY = parseInt(regYear.value);
-        let regM = parseInt(regMonth.value);
+        let regY = parseInt(regYear.value || 0);
+        let regM = parseInt(regMonth.value || 0);
 
-        let calcY = parseInt(calcYear.value);
-        let calcM = parseInt(calcMonth.value);
+        let calcY = parseInt(calcYear.value || 0);
+        let calcM = parseInt(calcMonth.value || 0);
 
         let months = (calcY * 12 + calcM) - (regY * 12 + regM);
 
