@@ -769,8 +769,20 @@
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth() + 1;
 
+    /* Depreciation calculator default */
+
     endYear.value = currentYear;
     endMonth.value = currentMonth;
+
+    /* Registration procedure → today */
+
+    calcYear.value = currentYear;
+    calcMonth.value = currentMonth;
+
+    /* First registration → 5 years earlier */
+
+    regYear.value = currentYear - 5;
+    regMonth.value = currentMonth;
 
     /* NEW CAR */
 
