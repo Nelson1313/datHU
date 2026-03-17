@@ -831,6 +831,9 @@
 
     function calculateTax() {
 
+      let powerIndex = parseInt(document.getElementById("power").value);
+      let envIndex = parseInt(document.getElementById("envClass").value);
+
       if (powerIndex === 7) {
         document.getElementById("taxResult").innerHTML = `
         Base Tax: 0 Ft<br>
@@ -840,9 +843,6 @@
 
         return;
       }
-
-      let powerIndex = parseInt(document.getElementById("power").value);
-      let envIndex = parseInt(document.getElementById("envClass").value);
 
       let baseTax = baseTaxTable[powerIndex]?.[envIndex] ?? 0;
 
