@@ -453,18 +453,33 @@
               <label>Environmental Class</label>
 
               <select id="envClass">
-                <option value="euro14plus">14+ (after 2020)</option>
-                <option value="euro14">14+</option>
-                <option value="euro12_14">12-14</option>
-                <option value="euro9_11">9-11</option>
-                <option value="euro8_or_worse">8 or worse</option>
+
+                <option value="0">14+ (after 2020)/Hibrid</option>
+                <option value="1">14+</option>
+                <option value="2">12-14</option>
+                <option value="3">9-11</option>
+                <option value="4">8 or worse</option>
+
               </select>
 
             </div>
 
             <div class="input-group">
               <label>Power (kW)</label>
-              <input type="number" id="power">
+
+              <select id="power">
+
+                <option value="0">0-80</option>
+                <option value="1">81-100</option>
+                <option value="2">101-120</option>
+                <option value="3">121-140</option>
+                <option value="4">141-180</option>
+                <option value="5">181-250</option>
+                <option value="6">250+</option>
+                <option value="7">5E / 5Z environmentally friendly</option>
+
+              </select>
+
             </div>
 
           </div>
@@ -766,137 +781,67 @@
       calcYear.disabled = isNew;
       calcMonth.disabled = isNew;
 
+      if (isNew) {
+        regYear.value = "";
+        regMonth.value = "";
+      }
+
     }
 
     /* BASE TAX TABLE */
 
-    const baseTaxTable = {
+    const baseTaxTable = [
 
-      euro14plus: [47000, 70500, 94000, 141000, 188000, 282000, 423000],
-
-      euro14: [70500, 105750, 141000, 211500, 282000, 423000, 634500],
-
-      euro12_14: [282000, 423000, 564000, 846000, 1128000, 1692000, 2538000],
-
-      euro9_11: [
-        564000,
-        846000,
-        1128000,
-        1692000,
-        2160000,
-        3384000,
-        5076000
-      ],
-
-      euro8_or_worse: [
-        1128000,
-        1692000,
-        2256000,
-        3384000,
-        4512000,
-        6768000,
-        10152000
-      ]
-
-    };
-
-    function getPowerIndex(power) {
-
-      if (power >= 0 && power <= 80) return 0;
-      if (power >= 81 && power <= 100) return 1;
-      if (power >= 101 && power <= 120) return 2;
-      if (power >= 121 && power <= 140) return 3;
-      if (power >= 141 && power <= 180) return 4;
-      if (power >= 181 && power <= 250) return 5;
-
-      return 6;
-
-    }
+      [47000, 70500, 282000, 564000, 1128000],
+      [70500, 105750, 423000, 846000, 1692000],
+      [94000, 141000, 564000, 1128000, 2256000],
+      [141000, 211500, 846000, 1692000, 3384000],
+      [188000, 282000, 1128000, 2256000, 4512000],
+      [282000, 423000, 1692000, 3384000, 6768000],
+      [423000, 634500, 2538000, 5076000, 10152000],
+      [0, 0, 0, 0, 0]
+    ];
 
     function getAgeMultiplier(months) {
 
-      if (months <= 0) return 1;
-      if (months <= 12) return 0.97;
-      if (months <= 24) return 0.94;
-      if (months <= 36) return 0.88;
-      if (months <= 48) return 0.82;
-      if (months <= 60) return 0.75;
-      if (months <= 72) return 0.68;
-      if (months <= 84) return 0.55;
-      if (months <= 96) return 0.40;
+      if (months === 0) return 1;
+      if (months <= 2) return 0.97;
+      if (months <= 4) return 0.92;
+      if (months <= 6) return 0.87;
+      if (months <= 12) return 0.82;
+      if (months <= 18) return 0.77;
+      if (months <= 24) return 0.72;
+      if (months <= 30) return 0.67;
+      if (months <= 36) return 0.62;
+      if (months <= 48) return 0.55;
+      if (months <= 60) return 0.47;
+      if (months <= 72) return 0.41;
+      if (months <= 84) return 0.35;
+      if (months <= 96) return 0.30;
       if (months <= 108) return 0.26;
-      if (months <= 120) return 0.20;
+      if (months <= 120) return 0.22;
 
-      return 0.20;
+      return 0.10;
 
     }
 
     /* REG TAX */
 
-    function interpolate(power, lowerKW, upperKW, lowerTax, upperTax) {
-
-      let ratio = (power - lowerKW) / (upperKW - lowerKW);
-
-      return Math.round(
-        lowerTax + ratio * (upperTax - lowerTax)
-      );
-
-    }
     function calculateTax() {
 
-      let power = parseInt(document.getElementById("power").value);
+      if (powerIndex === 7) {
+        document.getElementById("taxResult").innerHTML = `
+        Base Tax: 0 Ft<br>
+        Reduction: 0 Ft<br>
+        Payable Tax: 0 Ft
+        `;
 
-      if (isNaN(power)) {
-        alert("Please enter vehicle power.");
         return;
       }
+      let powerIndex = parseInt(document.getElementById("power").value);
+      let envIndex = parseInt(document.getElementById("envClass").value);
 
-      let env = document.getElementById("envClass").value;
-
-      const brackets = [0, 80, 100, 120, 140, 180, 250];
-
-      let index = getPowerIndex(power);
-
-      let lowerKW = brackets[index];
-      let upperKW = brackets[index + 1] ?? power;
-
-      let lowerTax = baseTaxTable[env][index];
-      let upperTax = baseTaxTable[env][index + 1] ?? lowerTax;
-
-      let baseTax;
-
-      /* 14+ 2020 után NINCS interpoláció */
-
-      if (env === "euro14plus" || env === "euro14" || env === "euro12_14" || env === "euro9_11" || env === "euro8_or_worse") {
-
-        baseTax = lowerTax;
-
-      }
-
-      /* minden más kategóriánál interpoláció */
-
-      else {
-
-        if (lowerKW === upperKW) {
-          baseTax = lowerTax;
-        }
-
-        else {
-
-          let ratio = (power - lowerKW) / (upperKW - lowerKW);
-
-          baseTax = lowerTax + ratio * (upperTax - lowerTax);
-
-        }
-
-      }
-
-      /* NAV kerekítés */
-
-      baseTax = Math.floor(baseTax / 10000) * 10000;
-
-
-      /* új autó */
+      let baseTax = baseTaxTable[powerIndex]?.[envIndex] ?? 0;
 
       let newCar =
         document.querySelector('input[name="newCar"]:checked').value === "yes";
@@ -911,22 +856,29 @@
         let calcY = parseInt(calcYear.value);
         let calcM = parseInt(calcMonth.value);
 
-        let ageMonths =
-          (calcY * 12 + calcM) - (regY * 12 + regM);
+        let months = (calcY * 12 + calcM) - (regY * 12 + regM);
 
-        let multiplier = getAgeMultiplier(ageMonths);
+        if (months < 0) {
+
+          alert("Registration date cannot be after calculation date.");
+          return;
+
+        }
+
+        let multiplier = getAgeMultiplier(months);
 
         payable = Math.round(baseTax * multiplier);
 
       }
 
-      let reduction = baseTax - payable;
+      let reduction = newCar ? 0 : baseTax - payable;
 
-      document.getElementById("taxResult").innerHTML =
-        `
+      document.getElementById("taxResult").innerHTML = `
+
 Base Tax: ${baseTax.toLocaleString()} Ft<br>
 Reduction: ${reduction.toLocaleString()} Ft<br>
 Payable Tax: ${payable.toLocaleString()} Ft
+
 `;
 
     }
