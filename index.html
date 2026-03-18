@@ -1438,14 +1438,12 @@ Payable Tax: ${payable.toLocaleString()} Ft
 
               if (diff > 0) {
                 td.classList.add("positive");
-                td.innerHTML = `${val}<br>(+${diff})`;
+                td.innerHTML = `${val}<br><span>(+${diff})</span>`;
               }
-
-              /* csökkenés */
 
               else if (diff < 0) {
                 td.classList.add("negative");
-                td.innerHTML = `${val}<br>(${diff})`;
+                td.innerHTML = `${val}<br><span>(${diff})</span>`;
               }
 
               else {
