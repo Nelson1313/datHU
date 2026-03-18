@@ -322,6 +322,43 @@
       border-right: 3px solid #444;
     }
 
+    .view-arrows {
+      position: fixed;
+      bottom: 30px;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+    }
+
+    .arrow {
+      position: absolute;
+      font-size: 32px;
+      background: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      pointer-events: auto;
+      user-select: none;
+    }
+
+    #arrow-left {
+      left: 30px;
+    }
+
+    #arrow-right {
+      right: 30px;
+    }
+
+    .arrow.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
     @media (max-width:1200px) {
 
       .container {
@@ -344,7 +381,7 @@
   <div class="navbar">
 
     <div class="nav-logo" onclick="switchViewLogo('welcome')">
-      <img src="datHU2.png" alt="DAT">
+      <img src="logo.jpeg" alt="DAT">
     </div>
 
     <div class="nav-item active" onclick="switchView(event,'calculator')">
@@ -673,7 +710,49 @@
 
   </div>
 
+  <div class="view-arrows">
+
+    <div id="arrow-left" class="arrow" onclick="prevView()">❮</div>
+    <div id="arrow-right" class="arrow" onclick="nextView()">❯</div>
+
+  </div>
+
   <script>
+
+    const viewOrder = ["calculator", "registration", "other"];
+    let currentIndex = 0;
+
+    function showViewByIndex(index) {
+
+      currentIndex = index;
+
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      document.getElementById("view-" + viewOrder[index]).classList.add("active");
+
+      updateArrows();
+    }
+
+    function nextView() {
+      if (currentIndex < viewOrder.length - 1) {
+        showViewByIndex(currentIndex + 1);
+      }
+    }
+
+    function prevView() {
+      if (currentIndex > 0) {
+        showViewByIndex(currentIndex - 1);
+      }
+    }
+
+    function updateArrows() {
+
+      const left = document.getElementById("arrow-left");
+      const right = document.getElementById("arrow-right");
+
+      left.classList.toggle("hidden", currentIndex === 0);
+      right.classList.toggle("hidden", currentIndex === viewOrder.length - 1);
+
+    }
 
     function switchViewLogo(view) {
 
@@ -782,6 +861,12 @@
 
       document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
       document.getElementById("view-" + view).classList.add("active");
+
+      viewOrder.forEach((v, i) => {
+        if (v === view) currentIndex = i;
+      });
+
+      updateArrows();
 
     }
 
