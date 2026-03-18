@@ -1536,9 +1536,33 @@ Payable Tax: ${payable.toLocaleString()} Ft
       const workbook = XLSX.read(buffer, { type: "array" });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-      /* object formátum */
+      /* tömb formátum */
 
-      const rows = XLSX.utils.sheet_to_json(sheet, { defval: null });
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
+
+      /* fejléc */
+
+      const header = rows[0];
+
+      /* oszlop index keresés */
+
+      const guideIndex = header.findIndex(h => {
+        if (!h) return false;
+        const t = h.toString().toLowerCase();
+        return t.includes("irány");
+      });
+
+      const datIndex = header.findIndex(h => {
+        if (!h) return false;
+        const t = h.toString().toLowerCase();
+        return t.includes("dat") && t.includes("ár") && !t.includes("kód");
+      });
+
+      const saleIndex = header.findIndex(h => {
+        if (!h) return false;
+        const t = h.toString().toLowerCase();
+        return t.includes("elad");
+      });
 
       let guide = [];
       let dat = [];
@@ -1559,8 +1583,6 @@ Payable Tax: ${payable.toLocaleString()} Ft
 
           if (val === "" || val === "-" || val === "–" || val === "—") return null;
 
-          /* minden nem szám törlése */
-
           val = val.replace(/[^\d]/g, "");
 
         }
@@ -1572,19 +1594,21 @@ Payable Tax: ${payable.toLocaleString()} Ft
       }
 
 
-      /* végig a sorokon */
+      /* sorok feldolgozása */
 
-      rows.forEach(r => {
+      for (let i = 1; i < rows.length; i++) {
 
-        const guideVal = parseNumber(r["Irányérték"]);
-        const datVal = parseNumber(r["DAT ár"]);
-        const saleVal = parseNumber(r["Eladási ár"]);
+        const r = rows[i];
+
+        const guideVal = parseNumber(r[guideIndex]);
+        const datVal = parseNumber(r[datIndex]);
+        const saleVal = parseNumber(r[saleIndex]);
 
         if (guideVal !== null) guide.push(guideVal);
         if (datVal !== null) dat.push(datVal);
         if (saleVal !== null) sale.push(saleVal);
 
-      });
+      }
 
 
       /* stat */
