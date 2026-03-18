@@ -327,6 +327,7 @@
     #statsTable td {
       border: 1px solid #444;
       padding: 6px 10px;
+      line-height: 1.3;
       text-align: center;
       white-space: nowrap;
     }
@@ -338,7 +339,7 @@
 
     #statsTable td span {
       font-size: 11px;
-      opacity: 0.8;
+      opacity: 0.75;
     }
 
     #statsTable thead th:first-child {
@@ -1419,30 +1420,32 @@ Payable Tax: ${payable.toLocaleString()} Ft
 
           const td = document.createElement("td");
 
-          /* első hónapnál nincs összehasonlítás */
+          /* első hónap */
 
           if (c === 2) {
             td.textContent = val;
           }
+
           else {
 
             const prev = rows[r][c - 1];
 
-            if (prev !== null && prev !== 0) {
+            if (prev !== null) {
 
-              const change = ((val - prev) / prev) * 100;
-              const percent = change.toFixed(1);
+              const diff = val - prev;
 
-              /* szín */
+              /* növekedés */
 
-              if (change > 0) {
+              if (diff > 0) {
                 td.classList.add("positive");
-                td.innerHTML = `${val}<br>(+${percent}%)`;
+                td.innerHTML = `${val}<br>(+${diff})`;
               }
 
-              else if (change < 0) {
+              /* csökkenés */
+
+              else if (diff < 0) {
                 td.classList.add("negative");
-                td.innerHTML = `${val}<br>(${percent}%)`;
+                td.innerHTML = `${val}<br>(${diff})`;
               }
 
               else {
