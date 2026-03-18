@@ -413,15 +413,15 @@
 
           <p>Vehicle valuation and statistics dashboard.</p>
 
-          <button onclick="switchView(event,'calculator')">
+          <button onclick="showViewByIndex(0)">
             Depreciation Calculator
           </button>
 
-          <button onclick="switchView(event,'registration')">
+          <button onclick="showViewByIndex(1)">
             Registration Tax
           </button>
 
-          <button onclick="switchView(event,'other')">
+          <button onclick="showViewByIndex(2)">
             Expert Offices Dashboard
           </button>
 
@@ -752,7 +752,7 @@
 
       const activeView = document.querySelector(".view.active").id;
 
-      /* WELCOME oldalon nincs nyíl */
+      /* HOME */
 
       if (activeView === "view-welcome") {
         left.classList.add("hidden");
@@ -814,6 +814,11 @@
 
       document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
       document.getElementById("view-" + view).classList.add("active");
+
+      /* reset index mert welcome nincs a viewOrderben */
+      currentIndex = -1;
+
+      updateArrows();
 
     }
 
