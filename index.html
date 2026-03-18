@@ -332,6 +332,10 @@
 
   <div class="navbar">
 
+    <div class="nav-item" onclick="switchView(event,'welcome')">
+      Home
+    </div>
+
     <div class="nav-item active" onclick="switchView(event,'calculator')">
       Depreciation Calculator
     </div>
@@ -345,6 +349,41 @@
     </div>
 
   </div>
+
+  <div id="view-welcome" class="view active">
+
+    <div class="container">
+
+      <div class="card" style="width:900px;text-align:center">
+
+        <div class="header">
+          <h1>DAT Hungary Tools</h1>
+        </div>
+
+        <div class="content">
+
+          <p>Vehicle valuation and statistics dashboard.</p>
+
+          <button onclick="switchView(event,'calculator')">
+            Depreciation Calculator
+          </button>
+
+          <button onclick="switchView(event,'registration')">
+            Registration Tax
+          </button>
+
+          <button onclick="switchView(event,'other')">
+            Expert Offices Dashboard
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
 
   <!-- DEPRECIATION -->
 
