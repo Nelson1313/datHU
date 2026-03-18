@@ -324,10 +324,11 @@
 
     .view-arrows {
       position: fixed;
-      bottom: 30px;
+      bottom: 80px;
       left: 0;
       right: 0;
       pointer-events: none;
+      z-index: 9999;
     }
 
     .arrow {
@@ -744,14 +745,30 @@
       }
     }
 
-    function updateArrows() {
+    function showViewByIndex(index) {
 
-      const left = document.getElementById("arrow-left");
-      const right = document.getElementById("arrow-right");
+      currentIndex = index;
 
-      left.classList.toggle("hidden", currentIndex === 0);
-      right.classList.toggle("hidden", currentIndex === viewOrder.length - 1);
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      document.getElementById("view-" + viewOrder[index]).classList.add("active");
 
+      /* NAVBAR ACTIVE */
+
+      document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+
+      const navMap = {
+        calculator: 0,
+        registration: 1,
+        other: 2
+      };
+
+      const navItems = document.querySelectorAll(".nav-item");
+
+      if (navMap[viewOrder[index]] !== undefined) {
+        navItems[navMap[viewOrder[index]]].classList.add("active");
+      }
+
+      updateArrows();
     }
 
     function switchViewLogo(view) {
