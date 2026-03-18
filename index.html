@@ -1532,56 +1532,93 @@ Payable Tax: ${payable.toLocaleString()} Ft
 
       const rows = XLSX.utils.sheet_to_json(sheet, { defval: null });
 
-      /* oszlopok */
+      /* tömbök */
 
-      let irany = [];
+      let guide = [];
       let dat = [];
-      let eladas = [];
+      let sale = [];
+
+
+      /* szám parse függvény */
+
+      function parseNumber(val) {
+
+        if (val === null || val === undefined) return null;
+
+        if (typeof val === "string") {
+
+          val = val.trim();
+
+          if (val === "" || val === "-") return null;
+
+          val = val.replace(/\s/g, "");
+
+        }
+
+        const num = Number(val);
+
+        return isNaN(num) ? null : num;
+
+      }
+
+
+      /* adatok feldolgozása */
 
       rows.forEach(r => {
 
-        const ir = Number(r["Irányérték"]);
-        const da = Number(r["  DAT ár  "] || r["DAT ár"]);
-        const el = Number(r["  Eladási ár  "] || r["Eladási ár"]);
+        const guideVal = parseNumber(r["Irányérték"]);
+        const datVal = parseNumber(r["DAT ár"]);
+        const saleVal = parseNumber(r["Eladási ár"]);
 
-        if (!isNaN(ir)) irany.push(ir);
-        if (!isNaN(da)) dat.push(da);
-        if (!isNaN(el)) eladas.push(el);
+        if (guideVal !== null) guide.push(guideVal);
+        if (datVal !== null) dat.push(datVal);
+        if (saleVal !== null) sale.push(saleVal);
 
       });
+
 
       /* statisztika */
 
       function stats(arr) {
 
+        if (arr.length === 0) {
+          return { avg: 0, min: 0, max: 0 };
+        }
+
         return {
+
           avg: Math.round(arr.reduce((a, b) => a + b, 0) / arr.length),
           min: Math.min(...arr),
           max: Math.max(...arr)
+
         };
 
       }
 
-      const s1 = stats(irany);
-      const s2 = stats(dat);
-      const s3 = stats(eladas);
+
+      const sGuide = stats(guide);
+      const sDat = stats(dat);
+      const sSale = stats(sale);
+
+
+      /* eredmény kiírás */
 
       document.getElementById("marketResult").innerHTML = `
 
-<b>Irányérték</b><br>
-Average: ${s1.avg.toLocaleString()} Ft<br>
-Min: ${s1.min.toLocaleString()} Ft<br>
-Max: ${s1.max.toLocaleString()} Ft<br><br>
+<b>Guide Price</b><br>
+Average: ${sGuide.avg.toLocaleString()} Ft<br>
+Min: ${sGuide.min.toLocaleString()} Ft<br>
+Max: ${sGuide.max.toLocaleString()} Ft<br><br>
 
-<b>DAT ár</b><br>
-Average: ${s2.avg.toLocaleString()} Ft<br>
-Min: ${s2.min.toLocaleString()} Ft<br>
-Max: ${s2.max.toLocaleString()} Ft<br><br>
+<b>DAT Price</b><br>
+Average: ${sDat.avg.toLocaleString()} Ft<br>
+Min: ${sDat.min.toLocaleString()} Ft<br>
+Max: ${sDat.max.toLocaleString()} Ft<br><br>
 
-<b>Eladási ár</b><br>
-Average: ${s3.avg.toLocaleString()} Ft<br>
-Min: ${s3.min.toLocaleString()} Ft<br>
-Max: ${s3.max.toLocaleString()} Ft
+<b>Sale Price</b><br>
+Average: ${sSale.avg.toLocaleString()} Ft<br>
+Min: ${sSale.min.toLocaleString()} Ft<br>
+Max: ${sSale.max.toLocaleString()} Ft
 
 `;
 
