@@ -267,6 +267,10 @@
       text-align: center;
     }
 
+    #changeTable td:first-child {
+      line-height: 1.2;
+      white-space: normal;
+    }
 
     /* STICKY HEADER */
 
@@ -1331,7 +1335,7 @@ Payable Tax: ${payable.toLocaleString()} Ft
 
         const tr = document.createElement("tr");
 
-        let html = `<td>${currentYear}. ${month}</td>`;
+        let html = `<td>${currentYear}.<br>${month}</td>`;
 
         for (const key in partners) {
 
