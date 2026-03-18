@@ -336,6 +336,11 @@
       font-weight: 600;
     }
 
+    #statsTable td span {
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
     #statsTable thead th:first-child {
       background: #FFD200;
       z-index: 10;
@@ -1413,7 +1418,40 @@ Payable Tax: ${payable.toLocaleString()} Ft
           if (val === null) continue;
 
           const td = document.createElement("td");
-          td.textContent = val;
+
+          /* első hónapnál nincs összehasonlítás */
+
+          if (c === 2) {
+            td.textContent = val;
+          }
+          else {
+
+            const prev = rows[r][c - 1];
+
+            if (prev !== null && prev !== 0) {
+
+              const change = ((val - prev) / prev) * 100;
+              const percent = change.toFixed(1);
+
+              /* szín */
+
+              if (change > 0) {
+                td.classList.add("positive");
+                td.innerHTML = `${val}<br>(+${percent}%)`;
+              }
+
+              else if (change < 0) {
+                td.classList.add("negative");
+                td.innerHTML = `${val}<br>(${percent}%)`;
+              }
+
+              else {
+                td.textContent = val;
+              }
+
+            }
+
+          }
 
           tr.appendChild(td);
 
