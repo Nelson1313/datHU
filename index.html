@@ -296,6 +296,11 @@
       background: #fff9cc;
     }
 
+    #changeTable td.col-hover,
+    #changeTable th.col-hover {
+      background: #f7f9ff;
+    }
+
     /* POSITIVE / NEGATIVE SZÍNEK */
 
     .positive {
@@ -1479,6 +1484,45 @@ Payable Tax: ${payable.toLocaleString()} Ft
 
     document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
 
+    const changeTable = document.getElementById("changeTable");
+
+    changeTable.addEventListener("mouseover", function (e) {
+
+      const cell = e.target.closest("td, th");
+      if (!cell) return;
+
+      const colIndex = cell.cellIndex;
+
+      /* Month oszlop kihagyása */
+      if (colIndex === 0) return;
+
+      const rows = changeTable.rows;
+
+      for (let r of rows) {
+        if (r.cells[colIndex]) {
+          r.cells[colIndex].classList.add("col-hover");
+        }
+      }
+
+    });
+
+    changeTable.addEventListener("mouseout", function (e) {
+
+      const cell = e.target.closest("td, th");
+      if (!cell) return;
+
+      const colIndex = cell.cellIndex;
+      if (colIndex === 0) return;
+
+      const rows = changeTable.rows;
+
+      for (let r of rows) {
+        if (r.cells[colIndex]) {
+          r.cells[colIndex].classList.remove("col-hover");
+        }
+      }
+
+    });
   </script>
 
 </body>
