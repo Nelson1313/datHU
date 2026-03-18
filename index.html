@@ -814,7 +814,7 @@
 
   <script>
 
-    const viewOrder = ["calculator", "registration", "other"];
+    const viewOrder = ["calculator", "registration", "other", "market"];
     let currentIndex = 0;
 
     function showViewByIndex(index) {
@@ -872,8 +872,14 @@
 
       if (activeView === "view-other") {
         left.classList.remove("hidden");
+        right.classList.remove("hidden");
+      }
+
+      if (activeView === "view-market") {
+        left.classList.remove("hidden");
         right.classList.add("hidden");
       }
+
 
     }
     function showViewByIndex(index) {
@@ -1545,17 +1551,23 @@ Payable Tax: ${payable.toLocaleString()} Ft
 
         if (val === null || val === undefined) return null;
 
-        if (typeof val === "number") {
-          return val;
-        }
+        /* ha már szám */
+
+        if (typeof val === "number") return val;
+
+        /* string feldolgozás */
 
         if (typeof val === "string") {
 
           val = val.trim();
 
+          /* üres vagy kötőjel */
+
           if (val === "" || val === "-" || val === "–" || val === "—") return null;
 
-          val = val.replace(/\s/g, "");
+          /* minden nem szám karakter törlése */
+
+          val = val.replace(/[^\d]/g, "");
 
         }
 
