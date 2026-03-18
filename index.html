@@ -34,10 +34,19 @@
 
     .nav-item {
       color: white;
+      transition: all 0.25s ease;
       margin-right: 40px;
       cursor: pointer;
       font-weight: 500;
       position: relative;
+    }
+
+    .nav-item:hover {
+      color: #FFD200;
+    }
+
+    .nav-item::after {
+      transition: all 0.25s ease;
     }
 
     .nav-item.active::after {
@@ -60,6 +69,11 @@
 
     .nav-logo img {
       height: 38px;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-logo:hover img {
+      transform: scale(1.15);
     }
 
     /* VIEW */
@@ -94,8 +108,14 @@
     .card {
       background: white;
       border-radius: 24px;
+      transition: all 0.3s ease;
       box-shadow: 0 30px 70px rgba(0, 0, 0, 0.08);
       overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 35px 80px rgba(0, 0, 0, 0.12);
     }
 
     .card-calculator {
@@ -183,6 +203,7 @@
       width: 100%;
       padding: 16px;
       border-radius: 14px;
+      transition: all 0.25s ease;
       border: none;
       background: var(--yellow);
       color: var(--blue);
@@ -190,6 +211,11 @@
       font-size: 15px;
       cursor: pointer;
       margin-top: 25px;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
 
     .result {
@@ -263,6 +289,13 @@
       border-left: 1px solid #444;
     }
 
+    #changeTable tbody tr:hover {
+      background: #f7f9ff;
+    }
+
+    #statsTable tbody tr:hover {
+      background: #fff9cc;
+    }
 
     /* POSITIVE / NEGATIVE SZÍNEK */
 
@@ -345,6 +378,13 @@
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
       pointer-events: auto;
       user-select: none;
+      transition: all 0.25s ease;
+    }
+
+    .arrow:hover {
+      transform: scale(1.2);
+      background: #FFD200;
+      color: #0A3D91;
     }
 
     #arrow-left {
