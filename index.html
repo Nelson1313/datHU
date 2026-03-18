@@ -1530,26 +1530,30 @@ Payable Tax: ${payable.toLocaleString()} Ft
       const workbook = XLSX.read(buffer, { type: "array" });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-      const rows = XLSX.utils.sheet_to_json(sheet, { defval: null });
+      /* itt most NEM object hanem tömb */
 
-      /* tömbök */
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
 
       let guide = [];
       let dat = [];
       let sale = [];
 
 
-      /* szám parse függvény */
+      /* szám parse */
 
       function parseNumber(val) {
 
         if (val === null || val === undefined) return null;
 
+        if (typeof val === "number") {
+          return val;
+        }
+
         if (typeof val === "string") {
 
           val = val.trim();
 
-          if (val === "" || val === "-") return null;
+          if (val === "" || val === "-" || val === "–" || val === "—") return null;
 
           val = val.replace(/\s/g, "");
 
@@ -1562,22 +1566,24 @@ Payable Tax: ${payable.toLocaleString()} Ft
       }
 
 
-      /* adatok feldolgozása */
+      /* első sor header ezért skip */
 
-      rows.forEach(r => {
+      for (let i = 1; i < rows.length; i++) {
 
-        const guideVal = parseNumber(r["Irányérték"]);
-        const datVal = parseNumber(r["DAT ár"]);
-        const saleVal = parseNumber(r["Eladási ár"]);
+        const r = rows[i];
+
+        const guideVal = parseNumber(r[4]);
+        const datVal = parseNumber(r[5]);
+        const saleVal = parseNumber(r[6]);
 
         if (guideVal !== null) guide.push(guideVal);
         if (datVal !== null) dat.push(datVal);
         if (saleVal !== null) sale.push(saleVal);
 
-      });
+      }
 
 
-      /* statisztika */
+      /* stat */
 
       function stats(arr) {
 
@@ -1586,11 +1592,9 @@ Payable Tax: ${payable.toLocaleString()} Ft
         }
 
         return {
-
           avg: Math.round(arr.reduce((a, b) => a + b, 0) / arr.length),
           min: Math.min(...arr),
           max: Math.max(...arr)
-
         };
 
       }
@@ -1601,7 +1605,7 @@ Payable Tax: ${payable.toLocaleString()} Ft
       const sSale = stats(sale);
 
 
-      /* eredmény kiírás */
+      /* output */
 
       document.getElementById("marketResult").innerHTML = `
 
