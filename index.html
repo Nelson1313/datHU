@@ -459,6 +459,10 @@
       Expert Offices
     </div>
 
+    <div class="nav-item" onclick="switchView(event,'market')">
+      Market Analysis
+    </div>
+
   </div>
 
   <div id="view-welcome" class="view active">
@@ -494,7 +498,6 @@
     </div>
 
   </div>
-
 
   <!-- DEPRECIATION -->
 
@@ -778,6 +781,35 @@
     <div id="arrow-left" class="arrow" onclick="prevView()">❮</div>
     <div id="arrow-right" class="arrow" onclick="nextView()">❯</div>
 
+  </div>
+
+  <div id="view-market" class="view">
+
+    <div class="container">
+
+      <div class="card card-calculator">
+
+        <div class="header">
+          <h1>Market Price Analysis</h1>
+        </div>
+
+        <div class="content">
+
+          <div class="input-group">
+            <label>Upload XLSX file</label>
+            <input type="file" id="marketFile" accept=".xlsx">
+          </div>
+
+          <button onclick="analyzeMarket()">Analyze</button>
+
+          <div class="result" id="marketResult">
+            Upload a file to calculate statistics.
+          </div>
+
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <script>
@@ -1483,6 +1515,77 @@ Payable Tax: ${payable.toLocaleString()} Ft
 
     }
 
+    async function analyzeMarket() {
+
+      const fileInput = document.getElementById("marketFile");
+
+      if (!fileInput.files.length) {
+        alert("Please upload an XLSX file.");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const buffer = await file.arrayBuffer();
+
+      const workbook = XLSX.read(buffer, { type: "array" });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+      const rows = XLSX.utils.sheet_to_json(sheet, { defval: null });
+
+      /* oszlopok */
+
+      let irany = [];
+      let dat = [];
+      let eladas = [];
+
+      rows.forEach(r => {
+
+        const ir = Number(r["Irányérték"]);
+        const da = Number(r["  DAT ár  "] || r["DAT ár"]);
+        const el = Number(r["  Eladási ár  "] || r["Eladási ár"]);
+
+        if (!isNaN(ir)) irany.push(ir);
+        if (!isNaN(da)) dat.push(da);
+        if (!isNaN(el)) eladas.push(el);
+
+      });
+
+      /* statisztika */
+
+      function stats(arr) {
+
+        return {
+          avg: Math.round(arr.reduce((a, b) => a + b, 0) / arr.length),
+          min: Math.min(...arr),
+          max: Math.max(...arr)
+        };
+
+      }
+
+      const s1 = stats(irany);
+      const s2 = stats(dat);
+      const s3 = stats(eladas);
+
+      document.getElementById("marketResult").innerHTML = `
+
+<b>Irányérték</b><br>
+Average: ${s1.avg.toLocaleString()} Ft<br>
+Min: ${s1.min.toLocaleString()} Ft<br>
+Max: ${s1.max.toLocaleString()} Ft<br><br>
+
+<b>DAT ár</b><br>
+Average: ${s2.avg.toLocaleString()} Ft<br>
+Min: ${s2.min.toLocaleString()} Ft<br>
+Max: ${s2.max.toLocaleString()} Ft<br><br>
+
+<b>Eladási ár</b><br>
+Average: ${s3.avg.toLocaleString()} Ft<br>
+Min: ${s3.min.toLocaleString()} Ft<br>
+Max: ${s3.max.toLocaleString()} Ft
+
+`;
+
+    }
 
 
     window.addEventListener("load", () => {
