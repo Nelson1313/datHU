@@ -745,6 +745,43 @@
       }
     }
 
+    function updateArrows() {
+
+      const left = document.getElementById("arrow-left");
+      const right = document.getElementById("arrow-right");
+
+      const activeView = document.querySelector(".view.active").id;
+
+      /* WELCOME oldalon nincs nyíl */
+
+      if (activeView === "view-welcome") {
+        left.classList.add("hidden");
+        right.classList.add("hidden");
+        return;
+      }
+
+      /* Depreciation */
+
+      if (activeView === "view-calculator") {
+        left.classList.add("hidden");
+        right.classList.remove("hidden");
+      }
+
+      /* Registration */
+
+      if (activeView === "view-registration") {
+        left.classList.remove("hidden");
+        right.classList.remove("hidden");
+      }
+
+      /* Expert Offices */
+
+      if (activeView === "view-other") {
+        left.classList.remove("hidden");
+        right.classList.add("hidden");
+      }
+
+    }
     function showViewByIndex(index) {
 
       currentIndex = index;
@@ -1354,7 +1391,10 @@ Payable Tax: ${payable.toLocaleString()} Ft
       loadOfficeChart();
       loadChangeTable();
       loadStatsTable();
+      updateArrows();
     });
+
+    document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
 
   </script>
 
