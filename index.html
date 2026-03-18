@@ -1536,9 +1536,9 @@ Payable Tax: ${payable.toLocaleString()} Ft
       const workbook = XLSX.read(buffer, { type: "array" });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-      /* itt most NEM object hanem tömb */
+      /* object formátum */
 
-      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
+      const rows = XLSX.utils.sheet_to_json(sheet, { defval: null });
 
       let guide = [];
       let dat = [];
@@ -1551,21 +1551,15 @@ Payable Tax: ${payable.toLocaleString()} Ft
 
         if (val === null || val === undefined) return null;
 
-        /* ha már szám */
-
         if (typeof val === "number") return val;
-
-        /* string feldolgozás */
 
         if (typeof val === "string") {
 
           val = val.trim();
 
-          /* üres vagy kötőjel */
-
           if (val === "" || val === "-" || val === "–" || val === "—") return null;
 
-          /* minden nem szám karakter törlése */
+          /* minden nem szám törlése */
 
           val = val.replace(/[^\d]/g, "");
 
@@ -1578,21 +1572,19 @@ Payable Tax: ${payable.toLocaleString()} Ft
       }
 
 
-      /* első sor header ezért skip */
+      /* végig a sorokon */
 
-      for (let i = 1; i < rows.length; i++) {
+      rows.forEach(r => {
 
-        const r = rows[i];
-
-        const guideVal = parseNumber(r[4]);
-        const datVal = parseNumber(r[5]);
-        const saleVal = parseNumber(r[6]);
+        const guideVal = parseNumber(r["Irányérték"]);
+        const datVal = parseNumber(r["DAT ár"]);
+        const saleVal = parseNumber(r["Eladási ár"]);
 
         if (guideVal !== null) guide.push(guideVal);
         if (datVal !== null) dat.push(datVal);
         if (saleVal !== null) sale.push(saleVal);
 
-      }
+      });
 
 
       /* stat */
@@ -1610,7 +1602,6 @@ Payable Tax: ${payable.toLocaleString()} Ft
         };
 
       }
-
 
       const sGuide = stats(guide);
       const sDat = stats(dat);
