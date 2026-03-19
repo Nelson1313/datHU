@@ -211,13 +211,8 @@ function generateFilters() {
     const fuelDiv = document.getElementById("fuelFilters");
     const yearDiv = document.getElementById("yearFilters");
 
-    fuelDiv.innerHTML += `
-<label>
-<input type="checkbox" ...>
-<span class="label-text">${f} (${count})</span>
-</label><br>
-`;
-    <span class="label-text">${y} (${count})</span>
+    fuelDiv.innerHTML = "";
+    yearDiv.innerHTML = "";
 
     const fuelSet = new Set();
     const yearSet = new Set();
@@ -234,7 +229,6 @@ function generateFilters() {
     });
 
     /* FUEL */
-
     [...fuelSet].sort().forEach(f => {
 
         const count = marketRows.filter(r => r[fuelIndex] === f).length;
@@ -248,7 +242,6 @@ function generateFilters() {
     });
 
     /* YEAR */
-
     [...yearSet].sort().forEach(y => {
 
         const count = marketRows.filter(r => excelDateToYear(r[yearIndex]) === y).length;
@@ -261,15 +254,8 @@ function generateFilters() {
 `;
     });
 
-    /* EVENT */
-
-    document.getElementById("fuelFilters").addEventListener("change", (e) => {
-        calculateFilteredStats();
-    });
-    document.getElementById("yearFilters").addEventListener("change", (e) => {
-        calculateFilteredStats();
-    });
-
+    document.getElementById("fuelFilters").addEventListener("change", calculateFilteredStats);
+    document.getElementById("yearFilters").addEventListener("change", calculateFilteredStats);
 }
 
 /* -------- FILTERED CALC -------- */
