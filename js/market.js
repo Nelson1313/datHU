@@ -263,8 +263,12 @@ function generateFilters() {
 
     /* EVENT */
 
-    document.getElementById("fuelFilters").addEventListener("change", calculateFilteredStats);
-    document.getElementById("yearFilters").addEventListener("change", calculateFilteredStats);
+    document.getElementById("fuelFilters").addEventListener("change", (e) => {
+        calculateFilteredStats();
+    });
+    document.getElementById("yearFilters").addEventListener("change", (e) => {
+        calculateFilteredStats();
+    });
 
 }
 
@@ -327,7 +331,9 @@ Please select at least one fuel type and year.
     const sDat = stats(dat);
     const sSale = stats(sale);
 
-    updateFilterCounts();
+    setTimeout(() => {
+        updateFilterCounts();
+    }, 0);
 
     document.getElementById("marketResult").innerHTML = `
 <b>Base Price</b><br>
