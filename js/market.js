@@ -157,7 +157,7 @@ function generateFilters() {
 
         fuelDiv.innerHTML += `
 <label>
-<input type="checkbox" value="${f}" class="fuelFilter" checked>
+<input type="checkbox" value="${String(f).trim()}" class="fuelFilter" checked>
 ${f} (${count})
 </label><br>
 `;
@@ -171,7 +171,7 @@ ${f} (${count})
 
         yearDiv.innerHTML += `
 <label>
-<input type="checkbox" value="${y}" class="yearFilter" checked>
+<input type="checkbox" value="${String(y).trim()}" class="yearFilter" checked>
 ${y} (${count})
 </label><br>
 `;
@@ -214,8 +214,11 @@ Please select at least one fuel type and year.
         const rowYear = excelDateToYear(r[yearIndex]);
 
         // SZŰRÉS (EZ A LÉNYEG!)
-        if (!selectedFuel.includes(r[fuelIndex])) return;
-        if (!rowYear || !selectedYear.includes(String(rowYear))) return;
+        const fuelValue = String(r[fuelIndex]).trim();
+
+        if (!selectedFuel.includes(fuelValue)) return;
+        if (!rowYear) return;
+        if (!selectedYear.includes(String(rowYear).trim())) return;
 
         const g = parseNumber(r[guideIndex]);
         const d = parseNumber(r[datIndex]);
