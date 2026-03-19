@@ -19,16 +19,17 @@ function parseNumber(val) {
 
         if (val === "" || val === "-" || val === "–" || val === "—") return null;
 
-        /* minden nem szám törlése */
+        // szóköz törlés
+        val = val.replace(/\s/g, "");
 
-        val = val.replace(/[^\d]/g, "");
+        // vessző → pont (EU formátum)
+        val = val.replace(",", ".");
 
     }
 
     const num = Number(val);
 
     return isNaN(num) ? null : num;
-
 }
 
 /* -------- MAIN -------- */
@@ -227,7 +228,7 @@ Please select at least one fuel type and year.
         }
 
         return {
-            avg: Math.round(arr.reduce((a, b) => a + b, 0) / arr.length),
+            avg: arr.reduce((a, b) => a + b, 0) / arr.length,
             min: Math.min(...arr),
             max: Math.max(...arr)
         };
@@ -239,7 +240,7 @@ Please select at least one fuel type and year.
 
     document.getElementById("marketResult").innerHTML = `
 <b>Base Price</b><br>
-Average: ${sGuide.avg.toLocaleString()} Ft<br>
+Average: ${sGuide.avg.toLocaleString(undefined, { maximumFractionDigits: 0 })} Ft<br>
 Min: ${sGuide.min.toLocaleString()} Ft<br>
 Max: ${sGuide.max.toLocaleString()} Ft<br><br>
 
