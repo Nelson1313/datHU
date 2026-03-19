@@ -22,9 +22,11 @@ function parseNumber(val) {
         // szóköz törlés
         val = val.replace(/\s/g, "");
 
-        // vessző → pont (EU formátum)
-        val = val.replace(",", ".");
+        // ezres elválasztó pont törlés
+        val = val.replace(/\./g, "");
 
+        // vessző → pont (tizedes)
+        val = val.replace(/,/g, ".");
     }
 
     const num = Number(val);
