@@ -245,12 +245,12 @@ Min: ${sGuide.min.toLocaleString()} Ft<br>
 Max: ${sGuide.max.toLocaleString()} Ft<br><br>
 
 <b>DAT Price</b><br>
-Average: ${sDat.avg.toLocaleString()} Ft<br>
+Average: ${sDat.avg.toLocaleString(undefined, { maximumFractionDigits: 0 })} Ft<br>
 Min: ${sDat.min.toLocaleString()} Ft<br>
 Max: ${sDat.max.toLocaleString()} Ft<br><br>
 
 <b>Sale Price</b><br>
-Average: ${sSale.avg.toLocaleString()} Ft<br>
+Average: ${sSale.avg.toLocaleString(undefined, { maximumFractionDigits: 0 })} Ft<br>
 Min: ${sSale.min.toLocaleString()} Ft<br>
 Max: ${sSale.max.toLocaleString()} Ft
 `;
