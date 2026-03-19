@@ -331,10 +331,6 @@ Please select at least one fuel type and year.
     const sDat = stats(dat);
     const sSale = stats(sale);
 
-    setTimeout(() => {
-        updateFilterCounts();
-    }, 0);
-
     document.getElementById("marketResult").innerHTML = `
 <b>Base Price</b><br>
 Average: ${sGuide.avg.toLocaleString("hu-HU", { maximumFractionDigits: 0 })} Ft<br>
@@ -351,4 +347,8 @@ Average: ${sSale.avg.toLocaleString("hu-HU", { maximumFractionDigits: 0 })} Ft<b
 Min: ${sSale.min.toLocaleString("hu-HU")} Ft<br>
 Max: ${sSale.max.toLocaleString("hu-HU")} Ft
 `;
+
+    setTimeout(() => {
+        updateFilterCounts();
+    }, 0);
 }
