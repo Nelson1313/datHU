@@ -37,6 +37,8 @@
 
   </div>
 
+  <!-- Welcome PAGE -->
+
   <div id="view-welcome" class="view active">
 
     <div class="container">
@@ -75,7 +77,7 @@
 
   </div>
 
-  <!-- DEPRECIATION -->
+  <!-- Értékcsökkenés -->
 
   <div id="view-calculator" class="view">
 
@@ -160,7 +162,7 @@
     </div>
   </div>
 
-  <!-- REGISTRATION TAX -->
+  <!-- Regisztrációs adó -->
 
   <div id="view-registration" class="view">
 
@@ -262,6 +264,8 @@
     </div>
   </div>
 
+  <!-- Szakértőiroda grafikonok/táblázatok -->
+
   <div id="view-other" class="view">
 
     <div class="container">
@@ -349,8 +353,9 @@
     </div>
 
   </div>
-
   </div>
+
+  <!-- Navigációs nyilak -->
 
   <div class="view-arrows">
 
@@ -358,6 +363,8 @@
     <div id="arrow-right" class="arrow" onclick="nextView()">❯</div>
 
   </div>
+
+  <!-- Használtjármű analízis -->
 
   <div id="view-market" class="view">
 
@@ -378,10 +385,29 @@
 
           <button onclick="analyzeMarket()">Analyze</button>
 
+          <div id="fuelFilters"></div>
+          <div id="yearFilters"></div>
+
           <div class="result" id="marketResult">
             Upload a file to calculate statistics.
           </div>
+          <div class="section-title">Filters</div>
 
+          <div class="grid-2">
+
+            <!-- FUEL -->
+            <div class="input-group">
+              <label>Fuel Type</label>
+              <div id="fuelFilters"></div>
+            </div>
+
+            <!-- YEAR -->
+            <div class="input-group">
+              <label>First Registration Year</label>
+              <div id="yearFilters"></div>
+            </div>
+
+          </div>
         </div>
       </div>
 
