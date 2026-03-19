@@ -80,6 +80,31 @@ async function analyzeMarket() {
 
 }
 
+function excelDateToYear(val) {
+
+    if (!val) return null;
+
+    /* ha szám → Excel dátum */
+
+    if (typeof val === "number") {
+
+        const excelEpoch = new Date(1899, 11, 30);
+        const date = new Date(excelEpoch.getTime() + val * 86400000);
+
+        return date.getFullYear();
+    }
+
+    /* ha string (pl már év) */
+
+    const num = Number(val);
+    if (!isNaN(num) && num > 1900 && num < 2100) {
+        return num;
+    }
+
+    return null;
+
+}
+
 /* -------- FILTER UI -------- */
 
 function generateFilters() {
@@ -90,7 +115,10 @@ function generateFilters() {
     marketRows.forEach(r => {
 
         if (r[fuelIndex]) fuelSet.add(r[fuelIndex]);
-        if (r[yearIndex]) yearSet.add(r[yearIndex]);
+        if (r[yearIndex]) {
+            const year = excelDateToYear(r[yearIndex]);
+            if (year) yearSet.add(year);
+        }
 
     });
 
@@ -119,7 +147,7 @@ ${f}
 
         yearDiv.innerHTML += `
 <label>
-<input type="checkbox" value="${y}" class="yearFilter" checked>
+<input type="checkbox" value="${y.toString()}" class="yearFilter" checked>
 ${y}
 </label><br>
 `;
@@ -138,8 +166,10 @@ ${y}
 
 function calculateFilteredStats() {
 
+    const rowYear = excelDateToYear(r[yearIndex]);
+    if (selectedYear.length && !selectedYear.includes(String(rowYear))) return;
+
     const selectedFuel = [...document.querySelectorAll(".fuelFilter:checked")].map(e => e.value);
-    const selectedYear = [...document.querySelectorAll(".yearFilter:checked")].map(e => e.value);
 
     let guide = [];
     let dat = [];
