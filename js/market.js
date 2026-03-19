@@ -96,9 +96,7 @@ async function analyzeMarket() {
 
     /* -------- FIRST CALC -------- */
 
-    setTimeout(() => {
-        calculateFilteredStats();
-    }, 0);
+    calculateFilteredStats();
 
 }
 
@@ -181,9 +179,8 @@ ${y} (${count})
 
     /* EVENT */
 
-    document.querySelectorAll(".fuelFilter, .yearFilter").forEach(el => {
-        el.addEventListener("change", calculateFilteredStats);
-    });
+    document.getElementById("fuelFilters").addEventListener("change", calculateFilteredStats);
+    document.getElementById("yearFilters").addEventListener("change", calculateFilteredStats);
 
 }
 
