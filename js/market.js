@@ -185,7 +185,7 @@ function calculateFilteredStats() {
 
         if (selectedFuel.length && !selectedFuel.includes(r[fuelIndex])) return;
 
-        if (selectedYear.length && !selectedYear.includes(String(rowYear))) return;
+        if (selectedYear.length && (!rowYear || !selectedYear.includes(String(rowYear)))) return;
 
         /* VALUES */
 
