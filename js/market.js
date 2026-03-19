@@ -180,7 +180,6 @@ function calculateFilteredStats() {
 
     marketRows.forEach(r => {
 
-        /* YEAR KONVERTÁLÁS */
         const rowYear = excelDateToYear(r[yearIndex]);
 
         /* FILTER */
