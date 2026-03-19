@@ -13,24 +13,28 @@ function parseNumber(val) {
 
     if (typeof val === "number") return val;
 
-    if (typeof val === "string") {
+    if (typeof val !== "string") return null;
 
-        val = val.trim();
+    val = val.trim();
+    if (!val) return null;
 
-        if (!val) return null;
+    // szóköz törlés
+    val = val.replace(/\s/g, "");
 
-        // szóköz törlés
-        val = val.replace(/\s/g, "");
+    // ha több pont van → ezres elválasztó
+    const dotCount = (val.match(/\./g) || []).length;
+    const commaCount = (val.match(/,/g) || []).length;
 
-        // ha van vessző → EU formátum
-        if (val.includes(",")) {
-            val = val.replace(/\./g, ""); // ezres pont törlés
-            val = val.replace(/,/g, ".");
-        }
+    if (commaCount > 0) {
+        // EU formátum
+        val = val.replace(/\./g, "");
+        val = val.replace(/,/g, ".");
+    } else if (dotCount > 1) {
+        // US ezres pontok
+        val = val.replace(/\./g, "");
     }
 
     const num = Number(val);
-
     return isNaN(num) ? null : num;
 }
 
