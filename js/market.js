@@ -118,6 +118,90 @@ function excelDateToYear(val) {
 
 }
 
+function getFilteredRows(ignoreFilter = null) {
+
+    const fuelContainer = document.getElementById("fuelFilters");
+    const yearContainer = document.getElementById("yearFilters");
+
+    const selectedFuel = [...fuelContainer.querySelectorAll(".fuelFilter:checked")]
+        .map(e => e.value.trim());
+
+    const selectedYear = [...yearContainer.querySelectorAll(".yearFilter:checked")]
+        .map(e => e.value.trim());
+
+    return marketRows.filter(r => {
+
+        const fuelValue = r[fuelIndex] != null ? String(r[fuelIndex]).trim() : "";
+        const rowYear = excelDateToYear(r[yearIndex]);
+
+        if (ignoreFilter !== "fuel") {
+            if (!selectedFuel.includes(fuelValue)) return false;
+        }
+
+        if (ignoreFilter !== "year") {
+            if (!rowYear || !selectedYear.includes(String(rowYear))) return false;
+        }
+
+        return true;
+    });
+}
+
+function updateFilterCounts() {
+
+    const fuelDiv = document.getElementById("fuelFilters");
+    const yearDiv = document.getElementById("yearFilters");
+
+    const fuelRows = getFilteredRows("fuel");
+
+    const fuelCounts = {};
+    fuelRows.forEach(r => {
+        const f = String(r[fuelIndex]).trim();
+        if (!f) return;
+        fuelCounts[f] = (fuelCounts[f] || 0) + 1;
+    });
+
+    fuelDiv.querySelectorAll("label").forEach(label => {
+        const input = label.querySelector("input");
+        const val = input.value;
+
+        const count = fuelCounts[val] || 0;
+
+        if (count === 0) {
+            input.checked = false;
+            input.disabled = true;
+        } else {
+            input.disabled = false;
+        }
+
+        label.lastChild.nodeValue = ` ${val} (${count})`;
+    });
+
+    const yearRows = getFilteredRows("year");
+
+    const yearCounts = {};
+    yearRows.forEach(r => {
+        const y = excelDateToYear(r[yearIndex]);
+        if (!y) return;
+        yearCounts[y] = (yearCounts[y] || 0) + 1;
+    });
+
+    yearDiv.querySelectorAll("label").forEach(label => {
+        const input = label.querySelector("input");
+        const val = input.value;
+
+        const count = yearCounts[val] || 0;
+
+        if (count === 0) {
+            input.checked = false;
+            input.disabled = true;
+        } else {
+            input.disabled = false;
+        }
+
+        label.lastChild.nodeValue = ` ${val} (${count})`;
+    });
+}
+
 /* -------- FILTER UI -------- */
 
 function generateFilters() {
@@ -235,6 +319,8 @@ Please select at least one fuel type and year.
     const sGuide = stats(guide);
     const sDat = stats(dat);
     const sSale = stats(sale);
+
+    updateFilterCounts();
 
     document.getElementById("marketResult").innerHTML = `
 <b>Base Price</b><br>

@@ -424,3 +424,7 @@
      }
 
  }
+
+ input:disabled+text {
+     opacity: 0.5;
+ }
