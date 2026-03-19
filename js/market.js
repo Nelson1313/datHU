@@ -53,10 +53,17 @@ async function analyzeMarket() {
 
     /* -------- INDEXEK -------- */
 
-    fuelIndex = header.findIndex(h => h && h.toString().toLowerCase().includes("üzem"));
-    yearIndex = header.findIndex(h => h && h.toString().toLowerCase().includes("forgal"));
+    function findIndexFlexible(header, keywords) {
+        return header.findIndex(h => {
+            if (!h) return false;
+            const t = h.toString().toLowerCase();
+            return keywords.some(k => t.includes(k));
+        });
+    }
 
-    guideIndex = header.findIndex(h => h && h.toString().toLowerCase().includes("irány"));
+    fuelIndex = findIndexFlexible(header, ["üzem", "fuel"]);
+    yearIndex = findIndexFlexible(header, ["forgal", "registration"]);
+    guideIndex = findIndexFlexible(header, ["irány", "guide"]);
 
     datIndex = header.findIndex(h => {
         if (!h) return false;
@@ -64,7 +71,7 @@ async function analyzeMarket() {
         return t.includes("dat") && t.includes("ár") && !t.includes("kód");
     });
 
-    saleIndex = header.findIndex(h => h && h.toString().toLowerCase().includes("elad"));
+    saleIndex = findIndexFlexible(header, ["elad", "sale"]);
 
     /* -------- DATA -------- */
 
