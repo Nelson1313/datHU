@@ -82,13 +82,7 @@ async function analyzeMarket() {
 
     /* -------- DATA -------- */
 
-    marketRows = rows.slice(1).filter(r => {
-        const g = parseNumber(r[guideIndex]);
-        const d = parseNumber(r[datIndex]);
-        const s = parseNumber(r[saleIndex]);
-
-        return g !== null || d !== null || s !== null;
-    });
+    marketRows = rows.slice(1);
 
     /* -------- FILTER UI -------- */
 
@@ -187,15 +181,14 @@ ${y} (${count})
 /* -------- FILTERED CALC -------- */
 
 function calculateFilteredStats() {
-
     const fuelContainer = document.getElementById("fuelFilters");
     const yearContainer = document.getElementById("yearFilters");
 
     const selectedFuel = [...fuelContainer.querySelectorAll(".fuelFilter:checked")]
-        .map(e => e.value);
+        .map(e => e.value.trim());
 
     const selectedYear = [...yearContainer.querySelectorAll(".yearFilter:checked")]
-        .map(e => e.value);
+        .map(e => e.value.trim());
 
     if (selectedFuel.length === 0 || selectedYear.length === 0) {
         document.getElementById("marketResult").innerHTML = `
@@ -205,38 +198,36 @@ Please select at least one fuel type and year.
         return;
     }
 
-    let guide = [];
-    let dat = [];
-    let sale = [];
-
-    marketRows.forEach(r => {
-
+    const filteredRows = marketRows.filter(r => {
+        const fuelValue = r[fuelIndex] != null ? String(r[fuelIndex]).trim() : "";
         const rowYear = excelDateToYear(r[yearIndex]);
 
-        // SZŰRÉS (EZ A LÉNYEG!)
-        const fuelValue = String(r[fuelIndex]).trim();
-
-        if (!selectedFuel.includes(fuelValue)) return;
-        if (!rowYear) return;
-        if (!selectedYear.includes(String(rowYear).trim())) return;
-
-        const g = parseNumber(r[guideIndex]);
-        const d = parseNumber(r[datIndex]);
-        const s = parseNumber(r[saleIndex]);
-
-        if (typeof g === "number" && !isNaN(g)) guide.push(g);
-        if (typeof d === "number" && !isNaN(d)) dat.push(d);
-        if (typeof s === "number" && !isNaN(s)) sale.push(s);
-
+        return selectedFuel.includes(fuelValue) &&
+            rowYear !== null &&
+            selectedYear.includes(String(rowYear));
     });
+
+    const guide = filteredRows
+        .map(r => parseNumber(r[guideIndex]))
+        .filter(v => typeof v === "number" && !isNaN(v));
+
+    const dat = filteredRows
+        .map(r => parseNumber(r[datIndex]))
+        .filter(v => typeof v === "number" && !isNaN(v));
+
+    const sale = filteredRows
+        .map(r => parseNumber(r[saleIndex]))
+        .filter(v => typeof v === "number" && !isNaN(v));
 
     function stats(arr) {
         if (arr.length === 0) {
             return { avg: 0, min: 0, max: 0 };
         }
 
+        const sum = arr.reduce((a, b) => a + b, 0);
+
         return {
-            avg: arr.reduce((a, b) => a + b, 0) / arr.length,
+            avg: sum / arr.length,
             min: Math.min(...arr),
             max: Math.max(...arr)
         };
@@ -248,18 +239,18 @@ Please select at least one fuel type and year.
 
     document.getElementById("marketResult").innerHTML = `
 <b>Base Price</b><br>
-Average: ${sGuide.avg.toLocaleString(undefined, { maximumFractionDigits: 0 })} Ft<br>
-Min: ${sGuide.min.toLocaleString()} Ft<br>
-Max: ${sGuide.max.toLocaleString()} Ft<br><br>
+Average: ${sGuide.avg.toLocaleString("hu-HU", { maximumFractionDigits: 0 })} Ft<br>
+Min: ${sGuide.min.toLocaleString("hu-HU")} Ft<br>
+Max: ${sGuide.max.toLocaleString("hu-HU")} Ft<br><br>
 
 <b>DAT Price</b><br>
-Average: ${sDat.avg.toLocaleString(undefined, { maximumFractionDigits: 0 })} Ft<br>
-Min: ${sDat.min.toLocaleString()} Ft<br>
-Max: ${sDat.max.toLocaleString()} Ft<br><br>
+Average: ${sDat.avg.toLocaleString("hu-HU", { maximumFractionDigits: 0 })} Ft<br>
+Min: ${sDat.min.toLocaleString("hu-HU")} Ft<br>
+Max: ${sDat.max.toLocaleString("hu-HU")} Ft<br><br>
 
 <b>Sale Price</b><br>
-Average: ${sSale.avg.toLocaleString(undefined, { maximumFractionDigits: 0 })} Ft<br>
-Min: ${sSale.min.toLocaleString()} Ft<br>
-Max: ${sSale.max.toLocaleString()} Ft
+Average: ${sSale.avg.toLocaleString("hu-HU", { maximumFractionDigits: 0 })} Ft<br>
+Min: ${sSale.min.toLocaleString("hu-HU")} Ft<br>
+Max: ${sSale.max.toLocaleString("hu-HU")} Ft
 `;
 }
