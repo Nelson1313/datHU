@@ -76,7 +76,9 @@ async function analyzeMarket() {
 
     /* -------- FIRST CALC -------- */
 
-    calculateFilteredStats();
+    setTimeout(() => {
+        calculateFilteredStats();
+    }, 0);
 
 }
 
