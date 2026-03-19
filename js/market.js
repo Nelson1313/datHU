@@ -80,7 +80,10 @@ async function analyzeMarket() {
 
     marketRows = rows.slice(1).filter(r => {
         const g = parseNumber(r[guideIndex]);
-        return g !== null;
+        const d = parseNumber(r[datIndex]);
+        const s = parseNumber(r[saleIndex]);
+
+        return g !== null || d !== null || s !== null;
     });
 
     /* -------- FILTER UI -------- */
