@@ -166,10 +166,11 @@ ${y}
 
 function calculateFilteredStats() {
 
-    const rowYear = excelDateToYear(r[yearIndex]);
-    if (selectedYear.length && !selectedYear.includes(String(rowYear))) return;
+    const selectedFuel = [...document.querySelectorAll(".fuelFilter:checked")]
+        .map(e => e.value);
 
-    const selectedFuel = [...document.querySelectorAll(".fuelFilter:checked")].map(e => e.value);
+    const selectedYear = [...document.querySelectorAll(".yearFilter:checked")]
+        .map(e => e.value);
 
     let guide = [];
     let dat = [];
@@ -177,10 +178,14 @@ function calculateFilteredStats() {
 
     marketRows.forEach(r => {
 
+        /* YEAR KONVERTÁLÁS */
+        const rowYear = excelDateToYear(r[yearIndex]);
+
         /* FILTER */
 
         if (selectedFuel.length && !selectedFuel.includes(r[fuelIndex])) return;
-        if (selectedYear.length && !selectedYear.includes(r[yearIndex])) return;
+
+        if (selectedYear.length && !selectedYear.includes(String(rowYear))) return;
 
         /* VALUES */
 
@@ -194,10 +199,7 @@ function calculateFilteredStats() {
 
     });
 
-    /* -------- STATS -------- */
-
     function stats(arr) {
-
         if (arr.length === 0) {
             return { avg: 0, min: 0, max: 0 };
         }
@@ -207,17 +209,13 @@ function calculateFilteredStats() {
             min: Math.min(...arr),
             max: Math.max(...arr)
         };
-
     }
 
     const sGuide = stats(guide);
     const sDat = stats(dat);
     const sSale = stats(sale);
 
-    /* -------- OUTPUT -------- */
-
     document.getElementById("marketResult").innerHTML = `
-
 <b>Base Price</b><br>
 Average: ${sGuide.avg.toLocaleString()} Ft<br>
 Min: ${sGuide.min.toLocaleString()} Ft<br>
@@ -232,7 +230,5 @@ Max: ${sDat.max.toLocaleString()} Ft<br><br>
 Average: ${sSale.avg.toLocaleString()} Ft<br>
 Min: ${sSale.min.toLocaleString()} Ft<br>
 Max: ${sSale.max.toLocaleString()} Ft
-
 `;
-
 }
