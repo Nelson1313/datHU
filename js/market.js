@@ -176,13 +176,14 @@ Please select at least one fuel type and year.
         return;
     }
 
-    const selectedFuel = [
-        ...document.querySelectorAll("#view-market .fuelFilter:checked")
-    ].map(e => e.value);
+    const fuelContainer = document.getElementById("fuelFilters");
+    const yearContainer = document.getElementById("yearFilters");
 
-    const selectedYear = [
-        ...document.querySelectorAll("#view-market .yearFilter:checked")
-    ].map(e => e.value);
+    const selectedFuel = [...fuelContainer.querySelectorAll(".fuelFilter:checked")]
+        .map(e => e.value);
+
+    const selectedYear = [...yearContainer.querySelectorAll(".yearFilter:checked")]
+        .map(e => e.value);
 
     let guide = [];
     let dat = [];
