@@ -17,16 +17,16 @@ function parseNumber(val) {
 
         val = val.trim();
 
-        if (val === "" || val === "-" || val === "–" || val === "—") return null;
+        if (!val) return null;
 
         // szóköz törlés
         val = val.replace(/\s/g, "");
 
-        // ezres elválasztó pont törlés
-        val = val.replace(/\./g, "");
-
-        // vessző → pont (tizedes)
-        val = val.replace(/,/g, ".");
+        // ha van vessző → EU formátum
+        if (val.includes(",")) {
+            val = val.replace(/\./g, ""); // ezres pont törlés
+            val = val.replace(/,/g, ".");
+        }
     }
 
     const num = Number(val);
@@ -221,9 +221,9 @@ Please select at least one fuel type and year.
         const d = parseNumber(r[datIndex]);
         const s = parseNumber(r[saleIndex]);
 
-        if (g !== null) guide.push(g);
-        if (d !== null) dat.push(d);
-        if (s !== null) sale.push(s);
+        if (typeof g === "number" && !isNaN(g)) guide.push(g);
+        if (typeof d === "number" && !isNaN(d)) dat.push(d);
+        if (typeof s === "number" && !isNaN(s)) sale.push(s);
 
     });
 
