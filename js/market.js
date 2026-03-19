@@ -168,10 +168,7 @@ ${y}
 
 function calculateFilteredStats() {
 
-    if (
-        document.querySelectorAll(".fuelFilter:checked").length === 0 ||
-        document.querySelectorAll(".yearFilter:checked").length === 0
-    ) {
+    if (selectedFuel.length === 0 || selectedYear.length === 0) {
         document.getElementById("marketResult").innerHTML = `
 <b>No data</b><br>
 Please select at least one fuel type and year.
@@ -179,11 +176,13 @@ Please select at least one fuel type and year.
         return;
     }
 
-    const selectedFuel = [...document.querySelectorAll(".fuelFilter:checked")]
-        .map(e => e.value);
+    const selectedFuel = [
+        ...document.querySelectorAll("#view-market .fuelFilter:checked")
+    ].map(e => e.value);
 
-    const selectedYear = [...document.querySelectorAll(".yearFilter:checked")]
-        .map(e => e.value);
+    const selectedYear = [
+        ...document.querySelectorAll("#view-market .yearFilter:checked")
+    ].map(e => e.value);
 
     let guide = [];
     let dat = [];
