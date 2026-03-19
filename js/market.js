@@ -209,13 +209,9 @@ Please select at least one fuel type and year.
 
         const rowYear = excelDateToYear(r[yearIndex]);
 
-        /* FILTER */
-
-        if (selectedFuel.length && !selectedFuel.includes(r[fuelIndex])) return;
-
-        if (selectedYear.length && (!rowYear || !selectedYear.includes(String(rowYear)))) return;
-
-        /* VALUES */
+        // SZŰRÉS (EZ A LÉNYEG!)
+        if (!selectedFuel.includes(r[fuelIndex])) return;
+        if (!rowYear || !selectedYear.includes(String(rowYear))) return;
 
         const g = parseNumber(r[guideIndex]);
         const d = parseNumber(r[datIndex]);
