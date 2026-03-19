@@ -16,25 +16,24 @@ function parseNumber(val) {
     if (typeof val !== "string") return null;
 
     val = val.trim();
+
     if (!val) return null;
 
-    // szóköz törlés
-    val = val.replace(/\s/g, "");
+    // 🔥 minden whitespace törlés (nem csak sima space!)
+    val = val.replace(/\s+/g, "");
 
-    // ha több pont van → ezres elválasztó
-    const dotCount = (val.match(/\./g) || []).length;
-    const commaCount = (val.match(/,/g) || []).length;
+    // unicode space-ek törlése (EZ A KULCS)
+    val = val.replace(/\u00A0/g, ""); // nbsp
+    val = val.replace(/\u202F/g, ""); // narrow no-break space
 
-    if (commaCount > 0) {
-        // EU formátum
+    // EU formátum kezelés
+    if (val.includes(",")) {
         val = val.replace(/\./g, "");
         val = val.replace(/,/g, ".");
-    } else if (dotCount > 1) {
-        // US ezres pontok
-        val = val.replace(/\./g, "");
     }
 
     const num = Number(val);
+
     return isNaN(num) ? null : num;
 }
 
