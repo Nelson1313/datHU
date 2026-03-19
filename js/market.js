@@ -126,34 +126,30 @@ function generateFilters() {
 
     /* FUEL */
 
-    const fuelDiv = document.getElementById("fuelFilters");
-    fuelDiv.innerHTML = "";
-
     [...fuelSet].sort().forEach(f => {
+
+        const count = marketRows.filter(r => r[fuelIndex] === f).length;
 
         fuelDiv.innerHTML += `
 <label>
 <input type="checkbox" value="${f}" class="fuelFilter" checked>
-${f}
+${f} (${count})
 </label><br>
 `;
-
     });
 
     /* YEAR */
 
-    const yearDiv = document.getElementById("yearFilters");
-    yearDiv.innerHTML = "";
-
     [...yearSet].sort().forEach(y => {
+
+        const count = marketRows.filter(r => excelDateToYear(r[yearIndex]) === y).length;
 
         yearDiv.innerHTML += `
 <label>
-<input type="checkbox" value="${y.toString()}" class="yearFilter" checked>
-${y}
+<input type="checkbox" value="${y}" class="yearFilter" checked>
+${y} (${count})
 </label><br>
 `;
-
     });
 
     /* EVENT */
@@ -168,14 +164,6 @@ ${y}
 
 function calculateFilteredStats() {
 
-    if (selectedFuel.length === 0 || selectedYear.length === 0) {
-        document.getElementById("marketResult").innerHTML = `
-<b>No data</b><br>
-Please select at least one fuel type and year.
-`;
-        return;
-    }
-
     const fuelContainer = document.getElementById("fuelFilters");
     const yearContainer = document.getElementById("yearFilters");
 
@@ -184,6 +172,14 @@ Please select at least one fuel type and year.
 
     const selectedYear = [...yearContainer.querySelectorAll(".yearFilter:checked")]
         .map(e => e.value);
+
+    if (selectedFuel.length === 0 || selectedYear.length === 0) {
+        document.getElementById("marketResult").innerHTML = `
+<b>No data</b><br>
+Please select at least one fuel type and year.
+`;
+        return;
+    }
 
     let guide = [];
     let dat = [];
