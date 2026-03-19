@@ -162,6 +162,7 @@ function updateFilterCounts() {
 
     fuelDiv.querySelectorAll("label").forEach(label => {
         const input = label.querySelector("input");
+        const textSpan = label.querySelector(".label-text");
         const val = input.value;
 
         const count = fuelCounts[val] || 0;
@@ -173,7 +174,7 @@ function updateFilterCounts() {
             input.disabled = false;
         }
 
-        label.lastChild.nodeValue = ` ${val} (${count})`;
+        textSpan.textContent = `${val} (${count})`;
     });
 
     const yearRows = getFilteredRows("year");
@@ -187,6 +188,7 @@ function updateFilterCounts() {
 
     yearDiv.querySelectorAll("label").forEach(label => {
         const input = label.querySelector("input");
+        const textSpan = label.querySelector(".label-text");
         const val = input.value;
 
         const count = yearCounts[val] || 0;
@@ -198,7 +200,7 @@ function updateFilterCounts() {
             input.disabled = false;
         }
 
-        label.lastChild.nodeValue = ` ${val} (${count})`;
+        textSpan.textContent = `${val} (${count})`;
     });
 }
 
@@ -209,8 +211,13 @@ function generateFilters() {
     const fuelDiv = document.getElementById("fuelFilters");
     const yearDiv = document.getElementById("yearFilters");
 
-    fuelDiv.innerHTML = "";
-    yearDiv.innerHTML = "";
+    fuelDiv.innerHTML += `
+<label>
+<input type="checkbox" ...>
+<span class="label-text">${f} (${count})</span>
+</label><br>
+`;
+    <span class="label-text">${y} (${count})</span>
 
     const fuelSet = new Set();
     const yearSet = new Set();
@@ -235,7 +242,7 @@ function generateFilters() {
         fuelDiv.innerHTML += `
 <label>
 <input type="checkbox" value="${String(f).trim()}" class="fuelFilter" checked>
-${f} (${count})
+<span class="label-text">${f} (${count})</span>
 </label><br>
 `;
     });
@@ -249,7 +256,7 @@ ${f} (${count})
         yearDiv.innerHTML += `
 <label>
 <input type="checkbox" value="${String(y).trim()}" class="yearFilter" checked>
-${y} (${count})
+<span class="label-text">${y} (${count})</span>
 </label><br>
 `;
     });
