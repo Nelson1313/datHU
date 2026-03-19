@@ -111,12 +111,19 @@ function excelDateToYear(val) {
 
 function generateFilters() {
 
+    const fuelDiv = document.getElementById("fuelFilters");
+    const yearDiv = document.getElementById("yearFilters");
+
+    fuelDiv.innerHTML = "";
+    yearDiv.innerHTML = "";
+
     const fuelSet = new Set();
     const yearSet = new Set();
 
     marketRows.forEach(r => {
 
         if (r[fuelIndex]) fuelSet.add(r[fuelIndex]);
+
         if (r[yearIndex]) {
             const year = excelDateToYear(r[yearIndex]);
             if (year) yearSet.add(year);
