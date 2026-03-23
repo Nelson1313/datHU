@@ -106,16 +106,6 @@ function initOfficeChart() {
                             return context.index === window.activeIndex
                                 ? "#FFD200"
                                 : "#888";
-                        },
-
-                        callback: function (value, index) {
-                            const label = this.getLabelForValue(value);
-
-                            if (index === window.activeIndex) {
-                                return "● " + label;
-                            }
-
-                            return label;
                         }
                     }
                 },
