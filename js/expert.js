@@ -116,8 +116,13 @@ async function loadOfficeChart() {
 
     }
 
-    officeChart.data.labels = labels;
-    officeChart.data.datasets[0].data = values;
+    const MAX_POINTS = 24;
+
+    const finalLabels = labels.slice(-MAX_POINTS);
+    const finalValues = values.slice(-MAX_POINTS);
+
+    officeChart.data.labels = finalLabels;
+    officeChart.data.datasets[0].data = finalValues;
 
     officeChart.update();
 
