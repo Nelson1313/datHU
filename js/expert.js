@@ -32,8 +32,7 @@ function initOfficeChart() {
                 const xScale = chart.scales.x;
                 if (!xScale) return;
 
-                // csak X tengelynél működjön
-                if (event.y > xScale.bottom) return;
+                if (event.y < xScale.bottom - 20) return;
 
                 const index = xScale.getValueForPixel(event.x);
                 if (index === undefined) return;
