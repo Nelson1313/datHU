@@ -29,7 +29,6 @@ function initOfficeChart() {
             responsive: true,
             maintainAspectRatio: false,
 
-            // 👇 IDE jön az interaction
             interaction: {
                 mode: "index",
                 intersect: false
@@ -38,7 +37,6 @@ function initOfficeChart() {
             plugins: {
                 legend: { display: false },
 
-                // 👇 IDE jön a tooltip
                 tooltip: {
                     enabled: true,
                     backgroundColor: "#000",
@@ -59,7 +57,6 @@ function initOfficeChart() {
                     }
                 },
 
-                // 👇 IDE jön a crosshair (ha használod)
                 crosshair: {
                     line: {
                         color: '#FFD200',
@@ -68,7 +65,6 @@ function initOfficeChart() {
                 }
             },
 
-            // 👇 IDE jön az elements
             elements: {
                 point: {
                     radius: 3,
