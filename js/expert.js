@@ -3,7 +3,6 @@ let officeChart;
 function initOfficeChart() {
 
     const ctx = document.getElementById("officeChart");
-
     if (!ctx) return;
 
     officeChart = new Chart(ctx, {
@@ -12,12 +11,11 @@ function initOfficeChart() {
         data: {
             labels: [],
             datasets: [{
-                label: "",
                 data: [],
                 borderColor: "#FFD200",
                 backgroundColor: "#FFD200",
                 pointRadius: 3,
-                pointHoverRadius: 10,
+                pointHoverRadius: 8,
                 pointHoverBackgroundColor: "#FFD200",
                 pointHoverBorderColor: "#000",
                 tension: 0.25,
@@ -26,60 +24,19 @@ function initOfficeChart() {
         },
 
         options: {
-
-            onHover: (event, elements, chart) => {
-
-                const xScale = chart.scales.x;
-                if (!xScale) return;
-
-                // ha NEM a tengelyen vagy → reset
-                if (event.y < xScale.bottom - 20) {
-
-                    if (window.activeIndex !== null) {
-
-                        window.activeIndex = null;
-
-                        chart.setActiveElements([]);
-                        chart.tooltip.setActiveElements([], {});
-                        chart.update();
-                    }
-
-                    return;
-                }
-
-                const index = xScale.getValueForPixel(event.x);
-                if (index === undefined) return;
-
-                const i = Math.round(index);
-
-                if (window.activeIndex === i) return;
-
-                window.activeIndex = i;
-
-                chart.setActiveElements([{
-                    datasetIndex: 0,
-                    index: i
-                }]);
-
-                chart.tooltip.setActiveElements([{
-                    datasetIndex: 0,
-                    index: i
-                }], {
-                    x: xScale.getPixelForValue(i),
-                    y: chart.scales.y.getPixelForValue(
-                        chart.data.datasets[0].data[i]
-                    )
-                });
-
-                chart.update();
-            },
-
             responsive: true,
             maintainAspectRatio: false,
 
             interaction: {
-                mode: "nearest",
-                intersect: false
+                mode: "index",
+                intersect: false,
+                axis: "x"
+            },
+
+            layout: {
+                padding: {
+                    bottom: 30
+                }
             },
 
             plugins: {
@@ -88,6 +45,7 @@ function initOfficeChart() {
                 tooltip: {
                     enabled: true,
                     position: "nearest",
+                    intersect: false,
                     animation: false,
                     backgroundColor: "#000",
                     titleColor: "#FFD200",
@@ -105,20 +63,13 @@ function initOfficeChart() {
                             return "Érték: " + context.raw;
                         }
                     }
-                },
-
-                crosshair: {
-                    line: {
-                        color: '#FFD200',
-                        width: 1
-                    }
                 }
             },
 
             elements: {
                 point: {
                     radius: 3,
-                    hoverRadius: 10
+                    hoverRadius: 8
                 },
                 line: {
                     borderWidth: 2
@@ -127,16 +78,8 @@ function initOfficeChart() {
 
             scales: {
                 x: {
+                    offset: true,
                     ticks: {
-                        callback: function (value, index) {
-                            let label = this.getLabelForValue(value);
-
-                            if (index === window.activeIndex) {
-                                return label.toUpperCase();
-                            }
-
-                            return label;
-                        },
                         autoSkip: false,
                         maxRotation: 60,
                         minRotation: 60,
@@ -148,9 +91,7 @@ function initOfficeChart() {
                 }
             }
         }
-
     });
-
 }
 
 function excelDateToJSDate(serial) {
