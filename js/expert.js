@@ -36,12 +36,21 @@ function initOfficeChart() {
                 intersect: false
             },
 
-            onHover: (event, elements) => {
-                if (elements.length > 0) {
-                    window.activeIndex = elements[0].index;
-                } else {
-                    window.activeIndex = null;
-                }
+            onHover: (event, elements, chart) => {
+
+                const xScale = chart.scales.x;
+                if (!xScale) return;
+
+                const index = xScale.getValueForPixel(event.x);
+                if (index === undefined) return;
+
+                window.activeIndex = Math.max(
+                    0,
+                    Math.min(
+                        chart.data.labels.length - 1,
+                        Math.round(index)
+                    )
+                );
             },
 
             plugins: {
