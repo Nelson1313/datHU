@@ -60,7 +60,7 @@ function initOfficeChart() {
                             return context[0].label;
                         },
                         label: function (context) {
-                            return "Érték: " + context.raw;
+                            return "Darab: " + context.raw;
                         }
                     }
                 }
