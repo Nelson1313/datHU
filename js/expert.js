@@ -1,4 +1,5 @@
 let officeChart;
+window.activeIndex = 0;
 
 function initOfficeChart() {
 
@@ -31,6 +32,8 @@ function initOfficeChart() {
             responsive: true,
             maintainAspectRatio: false,
 
+            animation: false,
+
             interaction: {
                 mode: "index",
                 intersect: false
@@ -44,13 +47,18 @@ function initOfficeChart() {
                 const index = xScale.getValueForPixel(event.x);
                 if (index === undefined) return;
 
-                window.activeIndex = Math.max(
+                const newIndex = Math.max(
                     0,
                     Math.min(
                         chart.data.labels.length - 1,
                         Math.round(index)
                     )
                 );
+
+                if (window.activeIndex !== newIndex) {
+                    window.activeIndex = newIndex;
+                    chart.update();
+                }
             },
 
             plugins: {
