@@ -32,34 +32,46 @@ function initOfficeChart() {
                 const xScale = chart.scales.x;
                 if (!xScale) return;
 
-                if (event.y < xScale.bottom - 20) return;
+                // ha NEM a tengelyen vagy → reset
+                if (event.y < xScale.bottom - 20) {
+
+                    if (window.activeIndex !== null) {
+
+                        window.activeIndex = null;
+
+                        chart.setActiveElements([]);
+                        chart.tooltip.setActiveElements([], {});
+                        chart.update();
+                    }
+
+                    return;
+                }
 
                 const index = xScale.getValueForPixel(event.x);
                 if (index === undefined) return;
 
                 const i = Math.round(index);
 
-                if (window.activeIndex !== i) {
+                if (window.activeIndex === i) return;
 
-                    window.activeIndex = i;
+                window.activeIndex = i;
 
-                    chart.setActiveElements([{
-                        datasetIndex: 0,
-                        index: i
-                    }]);
+                chart.setActiveElements([{
+                    datasetIndex: 0,
+                    index: i
+                }]);
 
-                    chart.tooltip.setActiveElements([{
-                        datasetIndex: 0,
-                        index: i
-                    }], {
-                        x: xScale.getPixelForValue(i),
-                        y: chart.scales.y.getPixelForValue(
-                            chart.data.datasets[0].data[i]
-                        )
-                    });
+                chart.tooltip.setActiveElements([{
+                    datasetIndex: 0,
+                    index: i
+                }], {
+                    x: xScale.getPixelForValue(i),
+                    y: chart.scales.y.getPixelForValue(
+                        chart.data.datasets[0].data[i]
+                    )
+                });
 
-                    chart.update();
-                }
+                chart.update();
             },
 
             responsive: true,
@@ -75,6 +87,8 @@ function initOfficeChart() {
 
                 tooltip: {
                     enabled: true,
+                    position: "nearest",
+                    animation: false,
                     backgroundColor: "#000",
                     titleColor: "#FFD200",
                     bodyColor: "#fff",
@@ -115,10 +129,13 @@ function initOfficeChart() {
                 x: {
                     ticks: {
                         callback: function (value, index) {
+                            let label = this.getLabelForValue(value);
+
                             if (index === window.activeIndex) {
-                                return "👉 " + this.getLabelForValue(value);
+                                return label.toUpperCase();
                             }
-                            return this.getLabelForValue(value);
+
+                            return label;
                         },
                         autoSkip: false,
                         maxRotation: 60,
