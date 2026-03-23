@@ -68,6 +68,7 @@ function initOfficeChart() {
                     enabled: true,
                     backgroundColor: "#000",
                     titleColor: "#FFD200",
+                    fontWeight: "bold",
                     bodyColor: "#fff",
                     borderColor: "#FFD200",
                     borderWidth: 1,
