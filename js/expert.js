@@ -18,7 +18,7 @@ function initOfficeChart() {
                 backgroundColor: "#FFD200",
                 pointRadius: 3,
                 pointHoverRadius: 10,
-                pointHoverBackgroundCOlor: "#FFD200",
+                pointHoverBackgroundColor: "#FFD200",
                 pointHoverBorderColor: "#000",
                 tension: 0.25,
                 fill: false
@@ -26,11 +26,48 @@ function initOfficeChart() {
         },
 
         options: {
+
+            onHover: (event, elements, chart) => {
+
+                const xScale = chart.scales.x;
+                if (!xScale) return;
+
+                // csak X tengelynél működjön
+                if (event.y < xScale.bottom) return;
+
+                const index = xScale.getValueForPixel(event.x);
+                if (index === undefined) return;
+
+                const i = Math.round(index);
+
+                if (window.activeIndex !== i) {
+
+                    window.activeIndex = i;
+
+                    chart.setActiveElements([{
+                        datasetIndex: 0,
+                        index: i
+                    }]);
+
+                    chart.tooltip.setActiveElements([{
+                        datasetIndex: 0,
+                        index: i
+                    }], {
+                        x: xScale.getPixelForValue(i),
+                        y: chart.scales.y.getPixelForValue(
+                            chart.data.datasets[0].data[i]
+                        )
+                    });
+
+                    chart.update();
+                }
+            },
+
             responsive: true,
             maintainAspectRatio: false,
 
             interaction: {
-                mode: "index",
+                mode: "nearest",
                 intersect: false
             },
 
@@ -78,6 +115,12 @@ function initOfficeChart() {
             scales: {
                 x: {
                     ticks: {
+                        callback: function (value, index) {
+                            if (index === window.activeIndex) {
+                                return "👉 " + this.getLabelForValue(value);
+                            }
+                            return this.getLabelForValue(value);
+                        },
                         autoSkip: false,
                         maxRotation: 60,
                         minRotation: 60,
