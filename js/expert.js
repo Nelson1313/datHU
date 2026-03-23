@@ -100,7 +100,6 @@ function initOfficeChart() {
                         autoSkip: false,
                         maxRotation: 60,
                         minRotation: 60,
-                        fontweight: "bold",
                         font: { size: 10 },
 
                         color: function (context) {
