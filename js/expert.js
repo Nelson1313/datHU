@@ -16,8 +16,10 @@ function initOfficeChart() {
                 data: [],
                 borderColor: "#FFD200",
                 backgroundColor: "#FFD200",
-                pointRadius: 4,
-                pointHoverRadius: 6,
+                pointRadius: 3,
+                pointHoverRadius: 10,
+                pointHoverBackgroundCOlor: "#FFD200",
+                pointHoverBorderColor: "#000",
                 tension: 0.25,
                 fill: false
             }]
@@ -27,8 +29,54 @@ function initOfficeChart() {
             responsive: true,
             maintainAspectRatio: false,
 
+            // 👇 IDE jön az interaction
+            interaction: {
+                mode: "index",
+                intersect: false
+            },
+
             plugins: {
-                legend: { display: false }
+                legend: { display: false },
+
+                // 👇 IDE jön a tooltip
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: "#000",
+                    titleColor: "#FFD200",
+                    bodyColor: "#fff",
+                    borderColor: "#FFD200",
+                    borderWidth: 1,
+                    padding: 10,
+                    displayColors: false,
+
+                    callbacks: {
+                        title: function (context) {
+                            return context[0].label;
+                        },
+                        label: function (context) {
+                            return "Érték: " + context.raw;
+                        }
+                    }
+                },
+
+                // 👇 IDE jön a crosshair (ha használod)
+                crosshair: {
+                    line: {
+                        color: '#FFD200',
+                        width: 1
+                    }
+                }
+            },
+
+            // 👇 IDE jön az elements
+            elements: {
+                point: {
+                    radius: 3,
+                    hoverRadius: 10
+                },
+                line: {
+                    borderWidth: 2
+                }
             },
 
             scales: {
@@ -44,7 +92,6 @@ function initOfficeChart() {
                     beginAtZero: true
                 }
             }
-
         }
 
     });
