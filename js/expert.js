@@ -14,12 +14,16 @@ function initOfficeChart() {
                 data: [],
                 borderColor: "#FFD200",
                 backgroundColor: "#FFD200",
-                pointRadius: 3,
+                tension: 0.25,
+                fill: false,
+
+                pointRadius: function (ctx) {
+                    return ctx.dataIndex === window.activeIndex ? 6 : 3;
+                },
+
                 pointHoverRadius: 8,
                 pointHoverBackgroundColor: "#FFD200",
-                pointHoverBorderColor: "#000",
-                tension: 0.25,
-                fill: false
+                pointHoverBorderColor: "#000"
             }]
         },
 
@@ -29,13 +33,14 @@ function initOfficeChart() {
 
             interaction: {
                 mode: "index",
-                intersect: false,
-                axis: "x"
+                intersect: false
             },
 
-            layout: {
-                padding: {
-                    bottom: 30
+            onHover: (event, elements) => {
+                if (elements.length > 0) {
+                    window.activeIndex = elements[0].index;
+                } else {
+                    window.activeIndex = null;
                 }
             },
 
@@ -44,9 +49,6 @@ function initOfficeChart() {
 
                 tooltip: {
                     enabled: true,
-                    position: "nearest",
-                    intersect: false,
-                    animation: false,
                     backgroundColor: "#000",
                     titleColor: "#FFD200",
                     bodyColor: "#fff",
@@ -60,7 +62,7 @@ function initOfficeChart() {
                             return context[0].label;
                         },
                         label: function (context) {
-                            return "Darab: " + context.raw;
+                            return "Érték: " + context.raw;
                         }
                     }
                 }
@@ -68,7 +70,6 @@ function initOfficeChart() {
 
             elements: {
                 point: {
-                    radius: 3,
                     hoverRadius: 8
                 },
                 line: {
@@ -78,14 +79,30 @@ function initOfficeChart() {
 
             scales: {
                 x: {
-                    offset: true,
                     ticks: {
                         autoSkip: false,
                         maxRotation: 60,
                         minRotation: 60,
-                        font: { size: 10 }
+                        font: { size: 10 },
+
+                        color: function (context) {
+                            return context.index === window.activeIndex
+                                ? "#FFD200"
+                                : "#888";
+                        },
+
+                        callback: function (value, index) {
+                            const label = this.getLabelForValue(value);
+
+                            if (index === window.activeIndex) {
+                                return "● " + label;
+                            }
+
+                            return label;
+                        }
                     }
                 },
+
                 y: {
                     beginAtZero: true
                 }
