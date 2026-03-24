@@ -380,10 +380,16 @@
 
           <div class="input-group">
             <label>Upload XLSX file</label>
-            <input type="file" id="marketFile" accept=".xlsx">
+
+            <div id="dropZone" class="drop-zone">
+              <p id="dropText">Drag & Drop file here or click to upload</p>
+              <input type="file" id="marketFile" accept=".xlsx" hidden>
+            </div>
           </div>
 
-          <button onclick="analyzeMarket()">Analyze</button>
+          <button onclick="document.getElementById('marketFile').click()">
+            Analyze
+          </button>
 
           <div class="result market-stats" id="marketResult">
             Upload a file to calculate statistics.

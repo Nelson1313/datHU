@@ -673,3 +673,31 @@
          grid-template-columns: 1fr;
      }
  }
+
+ /* ===== DROP ZONE ===== */
+
+ .drop-zone {
+     border: 2px dashed #c5d3f5;
+     border-radius: 16px;
+     padding: 30px;
+     text-align: center;
+     background: #f7f9fc;
+     cursor: pointer;
+     transition: all 0.2s ease;
+ }
+
+ .drop-zone:hover {
+     background: #eef3ff;
+     border-color: #2b7cff;
+ }
+
+ .drop-zone.dragover {
+     background: #e3edff;
+     border-color: #2b7cff;
+ }
+
+ .drop-zone p {
+     margin: 0;
+     color: #555;
+     font-weight: 500;
+ }

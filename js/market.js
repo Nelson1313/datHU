@@ -9,6 +9,40 @@ let saleIndex = null;
 let engineIndex = null;
 let equipmentIndex = null;
 
+document.addEventListener("DOMContentLoaded", () => {
+
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("marketFile");
+    const dropText = document.getElementById("dropText");
+
+    /* CLICK → file picker */
+    dropZone.addEventListener("click", () => fileInput.click());
+
+    /* FILE SELECT */
+    fileInput.addEventListener("change", () => {
+        handleFile(fileInput.files[0]);
+    });
+
+    /* DRAG EVENTS */
+    dropZone.addEventListener("dragover", e => {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("dragover");
+    });
+
+    dropZone.addEventListener("drop", e => {
+        e.preventDefault();
+        dropZone.classList.remove("dragover");
+
+        const file = e.dataTransfer.files[0];
+        handleFile(file);
+    });
+
+});
+
 /* -------- PARSE NUMBER -------- */
 
 function parseNumber(val) {
@@ -76,6 +110,52 @@ async function analyzeMarket() {
     equipmentIndex = findIndexFlexible(header, ["felszer", "equipment", "trim"]);
 
     marketRows = rows.slice(1);
+
+    generateFilters();
+    calculateFilteredStats();
+}
+
+async function handleFile(file) {
+
+    if (!file) return;
+
+    const dropText = document.getElementById("dropText");
+
+    dropText.textContent = `✔ ${file.name}`;
+
+    const buffer = await file.arrayBuffer();
+
+    const workbook = XLSX.read(buffer, { type: "array" });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
+    const header = rows[0];
+
+    function findIndexFlexible(header, keywords) {
+        return header.findIndex(h => {
+            if (!h) return false;
+            const t = h.toString().toLowerCase();
+            return keywords.some(k => t.includes(k));
+        });
+    }
+
+    fuelIndex = findIndexFlexible(header, ["üzem", "fuel"]);
+    yearIndex = findIndexFlexible(header, ["forgal", "registration"]);
+    guideIndex = findIndexFlexible(header, ["irány", "guide"]);
+
+    datIndex = header.findIndex(h => {
+        if (!h) return false;
+        const t = h.toString().toLowerCase();
+        return t.includes("dat") && t.includes("ár") && !t.includes("kód");
+    });
+
+    saleIndex = findIndexFlexible(header, ["elad", "sale"]);
+    engineIndex = findIndexFlexible(header, ["motor", "engine"]);
+    equipmentIndex = findIndexFlexible(header, ["felszer", "equipment", "trim"]);
+
+    marketRows = rows.slice(1);
+
+    localStorage.setItem("marketData", JSON.stringify(marketRows));
 
     generateFilters();
     calculateFilteredStats();
@@ -321,3 +401,50 @@ function calculateFilteredStats() {
 
     setTimeout(updateFilterCounts, 0);
 }
+
+/* -------- INIT -------- */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("marketFile");
+    const dropText = document.getElementById("dropText");
+
+    /* CLICK */
+    dropZone.addEventListener("click", () => fileInput.click());
+
+    /* FILE SELECT */
+    fileInput.addEventListener("change", () => {
+        handleFile(fileInput.files[0]);
+    });
+
+    /* DRAG */
+    dropZone.addEventListener("dragover", e => {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("dragover");
+    });
+
+    dropZone.addEventListener("drop", e => {
+        e.preventDefault();
+        dropZone.classList.remove("dragover");
+
+        const file = e.dataTransfer.files[0];
+        handleFile(file);
+    });
+
+    const saved = localStorage.getItem("marketData");
+
+    if (saved) {
+        marketRows = JSON.parse(saved);
+
+        generateFilters();
+        calculateFilteredStats();
+
+        dropText.textContent = "✔ Loaded from previous session";
+    }
+
+});
