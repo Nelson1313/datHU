@@ -299,21 +299,21 @@ function calculateFilteredStats() {
     document.getElementById("marketResult").innerHTML = `
 <div class="stat-box">
     <h3>Base Price</h3>
-    <p>Average: ${Math.round(sGuide.avg).toLocaleString("hu-HU")} Ft</p>
+    <p>Average: <strong>${Math.round(sGuide.avg).toLocaleString("hu-HU")} Ft</strong></p>
     <p>Min: ${sGuide.min.toLocaleString("hu-HU")} Ft</p>
     <p>Max: ${sGuide.max.toLocaleString("hu-HU")} Ft</p>
 </div>
 
 <div class="stat-box">
     <h3>DAT Price</h3>
-    <p>Average: ${Math.round(sDat.avg).toLocaleString("hu-HU")} Ft</p>
+    <p>Average: <strong>${Math.round(sDat.avg).toLocaleString("hu-HU")} Ft</strong></p>
     <p>Min: ${sDat.min.toLocaleString("hu-HU")} Ft</p>
     <p>Max: ${sDat.max.toLocaleString("hu-HU")} Ft</p>
 </div>
 
 <div class="stat-box">
     <h3>Sale Price</h3>
-    <p>Average: ${Math.round(sSale.avg).toLocaleString("hu-HU")} Ft</p>
+    <p>Average: <strong>${Math.round(sSale.avg).toLocaleString("hu-HU")} Ft</strong></p>
     <p>Min: ${sSale.min.toLocaleString("hu-HU")} Ft</p>
     <p>Max: ${sSale.max.toLocaleString("hu-HU")} Ft</p>
 </div>

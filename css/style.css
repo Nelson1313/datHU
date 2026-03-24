@@ -605,3 +605,71 @@
          grid-template-columns: 1fr;
      }
  }
+
+ /* ===== MARKET STATS UPGRADE ===== */
+
+ .market-stats {
+     display: grid;
+     grid-template-columns: repeat(3, 1fr);
+     gap: 20px;
+ }
+
+ /* kártyák */
+
+ .stat-box {
+     background: white;
+     border-radius: 16px;
+     padding: 20px;
+     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+     transition: all 0.2s ease;
+ }
+
+ .stat-box:hover {
+     transform: translateY(-3px);
+     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+ }
+
+ /* cím */
+
+ .stat-box h3 {
+     margin: 0 0 15px 0;
+     font-size: 16px;
+     color: var(--blue);
+ }
+
+ /* sorok */
+
+ .stat-box p {
+     margin: 6px 0;
+     font-size: 14px;
+     color: #333;
+ }
+
+ /* szám kiemelés */
+
+ .stat-box p strong {
+     font-size: 16px;
+     color: var(--blue);
+ }
+
+ /* külön színek (opcionális) */
+
+ .stat-box:nth-child(1) {
+     border-top: 4px solid #2b7cff;
+ }
+
+ .stat-box:nth-child(2) {
+     border-top: 4px solid #00a86b;
+ }
+
+ .stat-box:nth-child(3) {
+     border-top: 4px solid #ff9800;
+ }
+
+ /* mobil */
+
+ @media (max-width: 900px) {
+     .market-stats {
+         grid-template-columns: 1fr;
+     }
+ }
