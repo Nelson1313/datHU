@@ -351,13 +351,15 @@ function clearMarketData() {
 /* -------- INIT -------- */
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (!dropZone || !fileInput) return;
 
     const dropZone = document.getElementById("dropZone");
     const fileInput = document.getElementById("marketFile");
-    const dropText = document.getElementById("dropText");
 
     if (!dropZone || !fileInput) return;
+
+    /* 🔥 FONTOS: teljes oldal drop tiltás */
+    window.addEventListener("dragover", e => e.preventDefault());
+    window.addEventListener("drop", e => e.preventDefault());
 
     /* CLICK */
     dropZone.addEventListener("click", () => fileInput.click());
@@ -367,30 +369,36 @@ document.addEventListener("DOMContentLoaded", () => {
         handleFile(fileInput.files[0]);
     });
 
-    /* DRAG */
+    /* DRAG OVER */
     dropZone.addEventListener("dragover", e => {
         e.preventDefault();
+        e.stopPropagation();
         dropZone.classList.add("dragover");
     });
 
-    dropZone.addEventListener("dragleave", () => {
+    /* DRAG LEAVE */
+    dropZone.addEventListener("dragleave", e => {
+        e.preventDefault();
+        e.stopPropagation();
         dropZone.classList.remove("dragover");
     });
 
+    /* DROP */
     dropZone.addEventListener("drop", e => {
         e.preventDefault();
+        e.stopPropagation();
         dropZone.classList.remove("dragover");
 
         const file = e.dataTransfer.files[0];
         handleFile(file);
     });
 
+    /* 🔥 LOAD PREVIOUS SESSION */
     const saved = localStorage.getItem("marketFull");
 
     if (saved) {
 
         const data = JSON.parse(saved);
-
         const header = data.header;
         marketRows = data.rows;
 
@@ -419,13 +427,10 @@ document.addEventListener("DOMContentLoaded", () => {
         generateFilters();
         calculateFilteredStats();
 
-        document.getElementById("marketFile").value = "";
-
         const dropText = document.getElementById("dropText");
         if (dropText) {
             dropText.textContent = "✔ Loaded from previous session";
         }
-
-
     }
+
 });
