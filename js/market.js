@@ -363,11 +363,17 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("drop", e => e.preventDefault());
 
     /* CLICK */
-    dropZone.addEventListener("click", () => fileInput.click());
+    dropZone.addEventListener("click", () => {
+        fileInput.value = ""; // 🔥 EZ A KULCS
+        fileInput.click();
+    });
 
     /* FILE SELECT */
     fileInput.addEventListener("change", () => {
-        handleFile(fileInput.files[0]);
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        handleFile(file);
     });
 
     /* DRAG OVER */
