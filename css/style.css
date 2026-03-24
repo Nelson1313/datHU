@@ -567,3 +567,41 @@
      width: 100%;
      margin: 0 auto;
  }
+
+ /* ===== MARKET STATS GRID ===== */
+
+ .market-stats {
+     display: grid;
+     grid-template-columns: repeat(3, 1fr);
+     gap: 20px;
+     text-align: center;
+ }
+
+ /* egy-egy blokk */
+
+ .stat-box {
+     background: transparent;
+     padding: 10px;
+ }
+
+ /* cím */
+
+ .stat-box h3 {
+     margin-bottom: 10px;
+     color: var(--blue);
+ }
+
+ /* sorok */
+
+ .stat-box p {
+     margin: 4px 0;
+     font-weight: 500;
+ }
+
+ /* mobilon egymás alá */
+
+ @media (max-width: 900px) {
+     .market-stats {
+         grid-template-columns: 1fr;
+     }
+ }
