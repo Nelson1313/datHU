@@ -81,7 +81,8 @@ async function handleFile(file) {
     generateFilters();
     calculateFilteredStats();
 
-    document.querySelectorAll('#view-market input').forEach(i => i.disabled = false);
+    document.querySelectorAll('#view-market input:not(#marketFile)')
+        .forEach(i => i.disabled = false);
 }
 
 /* -------- DATE -------- */
@@ -344,8 +345,8 @@ function clearMarketData() {
         dropText.textContent = "Drag & Drop file here or click to upload";
     }
 
-    /* 🔥 EZ IS IDE JÖN */
-    document.querySelectorAll('#view-market input').forEach(i => i.disabled = true);
+    document.querySelectorAll('#view-market input:not(#marketFile)')
+        .forEach(i => i.disabled = true);
 }
 
 /* -------- INIT -------- */
