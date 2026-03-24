@@ -387,8 +387,8 @@
             </div>
           </div>
 
-          <button onclick="document.getElementById('marketFile').click()">
-            Analyze
+          <button onclick="localStorage.removeItem('marketFull'); location.reload();">
+            Clear Data
           </button>
 
           <div class="result market-stats" id="marketResult">

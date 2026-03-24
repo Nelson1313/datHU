@@ -120,7 +120,6 @@ async function handleFile(file) {
     if (!file) return;
 
     const dropText = document.getElementById("dropText");
-
     dropText.textContent = `✔ ${file.name}`;
 
     const buffer = await file.arrayBuffer();
@@ -155,7 +154,10 @@ async function handleFile(file) {
 
     marketRows = rows.slice(1);
 
-    localStorage.setItem("marketData", JSON.stringify(marketRows));
+    localStorage.setItem("marketFull", JSON.stringify({
+        header,
+        rows: marketRows
+    }));
 
     generateFilters();
     calculateFilteredStats();
@@ -436,15 +438,43 @@ document.addEventListener("DOMContentLoaded", () => {
         handleFile(file);
     });
 
-    const saved = localStorage.getItem("marketData");
+    const saved = localStorage.getItem("marketFull");
 
     if (saved) {
-        marketRows = JSON.parse(saved);
+
+        const data = JSON.parse(saved);
+
+        const header = data.header;
+        marketRows = data.rows;
+
+        function findIndexFlexible(header, keywords) {
+            return header.findIndex(h => {
+                if (!h) return false;
+                const t = h.toString().toLowerCase();
+                return keywords.some(k => t.includes(k));
+            });
+        }
+
+        fuelIndex = findIndexFlexible(header, ["üzem", "fuel"]);
+        yearIndex = findIndexFlexible(header, ["forgal", "registration"]);
+        guideIndex = findIndexFlexible(header, ["irány", "guide"]);
+
+        datIndex = header.findIndex(h => {
+            if (!h) return false;
+            const t = h.toString().toLowerCase();
+            return t.includes("dat") && t.includes("ár") && !t.includes("kód");
+        });
+
+        saleIndex = findIndexFlexible(header, ["elad", "sale"]);
+        engineIndex = findIndexFlexible(header, ["motor", "engine"]);
+        equipmentIndex = findIndexFlexible(header, ["felszer", "equipment", "trim"]);
 
         generateFilters();
         calculateFilteredStats();
 
-        dropText.textContent = "✔ Loaded from previous session";
+        const dropText = document.getElementById("dropText");
+        if (dropText) {
+            dropText.textContent = "✔ Loaded from previous session";
+        }
     }
-
 });
