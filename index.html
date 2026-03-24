@@ -395,13 +395,49 @@
             <!-- FUEL -->
             <div class="input-group">
               <label>Fuel Type</label>
+
+              <div class="filter-actions">
+                <button type="button" onclick="selectAll('fuelFilters')">All</button>
+                <button type="button" onclick="clearAll('fuelFilters')">Clear</button>
+              </div>
+
               <div id="fuelFilters"></div>
             </div>
 
             <!-- YEAR -->
             <div class="input-group">
               <label>First Registration Year</label>
+
+              <div class="filter-actions">
+                <button type="button" onclick="selectAll('yearFilters')">All</button>
+                <button type="button" onclick="clearAll('yearFilters')">Clear</button>
+              </div>
+
               <div id="yearFilters"></div>
+            </div>
+
+            <!-- ENGINE -->
+            <div class="input-group">
+              <label>Engine</label>
+
+              <div class="filter-actions">
+                <button type="button" onclick="selectAll('engineFilters')">All</button>
+                <button type="button" onclick="clearAll('engineFilters')">Clear</button>
+              </div>
+
+              <div id="engineFilters"></div>
+            </div>
+
+            <!-- EQUIPMENT -->
+            <div class="input-group">
+              <label>Equipment</label>
+
+              <div class="filter-actions">
+                <button type="button" onclick="selectAll('equipmentFilters')">All</button>
+                <button type="button" onclick="clearAll('equipmentFilters')">Clear</button>
+              </div>
+
+              <div id="equipmentFilters"></div>
             </div>
 
           </div>

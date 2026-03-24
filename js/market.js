@@ -1,39 +1,34 @@
 let marketRows = [];
+
 let fuelIndex = null;
 let yearIndex = null;
 let guideIndex = null;
 let datIndex = null;
 let saleIndex = null;
 
+let engineIndex = null;
+let equipmentIndex = null;
+
 /* -------- PARSE NUMBER -------- */
 
 function parseNumber(val) {
-
     if (val === null || val === undefined) return null;
-
     if (typeof val === "number") return val;
-
     if (typeof val !== "string") return null;
 
     val = val.trim();
-
     if (!val) return null;
 
-    // 🔥 minden whitespace törlés (nem csak sima space!)
     val = val.replace(/\s+/g, "");
+    val = val.replace(/\u00A0/g, "");
+    val = val.replace(/\u202F/g, "");
 
-    // unicode space-ek törlése (EZ A KULCS)
-    val = val.replace(/\u00A0/g, ""); // nbsp
-    val = val.replace(/\u202F/g, ""); // narrow no-break space
-
-    // EU formátum kezelés
     if (val.includes(",")) {
         val = val.replace(/\./g, "");
         val = val.replace(/,/g, ".");
     }
 
     const num = Number(val);
-
     return isNaN(num) ? null : num;
 }
 
@@ -57,8 +52,6 @@ async function analyzeMarket() {
     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
     const header = rows[0];
 
-    /* -------- INDEXEK -------- */
-
     function findIndexFlexible(header, keywords) {
         return header.findIndex(h => {
             if (!h) return false;
@@ -79,35 +72,25 @@ async function analyzeMarket() {
 
     saleIndex = findIndexFlexible(header, ["elad", "sale"]);
 
-    /* -------- DATA -------- */
+    engineIndex = findIndexFlexible(header, ["motor", "engine"]);
+    equipmentIndex = findIndexFlexible(header, ["felszer", "equipment", "trim"]);
 
     marketRows = rows.slice(1);
 
-    /* -------- FILTER UI -------- */
-
     generateFilters();
-
-    /* -------- FIRST CALC -------- */
-
     calculateFilteredStats();
-
 }
 
-function excelDateToYear(val) {
+/* -------- DATE -------- */
 
+function excelDateToYear(val) {
     if (!val) return null;
 
-    /* ha szám → Excel dátum */
-
     if (typeof val === "number") {
-
         const excelEpoch = new Date(1899, 11, 30);
         const date = new Date(excelEpoch.getTime() + val * 86400000);
-
         return date.getFullYear();
     }
-
-    /* ha string (pl már év) */
 
     const num = Number(val);
     if (!isNaN(num) && num > 1900 && num < 2100) {
@@ -115,92 +98,47 @@ function excelDateToYear(val) {
     }
 
     return null;
+}
 
+/* -------- FILTER CORE -------- */
+
+function getSelectedValues(containerId, className) {
+    const container = document.getElementById(containerId);
+    return [...container.querySelectorAll(`.${className}:checked`)]
+        .map(e => e.value.trim());
 }
 
 function getFilteredRows(ignoreFilter = null) {
 
-    const fuelContainer = document.getElementById("fuelFilters");
-    const yearContainer = document.getElementById("yearFilters");
+    const selectedFuel = getSelectedValues("fuelFilters", "fuelFilter");
+    const selectedYear = getSelectedValues("yearFilters", "yearFilter");
+    const selectedEngine = getSelectedValues("engineFilters", "engineFilter");
+    const selectedEquipment = getSelectedValues("equipmentFilters", "equipmentFilter");
 
-    const selectedFuel = [...fuelContainer.querySelectorAll(".fuelFilter:checked")]
-        .map(e => e.value.trim());
-
-    const selectedYear = [...yearContainer.querySelectorAll(".yearFilter:checked")]
-        .map(e => e.value.trim());
+    if (
+        ignoreFilter === null && (
+            selectedFuel.length === 0 ||
+            selectedYear.length === 0 ||
+            selectedEngine.length === 0 ||
+            selectedEquipment.length === 0
+        )
+    ) {
+        return marketRows;
+    }
 
     return marketRows.filter(r => {
 
         const fuelValue = r[fuelIndex] != null ? String(r[fuelIndex]).trim() : "";
         const rowYear = excelDateToYear(r[yearIndex]);
+        const engineValue = r[engineIndex] != null ? String(r[engineIndex]).trim() : "";
+        const equipmentValue = r[equipmentIndex] != null ? String(r[equipmentIndex]).trim() : "";
 
-        if (ignoreFilter !== "fuel") {
-            if (!selectedFuel.includes(fuelValue)) return false;
-        }
-
-        if (ignoreFilter !== "year") {
-            if (!rowYear || !selectedYear.includes(String(rowYear))) return false;
-        }
+        if (ignoreFilter !== "fuel" && !selectedFuel.includes(fuelValue)) return false;
+        if (ignoreFilter !== "year" && (!rowYear || !selectedYear.includes(String(rowYear)))) return false;
+        if (ignoreFilter !== "engine" && !selectedEngine.includes(engineValue)) return false;
+        if (ignoreFilter !== "equipment" && !selectedEquipment.includes(equipmentValue)) return false;
 
         return true;
-    });
-}
-
-function updateFilterCounts() {
-
-    const fuelDiv = document.getElementById("fuelFilters");
-    const yearDiv = document.getElementById("yearFilters");
-
-    const fuelRows = getFilteredRows("fuel");
-
-    const fuelCounts = {};
-    fuelRows.forEach(r => {
-        const f = String(r[fuelIndex]).trim();
-        if (!f) return;
-        fuelCounts[f] = (fuelCounts[f] || 0) + 1;
-    });
-
-    fuelDiv.querySelectorAll("label").forEach(label => {
-        const input = label.querySelector("input");
-        const textSpan = label.querySelector(".label-text");
-        const val = input.value;
-
-        const count = fuelCounts[val] || 0;
-
-        if (count === 0) {
-            input.checked = false;
-            input.disabled = true;
-        } else {
-            input.disabled = false;
-        }
-
-        textSpan.textContent = `${val} (${count})`;
-    });
-
-    const yearRows = getFilteredRows("year");
-
-    const yearCounts = {};
-    yearRows.forEach(r => {
-        const y = excelDateToYear(r[yearIndex]);
-        if (!y) return;
-        yearCounts[y] = (yearCounts[y] || 0) + 1;
-    });
-
-    yearDiv.querySelectorAll("label").forEach(label => {
-        const input = label.querySelector("input");
-        const textSpan = label.querySelector(".label-text");
-        const val = input.value;
-
-        const count = yearCounts[val] || 0;
-
-        if (count === 0) {
-            input.checked = false;
-            input.disabled = true;
-        } else {
-            input.disabled = false;
-        }
-
-        textSpan.textContent = `${val} (${count})`;
     });
 }
 
@@ -208,101 +146,142 @@ function updateFilterCounts() {
 
 function generateFilters() {
 
-    const fuelDiv = document.getElementById("fuelFilters");
-    const yearDiv = document.getElementById("yearFilters");
+    createFilter("fuelFilters", fuelIndex, "fuelFilter");
+    createFilter("yearFilters", yearIndex, "yearFilter", true);
+    createFilter("engineFilters", engineIndex, "engineFilter");
+    createFilter("equipmentFilters", equipmentIndex, "equipmentFilter");
 
-    fuelDiv.innerHTML = "";
-    yearDiv.innerHTML = "";
-
-    const fuelSet = new Set();
-    const yearSet = new Set();
-
-    marketRows.forEach(r => {
-
-        if (r[fuelIndex]) fuelSet.add(r[fuelIndex]);
-
-        if (r[yearIndex]) {
-            const year = excelDateToYear(r[yearIndex]);
-            if (year) yearSet.add(year);
-        }
-
-    });
-
-    /* FUEL */
-    [...fuelSet].sort().forEach(f => {
-
-        const count = marketRows.filter(r => r[fuelIndex] === f).length;
-
-        fuelDiv.innerHTML += `
-<label>
-<input type="checkbox" value="${String(f).trim()}" class="fuelFilter" checked>
-<span class="label-text">${f} (${count})</span>
-</label><br>
-`;
-    });
-
-    /* YEAR */
-    [...yearSet].sort().forEach(y => {
-
-        const count = marketRows.filter(r => excelDateToYear(r[yearIndex]) === y).length;
-
-        yearDiv.innerHTML += `
-<label>
-<input type="checkbox" value="${String(y).trim()}" class="yearFilter" checked>
-<span class="label-text">${y} (${count})</span>
-</label><br>
-`;
-    });
-
-    document.getElementById("fuelFilters").addEventListener("change", calculateFilteredStats);
-    document.getElementById("yearFilters").addEventListener("change", calculateFilteredStats);
+    ["fuelFilters", "yearFilters", "engineFilters", "equipmentFilters"]
+        .forEach(id => {
+            document.getElementById(id)
+                .addEventListener("change", calculateFilteredStats);
+        });
 }
 
-/* -------- FILTERED CALC -------- */
+function createFilter(containerId, index, className, isYear = false) {
+
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+
+    const values = new Set();
+
+    marketRows.forEach(r => {
+        let val = r[index];
+
+        if (isYear) val = excelDateToYear(val);
+        if (val) values.add(val);
+    });
+
+    [...values].sort().forEach(v => {
+
+        const count = marketRows.filter(r => {
+            let val = r[index];
+            if (isYear) val = excelDateToYear(val);
+            return val === v;
+        }).length;
+
+        container.innerHTML += `
+<label class="filter-item">
+  <input type="checkbox" value="${String(v).trim()}" class="${className}" checked>
+  <span class="label-text">${v}</span>
+  <span class="count">${count}</span>
+</label>
+`;
+    });
+}
+
+/* -------- COUNTS -------- */
+
+function updateFilterCounts() {
+
+    updateCounts("fuelFilters", "fuelFilter", fuelIndex);
+    updateCounts("yearFilters", "yearFilter", yearIndex, true);
+    updateCounts("engineFilters", "engineFilter", engineIndex);
+    updateCounts("equipmentFilters", "equipmentFilter", equipmentIndex);
+}
+
+function updateCounts(containerId, className, index, isYear = false) {
+
+    let filterKey;
+
+    if (containerId === "fuelFilters") filterKey = "fuel";
+    if (containerId === "yearFilters") filterKey = "year";
+    if (containerId === "engineFilters") filterKey = "engine";
+    if (containerId === "equipmentFilters") filterKey = "equipment";
+
+    const rows = getFilteredRows(filterKey);
+    const counts = {};
+
+    rows.forEach(r => {
+        let val = r[index];
+        if (isYear) val = excelDateToYear(val);
+        if (!val) return;
+
+        val = String(val).trim();
+        counts[val] = (counts[val] || 0) + 1;
+    });
+
+    document.getElementById(containerId)
+        .querySelectorAll("label")
+        .forEach(label => {
+
+            const input = label.querySelector("input");
+            const text = label.querySelector(".label-text");
+            const val = input.value;
+
+            const count = counts[val] || 0;
+            input.disabled = false;
+
+            text.textContent = `${val} (${count})`;
+
+            if (count === 0) {
+                label.style.opacity = 0.4;
+            } else {
+                label.style.opacity = 1;
+            }
+        });
+
+}
+
+function selectAll(containerId) {
+    const inputs = document.querySelectorAll(`#${containerId} input`);
+
+    inputs.forEach(i => i.checked = true);
+
+    calculateFilteredStats();
+}
+
+function clearAll(containerId) {
+    const inputs = document.querySelectorAll(`#${containerId} input`);
+
+    inputs.forEach((i, index) => {
+        i.checked = index === 0;
+    });
+
+    calculateFilteredStats();
+}
+
+/* -------- CALC -------- */
 
 function calculateFilteredStats() {
-    const fuelContainer = document.getElementById("fuelFilters");
-    const yearContainer = document.getElementById("yearFilters");
 
-    const selectedFuel = [...fuelContainer.querySelectorAll(".fuelFilter:checked")]
-        .map(e => e.value.trim());
+    let filteredRows = getFilteredRows();
 
-    const selectedYear = [...yearContainer.querySelectorAll(".yearFilter:checked")]
-        .map(e => e.value.trim());
+    if (filteredRows.length === 0) {
+        filteredRows = marketRows;
+    }
 
-    if (selectedFuel.length === 0 || selectedYear.length === 0) {
-        document.getElementById("marketResult").innerHTML = `
-<b>No data</b><br>
-Please select at least one fuel type and year.
-`;
+    if (filteredRows.length === 0) {
+        document.getElementById("marketResult").innerHTML = `<b>No data</b>`;
         return;
     }
 
-    const filteredRows = marketRows.filter(r => {
-        const fuelValue = r[fuelIndex] != null ? String(r[fuelIndex]).trim() : "";
-        const rowYear = excelDateToYear(r[yearIndex]);
-
-        return selectedFuel.includes(fuelValue) &&
-            rowYear !== null &&
-            selectedYear.includes(String(rowYear));
-    });
-
-    const guide = filteredRows
-        .map(r => parseNumber(r[guideIndex]))
-        .filter(v => typeof v === "number" && !isNaN(v));
-
-    const dat = filteredRows
-        .map(r => parseNumber(r[datIndex]))
-        .filter(v => typeof v === "number" && !isNaN(v));
-
-    const sale = filteredRows
-        .map(r => parseNumber(r[saleIndex]))
-        .filter(v => typeof v === "number" && !isNaN(v));
+    const guide = filteredRows.map(r => parseNumber(r[guideIndex])).filter(n => n);
+    const dat = filteredRows.map(r => parseNumber(r[datIndex])).filter(n => n);
+    const sale = filteredRows.map(r => parseNumber(r[saleIndex])).filter(n => n);
 
     function stats(arr) {
-        if (arr.length === 0) {
-            return { avg: 0, min: 0, max: 0 };
-        }
+        if (!arr.length) return { avg: 0, min: 0, max: 0 };
 
         const sum = arr.reduce((a, b) => a + b, 0);
 
@@ -319,22 +298,20 @@ Please select at least one fuel type and year.
 
     document.getElementById("marketResult").innerHTML = `
 <b>Base Price</b><br>
-Average: ${sGuide.avg.toLocaleString("hu-HU", { maximumFractionDigits: 0 })} Ft<br>
+Average: ${Math.round(sGuide.avg).toLocaleString("hu-HU")} Ft<br>
 Min: ${sGuide.min.toLocaleString("hu-HU")} Ft<br>
 Max: ${sGuide.max.toLocaleString("hu-HU")} Ft<br><br>
 
 <b>DAT Price</b><br>
-Average: ${sDat.avg.toLocaleString("hu-HU", { maximumFractionDigits: 0 })} Ft<br>
+Average: ${Math.round(sDat.avg).toLocaleString("hu-HU")} Ft<br>
 Min: ${sDat.min.toLocaleString("hu-HU")} Ft<br>
 Max: ${sDat.max.toLocaleString("hu-HU")} Ft<br><br>
 
 <b>Sale Price</b><br>
-Average: ${sSale.avg.toLocaleString("hu-HU", { maximumFractionDigits: 0 })} Ft<br>
+Average: ${Math.round(sSale.avg).toLocaleString("hu-HU")} Ft<br>
 Min: ${sSale.min.toLocaleString("hu-HU")} Ft<br>
 Max: ${sSale.max.toLocaleString("hu-HU")} Ft
 `;
 
-    setTimeout(() => {
-        updateFilterCounts();
-    }, 0);
+    setTimeout(updateFilterCounts, 0);
 }

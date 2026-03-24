@@ -428,3 +428,136 @@
  input:disabled+text {
      opacity: 0.5;
  }
+
+ /* ========================= */
+ /* 🔥 MARKET FILTER UI */
+ /* ========================= */
+
+ #view-market .filter-actions {
+     display: flex;
+     gap: 6px;
+     margin-bottom: 8px;
+ }
+
+ #view-market .filter-actions button {
+     width: auto;
+     flex: 1;
+     padding: 6px 8px;
+     font-size: 12px;
+     border-radius: 8px;
+     border: 1px solid #dce3f0;
+     background: white;
+     color: var(--blue);
+     margin-top: 0;
+     cursor: pointer;
+     transition: all 0.2s ease;
+ }
+
+ #view-market .filter-actions button:hover {
+     background: #eaf2ff;
+ }
+
+ /* ========================= */
+ /* 🔥 FILTER LIST DESIGN */
+ /* ========================= */
+
+ #view-market #fuelFilters,
+ #view-market #yearFilters,
+ #view-market #engineFilters,
+ #view-market #equipmentFilters {
+     max-height: 220px;
+     overflow-y: auto;
+     padding: 8px;
+     border-radius: 10px;
+     background: #f7f9fc;
+     border: 1px solid #e0e6ed;
+     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+ }
+
+ /* LABEL */
+
+ #view-market #fuelFilters label,
+ #view-market #yearFilters label,
+ #view-market #engineFilters label,
+ #view-market #equipmentFilters label {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     padding: 6px 10px;
+     border-radius: 8px;
+     cursor: pointer;
+     margin-bottom: 4px;
+     transition: all 0.2s ease;
+ }
+
+ /* HOVER */
+
+ #view-market #fuelFilters label:hover,
+ #view-market #yearFilters label:hover,
+ #view-market #engineFilters label:hover,
+ #view-market #equipmentFilters label:hover {
+     background: #eaf2ff;
+ }
+
+ /* CHECKBOX */
+
+ #view-market #fuelFilters input,
+ #view-market #yearFilters input,
+ #view-market #engineFilters input,
+ #view-market #equipmentFilters input {
+     accent-color: #2b7cff;
+     transform: scale(1.1);
+     margin-right: 8px;
+ }
+
+ /* TEXT */
+
+ #view-market .label-text {
+     flex: 1;
+     font-size: 14px;
+ }
+
+ /* CHECKED TEXT */
+
+ #view-market input:checked+.label-text {
+     font-weight: 600;
+     color: #2b7cff;
+ }
+
+ /* SELECTED ROW */
+
+ #view-market label:has(input:checked) {
+     background: #eaf2ff;
+     border: 1px solid #2b7cff33;
+ }
+
+ /* COUNT BADGE */
+
+ #view-market .filter-item .count {
+     background: #eaf2ff;
+     color: #2b7cff;
+     font-size: 12px;
+     padding: 2px 8px;
+     border-radius: 999px;
+     font-weight: 600;
+ }
+
+ /* ========================= */
+ /* 🔥 BUG FIX */
+ /* ========================= */
+
+ input:disabled+.label-text {
+     opacity: 0.5;
+ }
+
+ /* ========================= */
+ /* 🔥 EXPERT VIEW SAFE FIX */
+ /* ========================= */
+
+ #view-other .card-chart {
+     max-width: none;
+ }
+
+ #view-other .table-scroll {
+     overflow-y: auto;
+ }
