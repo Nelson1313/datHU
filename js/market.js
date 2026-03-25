@@ -119,17 +119,6 @@ function getFilteredRows(ignoreFilter = null) {
     const selectedEngine = getSelectedValues("engineFilters", "engineFilter");
     const selectedEquipment = getSelectedValues("equipmentFilters", "equipmentFilter");
 
-    if (
-        ignoreFilter === null && (
-            selectedFuel.length === 0 ||
-            selectedYear.length === 0 ||
-            selectedEngine.length === 0 ||
-            selectedEquipment.length === 0
-        )
-    ) {
-        return marketRows;
-    }
-
     return marketRows.filter(r => {
 
         const fuelValue = r[fuelIndex] != null ? String(r[fuelIndex]).trim() : "";
@@ -137,10 +126,10 @@ function getFilteredRows(ignoreFilter = null) {
         const engineValue = r[engineIndex] != null ? String(r[engineIndex]).trim() : "";
         const equipmentValue = r[equipmentIndex] != null ? String(r[equipmentIndex]).trim() : "";
 
-        if (ignoreFilter !== "fuel" && !selectedFuel.includes(fuelValue)) return false;
-        if (ignoreFilter !== "year" && (!rowYear || !selectedYear.includes(String(rowYear)))) return false;
-        if (ignoreFilter !== "engine" && !selectedEngine.includes(engineValue)) return false;
-        if (ignoreFilter !== "equipment" && !selectedEquipment.includes(equipmentValue)) return false;
+        if (ignoreFilter !== "fuel" && selectedFuel.length && !selectedFuel.includes(fuelValue)) return false;
+        if (ignoreFilter !== "year" && selectedYear.length && (!rowYear || !selectedYear.includes(String(rowYear)))) return false;
+        if (ignoreFilter !== "engine" && selectedEngine.length && !selectedEngine.includes(engineValue)) return false;
+        if (ignoreFilter !== "equipment" && selectedEquipment.length && !selectedEquipment.includes(equipmentValue)) return false;
 
         return true;
     });
