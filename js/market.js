@@ -239,7 +239,13 @@ function updateCounts(containerId, className, index, isYear = false) {
             const count = counts[val] || 0;
             input.disabled = false;
 
-            text.textContent = `${val} (${count})`;
+            let displayValue = val;
+
+            if (className === "engineFilter") {
+                displayValue = `${Number(val).toLocaleString("hu-HU")} cm³`;
+            }
+
+            text.textContent = `${displayValue} (${count})`;
 
             if (count === 0) {
                 label.style.opacity = 0.4;
