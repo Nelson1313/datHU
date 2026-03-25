@@ -358,13 +358,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!dropZone || !fileInput) return;
 
-    /* 🔥 FONTOS: teljes oldal drop tiltás */
     window.addEventListener("dragover", e => e.preventDefault());
     window.addEventListener("drop", e => e.preventDefault());
 
     /* CLICK */
     dropZone.addEventListener("click", () => {
-        fileInput.value = ""; // 🔥 EZ A KULCS
+        fileInput.value = "";
         fileInput.click();
     });
 
@@ -400,7 +399,6 @@ document.addEventListener("DOMContentLoaded", () => {
         handleFile(file);
     });
 
-    /* 🔥 LOAD PREVIOUS SESSION */
     const saved = localStorage.getItem("marketFull");
 
     if (saved) {
