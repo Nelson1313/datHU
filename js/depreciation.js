@@ -66,8 +66,11 @@ function loadExcelFromServer() {
 
             });
 
-            console.log("Excel AUTO betöltve:", excelLookup);
+            console.log("Excel betöltve háttérben:", excelLookup);
 
+        })
+        .catch(err => {
+            console.error("Excel betöltési hiba:", err);
         });
 }
 
@@ -100,6 +103,11 @@ function calculate() {
 
     const startTotal = sy * 12 + sm;
     const endTotal = ey * 12 + em;
+
+    if (Object.keys(excelLookup).length === 0) {
+        alert("Excel data is still loading...");
+        return;
+    }
 
     if (endTotal < startTotal) {
         alert("End date cannot be earlier than start date.");
@@ -157,10 +165,12 @@ function calculate() {
 
     if (correctionPercent !== 0) {
         current *= (1 + correctionPercent / 100);
+
+        values[values.length - 1] = (current * 100).toFixed(2);
     }
 
     document.getElementById("output").innerHTML =
-        `Remaining Value: ${values[values.length - 1]}%`;
+        `Remaining Value: ${(current * 100).toFixed(2)}%`;
 
     chart.data.labels = labels;
     chart.data.datasets[0].data = values;
