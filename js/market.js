@@ -280,10 +280,6 @@ function calculateFilteredStats() {
     let filteredRows = getFilteredRows();
 
     if (filteredRows.length === 0) {
-        filteredRows = marketRows;
-    }
-
-    if (filteredRows.length === 0) {
         document.getElementById("marketResult").innerHTML = `<b>No data</b>`;
         return;
     }
