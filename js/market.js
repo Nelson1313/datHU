@@ -253,6 +253,10 @@ function updateCounts(containerId, className, index, isYear = false) {
                 label.style.opacity = 1;
             }
         });
+    label.classList.toggle(
+        "active",
+        input.checked
+    );
 
 }
 
@@ -267,9 +271,7 @@ function selectAll(containerId) {
 function clearAll(containerId) {
     const inputs = document.querySelectorAll(`#${containerId} input`);
 
-    inputs.forEach((i, index) => {
-        i.checked = index === 0;
-    });
+    inputs.forEach(i => i.checked = false);
 
     calculateFilteredStats();
 }

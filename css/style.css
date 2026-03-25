@@ -701,3 +701,17 @@
      color: #555;
      font-weight: 500;
  }
+
+ #view-market label {
+     background: transparent;
+     border: 1px solid transparent;
+ }
+
+ #view-market label:has(input:checked) {
+     background: #eaf2ff;
+     border: 1px solid #2b7cff33;
+ }
+
+ #view-market label.active {
+     background: #eaf2ff;
+ }
