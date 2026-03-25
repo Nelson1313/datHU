@@ -249,6 +249,7 @@ function updateCounts(containerId, className, index, isYear = false) {
 
             if (count === 0) {
                 label.style.opacity = 0.4;
+                input.checked = false;
             } else {
                 label.style.opacity = 1;
             }
