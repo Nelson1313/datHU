@@ -1,4 +1,5 @@
 let chart;
+let excelLookup = {};
 
 function initDepreciationChart() {
 
@@ -28,6 +29,67 @@ function initDepreciationChart() {
 
 }
 
+function loadExcelFromServer() {
+
+    fetch("data/km_table.xlsx")
+        .then(res => res.arrayBuffer())
+        .then(data => {
+
+            const workbook = XLSX.read(data, { type: "array" });
+
+            workbook.SheetNames.forEach(sheetName => {
+
+                const sheet = workbook.Sheets[sheetName];
+                const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                excelLookup[sheetName] = [];
+
+                for (let i = 4; i < json.length; i++) {
+
+                    const row = json[i];
+                    const km = row[1]; // B oszlop
+
+                    if (!km) continue;
+
+                    let values = {};
+
+                    for (let col = 1; col <= 9; col++) {
+                        values[col] = row[col + 1]; // C–K
+                    }
+
+                    excelLookup[sheetName].push({
+                        km: km,
+                        values: values
+                    });
+
+                }
+
+            });
+
+            console.log("Excel AUTO betöltve:", excelLookup);
+
+        });
+}
+
+function getExcelValue(sheet, diff, column) {
+
+    const rows = excelLookup[sheet];
+
+    if (!rows || rows.length === 0) return null;
+
+    let selected = rows[0];
+
+    for (let row of rows) {
+        if (row.km <= diff) {
+            selected = row;
+        } else {
+            break;
+        }
+    }
+
+    return selected.values[column];
+}
+
 function calculate() {
 
     const sy = parseInt(startYear.value);
@@ -52,6 +114,27 @@ function calculate() {
 
     const monthsRate1 = years1 * 12;
 
+    // ===== Excel KM korrekció =====
+
+    const theoreticalKm = parseInt(document.getElementById("theoreticalKm").value);
+    const customerKm = parseInt(document.getElementById("customerKm").value);
+    const sheet = document.getElementById("sheetSelect").value;
+    const column = parseInt(document.getElementById("columnSelect").value);
+
+    let correctionPercent = 0;
+
+    if (!isNaN(theoreticalKm) && !isNaN(customerKm)) {
+
+        const diff = Math.abs(customerKm - theoreticalKm);
+
+        const excelValue = getExcelValue(sheet, diff, column);
+
+        if (excelValue !== null) {
+            correctionPercent = excelValue;
+        }
+
+    }
+
     let values = [];
     let labels = [];
 
@@ -70,7 +153,10 @@ function calculate() {
 
         values.push((current * 100).toFixed(2));
         labels.push(i);
+    }
 
+    if (correctionPercent !== 0) {
+        current *= (1 + correctionPercent / 100);
     }
 
     document.getElementById("output").innerHTML =

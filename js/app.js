@@ -64,7 +64,7 @@ window.addEventListener("load", () => {
 
     initDepreciationChart();
     initOfficeChart();
-
+    loadExcelFromServer();
     loadOfficeChart();
     loadChangeTable();
     loadStatsTable();
