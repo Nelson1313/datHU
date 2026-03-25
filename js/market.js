@@ -184,10 +184,13 @@ function createFilter(containerId, index, className, isYear = false) {
             return val === v;
         }).length;
 
+        const displayValue =
+            className === "engineFilter" ? `${v} cm³` : v;
+
         container.innerHTML += `
 <label class="filter-item">
   <input type="checkbox" value="${String(v).trim()}" class="${className}" checked>
-  <span class="label-text">${v}</span>
+  <span class="label-text">${displayValue}</span>
   <span class="count">${count}</span>
 </label>
 `;
