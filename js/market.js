@@ -253,12 +253,8 @@ function updateCounts(containerId, className, index, isYear = false) {
             } else {
                 label.style.opacity = 1;
             }
+            label.classList.toggle("active", input.checked);
         });
-    label.classList.toggle(
-        "active",
-        input.checked
-    );
-
 }
 
 function selectAll(containerId) {
