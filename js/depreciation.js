@@ -182,12 +182,10 @@ function calculateKmCorrection() {
         `Difference: ${diff} km<br>Correction: ${value}%`;
 }
 
-function openKmModal() {
-    document.getElementById("kmModal").classList.add("active");
-    document.querySelector(".view-arrows").style.display = "none";
-}
+window.openKmModal = function () {
+    document.getElementById("kmModal").classList.remove("hidden");
+};
 
-function closeKmModal() {
-    document.getElementById("kmModal").classList.remove("active");
-    document.querySelector(".view-arrows").style.display = "flex";
-}
+window.closeKmModal = function () {
+    document.getElementById("kmModal").classList.add("hidden");
+};
