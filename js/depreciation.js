@@ -177,3 +177,37 @@ function calculate() {
     chart.update();
 
 }
+
+function openKmModal() {
+    document.getElementById("kmModal").classList.remove("hidden");
+}
+
+function closeKmModal() {
+    document.getElementById("kmModal").classList.add("hidden");
+}
+
+function calculateKmCorrection() {
+
+    if (Object.keys(excelLookup).length === 0) {
+        alert("Excel still loading...");
+        return;
+    }
+
+    const sheet = document.getElementById("kmSheet").value;
+    const column = parseInt(document.getElementById("kmColumn").value);
+
+    const theo = parseInt(document.getElementById("kmTheo").value);
+    const cust = parseInt(document.getElementById("kmCust").value);
+
+    if (isNaN(theo) || isNaN(cust)) {
+        alert("Please enter KM values");
+        return;
+    }
+
+    const diff = Math.abs(cust - theo);
+
+    const value = getExcelValue(sheet, diff, column);
+
+    document.getElementById("kmResult").innerHTML =
+        `Difference: ${diff} km<br>Correction: ${value}%`;
+}
