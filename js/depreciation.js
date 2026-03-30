@@ -183,11 +183,11 @@ function calculateKmCorrection() {
 }
 
 function openKmModal() {
-    document.getElementById("kmModal").classList.remove("hidden");
-    document.body.style.overflow = "hidden";
+    document.getElementById("kmModal").classList.add("active");
+    document.querySelector(".view-arrows").style.display = "none";
 }
 
 function closeKmModal() {
-    document.getElementById("kmModal").classList.add("hidden");
-    document.body.style.overflow = "";
+    document.getElementById("kmModal").classList.remove("active");
+    document.querySelector(".view-arrows").style.display = "flex";
 }
