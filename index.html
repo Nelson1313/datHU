@@ -447,72 +447,72 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <div id="kmModal" class="modal hidden">
+  <div id="kmModal" class="modal hidden">
 
-      <div class="modal-content">
+    <div class="modal-content">
 
-        <h2>KM Correction Tool</h2>
+      <h2>KM Correction Tool</h2>
 
-        <div class="grid-2">
+      <div class="grid-2">
 
-          <div class="input-group">
-            <label>Sheet</label>
-            <select id="kmSheet">
-              <option value="E">E</option>
-              <option value="F">F</option>
-              <option value="G">G</option>
-              <option value="H">H</option>
-              <option value="I">I</option>
-            </select>
-          </div>
-
-          <div class="input-group">
-            <label>Column</label>
-            <select id="kmColumn">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-            </select>
-          </div>
-
-          <div class="input-group">
-            <label>Theoretical KM</label>
-            <input type="number" id="kmTheo">
-          </div>
-
-          <div class="input-group">
-            <label>Customer KM</label>
-            <input type="number" id="kmCust">
-          </div>
-
+        <div class="input-group">
+          <label>Sheet</label>
+          <select id="kmSheet">
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="G">G</option>
+            <option value="H">H</option>
+            <option value="I">I</option>
+          </select>
         </div>
 
-        <button onclick="calculateKmCorrection()">Calculate</button>
+        <div class="input-group">
+          <label>Column</label>
+          <select id="kmColumn">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+        </div>
 
-        <div class="result" id="kmResult"></div>
+        <div class="input-group">
+          <label>Theoretical KM</label>
+          <input type="number" id="kmTheo">
+        </div>
 
-        <button onclick="closeKmModal()">Close</button>
+        <div class="input-group">
+          <label>Customer KM</label>
+          <input type="number" id="kmCust">
+        </div>
 
       </div>
 
+      <button onclick="calculateKmCorrection()">Calculate</button>
+
+      <div class="result" id="kmResult"></div>
+
+      <button onclick="closeKmModal()">Close</button>
+
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <script src="js/navigation.js"></script>
-    <script src="js/depreciation.js"></script>
-    <script src="js/registration.js"></script>
-    <script src="js/expert.js"></script>
-    <script src="js/market.js"></script>
-    <script src="js/app.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/depreciation.js"></script>
+  <script src="js/registration.js"></script>
+  <script src="js/expert.js"></script>
+  <script src="js/market.js"></script>
+  <script src="js/app.js"></script>
 
 </body>
 
