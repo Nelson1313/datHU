@@ -29,6 +29,16 @@ function initDepreciationChart() {
 
 }
 
+function parseExcelNumber(val) {
+    if (val === undefined || val === null) return null;
+
+    return Number(
+        String(val)
+            .replace(",", ".")
+            .replace(/\s/g, "")
+    );
+}
+
 function loadExcelFromServer() {
 
     fetch("data/km_table.xlsx")
@@ -47,7 +57,7 @@ function loadExcelFromServer() {
                 for (let i = 4; i < json.length; i++) {
 
                     const row = json[i];
-                    const km = Number(row[1]); // B oszlop
+                    const km = parseExcelNumber(row[1]); // B oszlop
 
                     if (!km) continue;
 
@@ -153,7 +163,7 @@ function calculateKmCorrection() {
         return;
     }
 
-    const sheet = document.getElementById("kmSheet").value;
+    const sheet = document.getElementById("kmSheet").value.toLowerCase();
     const column = parseInt(document.getElementById("kmColumn").value);
 
     const theo = parseInt(document.getElementById("kmTheo").value);
