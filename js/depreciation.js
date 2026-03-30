@@ -183,9 +183,9 @@ function calculateKmCorrection() {
 }
 
 window.openKmModal = function () {
-    document.getElementById("kmModal").classList.remove("hidden");
+    document.getElementById("kmModal").classList.add("show");
 };
 
 window.closeKmModal = function () {
-    document.getElementById("kmModal").classList.add("hidden");
+    document.getElementById("kmModal").classList.remove("show");
 };
