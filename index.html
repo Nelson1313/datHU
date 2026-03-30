@@ -334,119 +334,119 @@
       </div>
 
     </div>
+  </div>
+  <div class="container" style="margin-top:40px;">
 
-    <div class="container" style="margin-top:40px;">
+    <div class="card" style="width:100%; max-width:1400px;">
 
-      <div class="card" style="width:100%; max-width:1400px;">
+      <div class="header">
+        <h1>Statistics</h1>
+      </div>
+
+      <div class="table-scroll-big">
+
+        <table id="statsTable"></table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Navigációs nyilak -->
+
+  <div class="view-arrows">
+
+    <div id="arrow-left" class="arrow" onclick="prevView()">❮</div>
+    <div id="arrow-right" class="arrow" onclick="nextView()">❯</div>
+
+  </div>
+
+  <!-- Használtjármű analízis -->
+
+  <div id="view-market" class="view">
+
+    <div class="container">
+
+      <div class="card card-calculator">
 
         <div class="header">
-          <h1>Statistics</h1>
+          <h1>Market Price Analysis</h1>
         </div>
 
-        <div class="table-scroll-big">
+        <div class="content">
 
-          <table id="statsTable"></table>
+          <div class="input-group">
+            <label>Upload XLSX file</label>
 
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- Navigációs nyilak -->
-
-    <div class="view-arrows">
-
-      <div id="arrow-left" class="arrow" onclick="prevView()">❮</div>
-      <div id="arrow-right" class="arrow" onclick="nextView()">❯</div>
-
-    </div>
-
-    <!-- Használtjármű analízis -->
-
-    <div id="view-market" class="view">
-
-      <div class="container">
-
-        <div class="card card-calculator">
-
-          <div class="header">
-            <h1>Market Price Analysis</h1>
+            <div id="dropZone" class="drop-zone">
+              <p id="dropText">Drag & Drop file here or click to upload</p>
+              <input type="file" id="marketFile" accept=".xlsx" hidden>
+            </div>
           </div>
 
-          <div class="content">
+          <button onclick="clearMarketData()">Clear Data</button>
 
+          <div class="result market-stats" id="marketResult">
+            Upload a file to calculate statistics.
+          </div>
+          <div class="section-title">Filters</div>
+
+          <div class="grid-2">
+
+            <!-- FUEL -->
             <div class="input-group">
-              <label>Upload XLSX file</label>
+              <label>Fuel Type</label>
 
-              <div id="dropZone" class="drop-zone">
-                <p id="dropText">Drag & Drop file here or click to upload</p>
-                <input type="file" id="marketFile" accept=".xlsx" hidden>
+              <div class="filter-actions">
+                <button type="button" onclick="selectAll('fuelFilters')">All</button>
+                <button type="button" onclick="clearAll('fuelFilters')">Clear</button>
               </div>
+
+              <div id="fuelFilters"></div>
             </div>
 
-            <button onclick="clearMarketData()">Clear Data</button>
+            <!-- YEAR -->
+            <div class="input-group">
+              <label>First Registration Year</label>
 
-            <div class="result market-stats" id="marketResult">
-              Upload a file to calculate statistics.
+              <div class="filter-actions">
+                <button type="button" onclick="selectAll('yearFilters')">All</button>
+                <button type="button" onclick="clearAll('yearFilters')">Clear</button>
+              </div>
+
+              <div id="yearFilters"></div>
             </div>
-            <div class="section-title">Filters</div>
 
-            <div class="grid-2">
+            <!-- ENGINE -->
+            <div class="input-group">
+              <label>Engine</label>
 
-              <!-- FUEL -->
-              <div class="input-group">
-                <label>Fuel Type</label>
-
-                <div class="filter-actions">
-                  <button type="button" onclick="selectAll('fuelFilters')">All</button>
-                  <button type="button" onclick="clearAll('fuelFilters')">Clear</button>
-                </div>
-
-                <div id="fuelFilters"></div>
+              <div class="filter-actions">
+                <button type="button" onclick="selectAll('engineFilters')">All</button>
+                <button type="button" onclick="clearAll('engineFilters')">Clear</button>
               </div>
 
-              <!-- YEAR -->
-              <div class="input-group">
-                <label>First Registration Year</label>
-
-                <div class="filter-actions">
-                  <button type="button" onclick="selectAll('yearFilters')">All</button>
-                  <button type="button" onclick="clearAll('yearFilters')">Clear</button>
-                </div>
-
-                <div id="yearFilters"></div>
-              </div>
-
-              <!-- ENGINE -->
-              <div class="input-group">
-                <label>Engine</label>
-
-                <div class="filter-actions">
-                  <button type="button" onclick="selectAll('engineFilters')">All</button>
-                  <button type="button" onclick="clearAll('engineFilters')">Clear</button>
-                </div>
-
-                <div id="engineFilters"></div>
-              </div>
-
-              <!-- EQUIPMENT -->
-              <div class="input-group">
-                <label>Equipment</label>
-
-                <div class="filter-actions">
-                  <button type="button" onclick="selectAll('equipmentFilters')">All</button>
-                  <button type="button" onclick="clearAll('equipmentFilters')">Clear</button>
-                </div>
-
-                <div id="equipmentFilters"></div>
-              </div>
-
+              <div id="engineFilters"></div>
             </div>
+
+            <!-- EQUIPMENT -->
+            <div class="input-group">
+              <label>Equipment</label>
+
+              <div class="filter-actions">
+                <button type="button" onclick="selectAll('equipmentFilters')">All</button>
+                <button type="button" onclick="clearAll('equipmentFilters')">Clear</button>
+              </div>
+
+              <div id="equipmentFilters"></div>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <div id="kmModal" class="modal hidden">
