@@ -722,18 +722,17 @@
      left: 0;
      width: 100vw;
      height: 100vh;
-
      background: rgba(0, 0, 0, 0.5);
-
-     display: none !important;
      justify-content: center;
+     display: flex;
      align-items: center;
-
+     pointer-events: auto;
      z-index: 99999;
  }
 
  .modal.hidden {
      display: none !important;
+     pointer-events: none;
  }
 
  .modal-content {
