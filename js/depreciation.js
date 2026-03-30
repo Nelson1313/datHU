@@ -90,7 +90,7 @@ function getExcelValue(sheet, diff, column) {
         }
     }
 
-    return selected.values[column];
+    return selected.values[column] ?? null;
 }
 
 function calculate() {
@@ -104,11 +104,6 @@ function calculate() {
     const startTotal = sy * 12 + sm;
     const endTotal = ey * 12 + em;
 
-    if (Object.keys(excelLookup).length === 0) {
-        alert("Excel data is still loading...");
-        return;
-    }
-
     if (endTotal < startTotal) {
         alert("End date cannot be earlier than start date.");
         return;
@@ -121,27 +116,6 @@ function calculate() {
     const rate2 = parseFloat(document.getElementById("rate2").value) / 100;
 
     const monthsRate1 = years1 * 12;
-
-    // ===== Excel KM korrekció =====
-
-    const theoreticalKm = parseInt(document.getElementById("theoreticalKm").value);
-    const customerKm = parseInt(document.getElementById("customerKm").value);
-    const sheet = document.getElementById("sheetSelect").value;
-    const column = parseInt(document.getElementById("columnSelect").value);
-
-    let correctionPercent = 0;
-
-    if (!isNaN(theoreticalKm) && !isNaN(customerKm)) {
-
-        const diff = Math.abs(customerKm - theoreticalKm);
-
-        const excelValue = getExcelValue(sheet, diff, column);
-
-        if (excelValue !== null) {
-            correctionPercent = excelValue;
-        }
-
-    }
 
     let values = [];
     let labels = [];
@@ -163,27 +137,12 @@ function calculate() {
         labels.push(i);
     }
 
-    if (correctionPercent !== 0) {
-        current *= (1 + correctionPercent / 100);
-
-        values[values.length - 1] = (current * 100).toFixed(2);
-    }
-
     document.getElementById("output").innerHTML =
         `Remaining Value: ${(current * 100).toFixed(2)}%`;
 
     chart.data.labels = labels;
     chart.data.datasets[0].data = values;
     chart.update();
-
-}
-
-function openKmModal() {
-    document.getElementById("kmModal").classList.remove("hidden");
-}
-
-function closeKmModal() {
-    document.getElementById("kmModal").classList.add("hidden");
 }
 
 function calculateKmCorrection() {
@@ -210,4 +169,14 @@ function calculateKmCorrection() {
 
     document.getElementById("kmResult").innerHTML =
         `Difference: ${diff} km<br>Correction: ${value}%`;
+}
+
+function openKmModal() {
+    document.getElementById("kmModal").classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+}
+
+function closeKmModal() {
+    document.getElementById("kmModal").classList.add("hidden");
+    document.body.style.overflow = "";
 }
