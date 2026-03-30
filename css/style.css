@@ -717,20 +717,23 @@
  }
 
  .modal {
-     position: fixed;
+     position: fixed !important;
      top: 0;
      left: 0;
-     right: 0;
-     bottom: 0;
+     width: 100vw;
+     height: 100vh;
+
      background: rgba(0, 0, 0, 0.5);
+
      display: flex;
      justify-content: center;
      align-items: center;
-     z-index: 9999;
+
+     z-index: 99999;
  }
 
  .modal.hidden {
-     display: none;
+     display: none !important;
  }
 
  .modal-content {
@@ -738,4 +741,7 @@
      padding: 30px;
      border-radius: 20px;
      width: 500px;
+     max-width: 90%;
+
+     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
  }

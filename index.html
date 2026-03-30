@@ -353,169 +353,166 @@
 
     </div>
 
-  </div>
-  </div>
+    <!-- Navigációs nyilak -->
 
-  <!-- Navigációs nyilak -->
+    <div class="view-arrows">
 
-  <div class="view-arrows">
+      <div id="arrow-left" class="arrow" onclick="prevView()">❮</div>
+      <div id="arrow-right" class="arrow" onclick="nextView()">❯</div>
 
-    <div id="arrow-left" class="arrow" onclick="prevView()">❮</div>
-    <div id="arrow-right" class="arrow" onclick="nextView()">❯</div>
+    </div>
 
-  </div>
+    <!-- Használtjármű analízis -->
 
-  <!-- Használtjármű analízis -->
+    <div id="view-market" class="view">
 
-  <div id="view-market" class="view">
+      <div class="container">
 
-    <div class="container">
+        <div class="card card-calculator">
 
-      <div class="card card-calculator">
+          <div class="header">
+            <h1>Market Price Analysis</h1>
+          </div>
 
-        <div class="header">
-          <h1>Market Price Analysis</h1>
+          <div class="content">
+
+            <div class="input-group">
+              <label>Upload XLSX file</label>
+
+              <div id="dropZone" class="drop-zone">
+                <p id="dropText">Drag & Drop file here or click to upload</p>
+                <input type="file" id="marketFile" accept=".xlsx" hidden>
+              </div>
+            </div>
+
+            <button onclick="clearMarketData()">Clear Data</button>
+
+            <div class="result market-stats" id="marketResult">
+              Upload a file to calculate statistics.
+            </div>
+            <div class="section-title">Filters</div>
+
+            <div class="grid-2">
+
+              <!-- FUEL -->
+              <div class="input-group">
+                <label>Fuel Type</label>
+
+                <div class="filter-actions">
+                  <button type="button" onclick="selectAll('fuelFilters')">All</button>
+                  <button type="button" onclick="clearAll('fuelFilters')">Clear</button>
+                </div>
+
+                <div id="fuelFilters"></div>
+              </div>
+
+              <!-- YEAR -->
+              <div class="input-group">
+                <label>First Registration Year</label>
+
+                <div class="filter-actions">
+                  <button type="button" onclick="selectAll('yearFilters')">All</button>
+                  <button type="button" onclick="clearAll('yearFilters')">Clear</button>
+                </div>
+
+                <div id="yearFilters"></div>
+              </div>
+
+              <!-- ENGINE -->
+              <div class="input-group">
+                <label>Engine</label>
+
+                <div class="filter-actions">
+                  <button type="button" onclick="selectAll('engineFilters')">All</button>
+                  <button type="button" onclick="clearAll('engineFilters')">Clear</button>
+                </div>
+
+                <div id="engineFilters"></div>
+              </div>
+
+              <!-- EQUIPMENT -->
+              <div class="input-group">
+                <label>Equipment</label>
+
+                <div class="filter-actions">
+                  <button type="button" onclick="selectAll('equipmentFilters')">All</button>
+                  <button type="button" onclick="clearAll('equipmentFilters')">Clear</button>
+                </div>
+
+                <div id="equipmentFilters"></div>
+              </div>
+
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <div class="content">
+    <div id="kmModal" class="modal hidden">
+
+      <div class="modal-content">
+
+        <h2>KM Correction Tool</h2>
+
+        <div class="grid-2">
 
           <div class="input-group">
-            <label>Upload XLSX file</label>
-
-            <div id="dropZone" class="drop-zone">
-              <p id="dropText">Drag & Drop file here or click to upload</p>
-              <input type="file" id="marketFile" accept=".xlsx" hidden>
-            </div>
+            <label>Sheet</label>
+            <select id="kmSheet">
+              <option value="E">E</option>
+              <option value="F">F</option>
+              <option value="G">G</option>
+              <option value="H">H</option>
+              <option value="I">I</option>
+            </select>
           </div>
 
-          <button onclick="clearMarketData()">Clear Data</button>
-
-          <div class="result market-stats" id="marketResult">
-            Upload a file to calculate statistics.
+          <div class="input-group">
+            <label>Column</label>
+            <select id="kmColumn">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
           </div>
-          <div class="section-title">Filters</div>
 
-          <div class="grid-2">
-
-            <!-- FUEL -->
-            <div class="input-group">
-              <label>Fuel Type</label>
-
-              <div class="filter-actions">
-                <button type="button" onclick="selectAll('fuelFilters')">All</button>
-                <button type="button" onclick="clearAll('fuelFilters')">Clear</button>
-              </div>
-
-              <div id="fuelFilters"></div>
-            </div>
-
-            <!-- YEAR -->
-            <div class="input-group">
-              <label>First Registration Year</label>
-
-              <div class="filter-actions">
-                <button type="button" onclick="selectAll('yearFilters')">All</button>
-                <button type="button" onclick="clearAll('yearFilters')">Clear</button>
-              </div>
-
-              <div id="yearFilters"></div>
-            </div>
-
-            <!-- ENGINE -->
-            <div class="input-group">
-              <label>Engine</label>
-
-              <div class="filter-actions">
-                <button type="button" onclick="selectAll('engineFilters')">All</button>
-                <button type="button" onclick="clearAll('engineFilters')">Clear</button>
-              </div>
-
-              <div id="engineFilters"></div>
-            </div>
-
-            <!-- EQUIPMENT -->
-            <div class="input-group">
-              <label>Equipment</label>
-
-              <div class="filter-actions">
-                <button type="button" onclick="selectAll('equipmentFilters')">All</button>
-                <button type="button" onclick="clearAll('equipmentFilters')">Clear</button>
-              </div>
-
-              <div id="equipmentFilters"></div>
-            </div>
-
+          <div class="input-group">
+            <label>Theoretical KM</label>
+            <input type="number" id="kmTheo">
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div id="kmModal" class="modal hidden">
+          <div class="input-group">
+            <label>Customer KM</label>
+            <input type="number" id="kmCust">
+          </div>
 
-    <div class="modal-content">
-
-      <h2>KM Correction Tool</h2>
-
-      <div class="grid-2">
-
-        <div class="input-group">
-          <label>Sheet</label>
-          <select id="kmSheet">
-            <option value="E">E</option>
-            <option value="F">F</option>
-            <option value="G">G</option>
-            <option value="H">H</option>
-            <option value="I">I</option>
-          </select>
         </div>
 
-        <div class="input-group">
-          <label>Column</label>
-          <select id="kmColumn">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-          </select>
-        </div>
+        <button onclick="calculateKmCorrection()">Calculate</button>
 
-        <div class="input-group">
-          <label>Theoretical KM</label>
-          <input type="number" id="kmTheo">
-        </div>
+        <div class="result" id="kmResult"></div>
 
-        <div class="input-group">
-          <label>Customer KM</label>
-          <input type="number" id="kmCust">
-        </div>
+        <button onclick="closeKmModal()">Close</button>
 
       </div>
 
-      <button onclick="calculateKmCorrection()">Calculate</button>
-
-      <div class="result" id="kmResult"></div>
-
-      <button onclick="closeKmModal()">Close</button>
-
     </div>
 
-  </div>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
-  <script src="js/navigation.js"></script>
-  <script src="js/depreciation.js"></script>
-  <script src="js/registration.js"></script>
-  <script src="js/expert.js"></script>
-  <script src="js/market.js"></script>
-  <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/depreciation.js"></script>
+    <script src="js/registration.js"></script>
+    <script src="js/expert.js"></script>
+    <script src="js/market.js"></script>
+    <script src="js/app.js"></script>
 
 </body>
 
