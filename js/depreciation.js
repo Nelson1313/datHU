@@ -47,20 +47,21 @@ function loadExcelFromServer() {
                 for (let i = 4; i < json.length; i++) {
 
                     const row = json[i];
-                    const km = row[1]; // B oszlop
+                    const km = Number(row[1]); // B oszlop
 
                     if (!km) continue;
 
                     let values = {};
 
                     for (let col = 1; col <= 9; col++) {
-                        values[col] = row[col + 1]; // C–K
+                        values[col] = Number(row[col + 1]); // C–K
                     }
 
                     excelLookup[sheetName].push({
                         km: km,
                         values: values
                     });
+                    excelLookup[sheetName].sort((a, b) => a.km - b.km);
 
                 }
 
@@ -90,7 +91,7 @@ function getExcelValue(sheet, diff, column) {
         }
     }
 
-    return selected.values[column] ?? null;
+    return selected ? selected.values[column] : 0;
 }
 
 function calculate() {
